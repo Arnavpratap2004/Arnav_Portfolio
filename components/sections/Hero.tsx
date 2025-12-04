@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { SparklesCore } from "@/components/ui/Sparkles";
 import { HyperText } from "@/components/ui/HyperText";
+import { NoiseButton } from "@/components/ui/NoiseButton";
 
 import { BackgroundGradientAnimation } from "@/components/ui/BackgroundGradientAnimation";
 import { Vortex } from "@/components/ui/Vortex";
@@ -11,13 +12,26 @@ import { Vortex } from "@/components/ui/Vortex";
 export function Hero() {
     return (
         <div className="relative h-[100vh] w-full overflow-hidden">
-            <BackgroundGradientAnimation containerClassName="absolute inset-0 z-0">
+            <BackgroundGradientAnimation
+                containerClassName="absolute inset-0 z-0"
+                gradientBackgroundStart="rgb(15, 23, 42)"
+                gradientBackgroundEnd="rgb(10, 10, 15)"
+                firstColor="18, 113, 255"
+                secondColor="221, 74, 255"
+                thirdColor="100, 220, 255"
+                fourthColor="200, 50, 50"
+                fifthColor="180, 180, 50"
+                pointerColor="140, 100, 255"
+                size="80%"
+                blendingValue="hard-light"
+            >
                 <div className="absolute inset-0 z-10 w-full h-full pointer-events-none">
                     <Vortex
                         backgroundColor="transparent"
                         rangeY={800}
                         particleCount={500}
-                        baseHue={120}
+                        baseHue={20}
+                        rangeHue={30}
                         className="flex items-center flex-col justify-center px-2 md:px-10 py-4 w-full h-full"
                     >
                         {/* Content Container - pointer-events-auto to allow interaction with buttons */}
@@ -62,12 +76,12 @@ export function Hero() {
                                     transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
                                     className="mt-10 flex gap-6"
                                 >
-                                    <a href="#projects" className="px-8 py-3 rounded-full bg-[#FF4D4D] text-white font-bold hover:bg-[#ff3333] transition-all shadow-lg hover:shadow-xl hover:scale-105 active:scale-95">
+                                    <NoiseButton href="#projects">
                                         View Work
-                                    </a>
-                                    <a href="#contact" className="px-8 py-3 rounded-full bg-[#FF4D4D] text-white font-bold hover:bg-[#ff3333] transition-all shadow-lg hover:shadow-xl hover:scale-105 active:scale-95">
+                                    </NoiseButton>
+                                    <NoiseButton href="#contact">
                                         Hire Me
-                                    </a>
+                                    </NoiseButton>
                                 </motion.div>
                             </div>
 

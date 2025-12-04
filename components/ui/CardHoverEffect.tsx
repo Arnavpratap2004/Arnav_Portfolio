@@ -11,7 +11,7 @@ export const HoverEffect = ({
     items: {
         title: string;
         description?: string;
-        skills?: { name: string; icon: string }[];
+        skills?: { name: string; icon: string; className?: string }[];
         link?: string;
         icon?: React.ReactNode;
     }[];
@@ -62,10 +62,10 @@ export const HoverEffect = ({
                                                     src={skill.icon}
                                                     alt={skill.name}
                                                     fill
-                                                    className="object-contain"
+                                                    className={cn("object-contain", skill.className)}
                                                 />
                                             </div>
-                                            <span className="text-[10px] text-neutral-400 opacity-0 group-hover/skill:opacity-100 transition-opacity absolute -bottom-4 whitespace-nowrap">
+                                            <span className="text-[10px] text-neutral-400 mt-1 whitespace-nowrap">
                                                 {skill.name}
                                             </span>
                                         </div>
