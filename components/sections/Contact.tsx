@@ -302,9 +302,9 @@ const ContactIcon = ({ children, pulseDelay }: ContactIconProps) => {
             setTimeout(() => setIsPulsing(false), 600);
         };
 
-        // Initial delay then pulse every 4 seconds
+        // Initial delay then pulse every 6 seconds
         const initialTimeout = setTimeout(startPulse, pulseDelay);
-        const interval = setInterval(startPulse, 4000);
+        const interval = setInterval(startPulse, 6000);
 
         return () => {
             clearTimeout(initialTimeout);
@@ -341,9 +341,9 @@ const SocialIcon = ({ href, children, pulseDelay, hoverColor }: SocialIconProps)
             setTimeout(() => setIsPulsing(false), 600);
         };
 
-        // Initial delay then pulse every 4-5 seconds
+        // Initial delay then pulse every 7 seconds
         const initialTimeout = setTimeout(startPulse, pulseDelay);
-        const interval = setInterval(startPulse, 4500);
+        const interval = setInterval(startPulse, 7000);
 
         return () => {
             clearTimeout(initialTimeout);

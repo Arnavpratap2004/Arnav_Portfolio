@@ -68,7 +68,7 @@ export const MagneticPulse = ({ className, children }: MagneticPulseProps) => {
         }
 
         const particles: AttractedParticle[] = [];
-        const particleCount = 60;
+        const particleCount = 15; // Reduced for better scroll performance
 
         const initParticles = (width: number, height: number) => {
             particles.length = 0;
@@ -202,14 +202,12 @@ export const MagneticPulse = ({ className, children }: MagneticPulseProps) => {
                     ctx.lineWidth = 2;
                     ctx.stroke();
 
-                    // Inner glow
+                    // Simplified inner glow without filter
                     ctx.beginPath();
                     ctx.arc(centerX, centerY, ring.radius, 0, Math.PI * 2);
-                    ctx.strokeStyle = `hsla(${ring.hue}, 80%, 70%, ${ring.opacity * 0.5})`;
-                    ctx.lineWidth = 6;
-                    ctx.filter = "blur(4px)";
+                    ctx.strokeStyle = `hsla(${ring.hue}, 80%, 70%, ${ring.opacity * 0.3})`;
+                    ctx.lineWidth = 8;
                     ctx.stroke();
-                    ctx.filter = "none";
                 } else {
                     pulseRings.splice(index, 1);
                 }
@@ -217,9 +215,9 @@ export const MagneticPulse = ({ className, children }: MagneticPulseProps) => {
 
             // Draw and update attracted particles
             particles.forEach((particle) => {
-                // Store trail
+                // Store trail (reduced length for performance)
                 particle.trail.push({ x: particle.x, y: particle.y });
-                if (particle.trail.length > 15) {
+                if (particle.trail.length > 8) {
                     particle.trail.shift();
                 }
 

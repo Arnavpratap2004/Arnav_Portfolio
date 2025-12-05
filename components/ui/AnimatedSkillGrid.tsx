@@ -33,11 +33,11 @@ export const AnimatedSkillGrid = ({ categories, className }: AnimatedSkillGridPr
             ([entry]) => {
                 if (entry.isIntersecting) {
                     setIsVisible(true);
-                    // Staggered category reveal
+                    // Faster staggered category reveal
                     categories.forEach((_, index) => {
                         setTimeout(() => {
                             setRevealedCategories(prev => new Set([...prev, index]));
-                        }, index * 200);
+                        }, index * 100);
                     });
                 }
             },

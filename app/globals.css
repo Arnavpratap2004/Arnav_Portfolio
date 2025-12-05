@@ -140,4 +140,26 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Performance optimizations */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* GPU acceleration for animated elements */
+  canvas {
+    will-change: transform;
+    transform: translateZ(0);
+  }
+
+  /* Reduce animations for users who prefer reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }

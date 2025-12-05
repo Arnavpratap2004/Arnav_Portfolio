@@ -22,7 +22,7 @@ interface VortexProps {
 export const Vortex = (props: VortexProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
-    const particleCount = props.particleCount || 700;
+    const particleCount = props.particleCount || 150;
     const particlePropCount = 9;
     const particlePropsLength = particleCount * particlePropCount;
     const rangeY = props.rangeY || 100;
@@ -99,6 +99,8 @@ export const Vortex = (props: VortexProps) => {
         particleProps.set([x, y, vx, vy, life, ttl, speed, radius, hue], i);
     };
 
+    let animationFrameId: number;
+
     const draw = (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
         tick++;
 
@@ -108,10 +110,14 @@ export const Vortex = (props: VortexProps) => {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         drawParticles(ctx);
-        renderGlow(canvas, ctx);
-        renderToScreen(canvas, ctx);
 
-        window.requestAnimationFrame(() => draw(canvas, ctx));
+        // Only render glow every 3 frames for better scroll performance
+        if (tick % 3 === 0) {
+            renderGlow(canvas, ctx);
+            renderToScreen(canvas, ctx);
+        }
+
+        animationFrameId = window.requestAnimationFrame(() => draw(canvas, ctx));
     };
 
     const drawParticles = (ctx: CanvasRenderingContext2D) => {
@@ -204,14 +210,9 @@ export const Vortex = (props: VortexProps) => {
         canvas: HTMLCanvasElement,
         ctx: CanvasRenderingContext2D
     ) => {
+        // Single pass glow for better performance
         ctx.save();
-        ctx.filter = "blur(8px) brightness(200%)";
-        ctx.globalCompositeOperation = "lighter";
-        ctx.drawImage(canvas, 0, 0);
-        ctx.restore();
-
-        ctx.save();
-        ctx.filter = "blur(4px) brightness(200%)";
+        ctx.filter = "blur(4px) brightness(150%)";
         ctx.globalCompositeOperation = "lighter";
         ctx.drawImage(canvas, 0, 0);
         ctx.restore();
@@ -229,13 +230,23 @@ export const Vortex = (props: VortexProps) => {
 
     useEffect(() => {
         setup();
-        window.addEventListener("resize", () => {
+
+        const handleResize = () => {
             const canvas = canvasRef.current;
             const ctx = canvas?.getContext("2d");
             if (canvas && ctx) {
                 resize(canvas, ctx);
             }
-        });
+        };
+
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
+        };
     }, []);
 
     return (

@@ -28,45 +28,57 @@ export const AnimatedTimeline = ({ items, className }: AnimatedTimelineProps) =>
     const [currentYear, setCurrentYear] = useState(items[0]?.year || "");
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-    // Track scroll progress and visible items
+    // Track scroll progress and visible items - throttled with RAF
     useEffect(() => {
+        let ticking = false;
+
         const handleScroll = () => {
-            if (!containerRef.current) return;
-
-            const rect = containerRef.current.getBoundingClientRect();
-            const windowHeight = window.innerHeight;
-
-            // Calculate overall scroll progress
-            const totalHeight = rect.height;
-            const scrolled = Math.max(0, windowHeight - rect.top);
-            const progress = Math.min(1, Math.max(0, scrolled / (totalHeight + windowHeight * 0.5)));
-            setScrollProgress(progress);
-
-            // Check visibility of each item
-            const newVisible = new Set<number>();
-            let latestVisibleIndex = -1;
-
-            itemRefs.current.forEach((ref, index) => {
-                if (ref) {
-                    const itemRect = ref.getBoundingClientRect();
-                    const itemCenter = itemRect.top + itemRect.height / 2;
-
-                    if (itemCenter < windowHeight * 0.8 && itemCenter > 0) {
-                        newVisible.add(index);
-                        latestVisibleIndex = index;
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    if (!containerRef.current) {
+                        ticking = false;
+                        return;
                     }
-                }
-            });
 
-            setVisibleItems(newVisible);
+                    const rect = containerRef.current.getBoundingClientRect();
+                    const windowHeight = window.innerHeight;
 
-            if (latestVisibleIndex >= 0) {
-                setActiveIndex(latestVisibleIndex);
-                setCurrentYear(items[latestVisibleIndex].year);
+                    // Calculate overall scroll progress
+                    const totalHeight = rect.height;
+                    const scrolled = Math.max(0, windowHeight - rect.top);
+                    const progress = Math.min(1, Math.max(0, scrolled / (totalHeight + windowHeight * 0.5)));
+                    setScrollProgress(progress);
+
+                    // Check visibility of each item
+                    const newVisible = new Set<number>();
+                    let latestVisibleIndex = -1;
+
+                    itemRefs.current.forEach((ref, index) => {
+                        if (ref) {
+                            const itemRect = ref.getBoundingClientRect();
+                            const itemCenter = itemRect.top + itemRect.height / 2;
+
+                            if (itemCenter < windowHeight * 0.8 && itemCenter > 0) {
+                                newVisible.add(index);
+                                latestVisibleIndex = index;
+                            }
+                        }
+                    });
+
+                    setVisibleItems(newVisible);
+
+                    if (latestVisibleIndex >= 0) {
+                        setActiveIndex(latestVisibleIndex);
+                        setCurrentYear(items[latestVisibleIndex].year);
+                    }
+
+                    ticking = false;
+                });
+                ticking = true;
             }
         };
 
-        window.addEventListener("scroll", handleScroll);
+        window.addEventListener("scroll", handleScroll, { passive: true });
         handleScroll(); // Initial check
 
         return () => window.removeEventListener("scroll", handleScroll);
@@ -124,21 +136,9 @@ interface TimelineCardProps {
 const TimelineCard = React.forwardRef<HTMLDivElement, TimelineCardProps>(
     ({ item, index, isVisible, isActive, isOlder }, ref) => {
         const [hoveredAchievement, setHoveredAchievement] = useState<number | null>(null);
-        const [revealStage, setRevealStage] = useState(0);
+        // Show all content immediately - no staged reveal
+        const revealStage = isVisible ? 4 : 0;
         const isLeft = index % 2 === 0;
-
-        // Cause-Effect Sequential Reveal
-        useEffect(() => {
-            if (isVisible && revealStage < 4) {
-                const timers = [
-                    setTimeout(() => setRevealStage(1), 100),  // Title
-                    setTimeout(() => setRevealStage(2), 300),  // Organization
-                    setTimeout(() => setRevealStage(3), 500),  // Period
-                    setTimeout(() => setRevealStage(4), 700),  // Achievements
-                ];
-                return () => timers.forEach(clearTimeout);
-            }
-        }, [isVisible, revealStage]);
 
         // Highlight keywords in achievements
         const highlightKeywords = (text: string, isHovered: boolean) => {

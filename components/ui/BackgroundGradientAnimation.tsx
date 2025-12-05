@@ -59,20 +59,31 @@ export const BackgroundGradientAnimation = ({
     }, []);
 
     useEffect(() => {
+        let frameCount = 0;
+        let animationId: number;
+
         function move() {
+            frameCount++;
             if (!interactiveRef.current) {
+                animationId = requestAnimationFrame(move);
                 return;
             }
-            setCurX(curX + (tgX - curX) / 20);
-            setCurY(curY + (tgY - curY) / 20);
-            interactiveRef.current.style.transform = `translate(${Math.round(
-                curX
-            )}px, ${Math.round(curY)}px)`;
-            requestAnimationFrame(move);
+            // Only update every 2 frames for smoother scrolling
+            if (frameCount % 2 === 0) {
+                setCurX(curX + (tgX - curX) / 20);
+                setCurY(curY + (tgY - curY) / 20);
+                interactiveRef.current.style.transform = `translate(${Math.round(
+                    curX
+                )}px, ${Math.round(curY)}px)`;
+            }
+            animationId = requestAnimationFrame(move);
         }
         move();
+
+        return () => cancelAnimationFrame(animationId);
     }, [tgX, tgY]);
 
+    // Throttled mouse move handler
     const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
         if (interactiveRef.current) {
             const rect = interactiveRef.current.getBoundingClientRect();
