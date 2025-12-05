@@ -314,47 +314,6 @@ const SkillItem = ({ skill, skillIndex, categoryIndex, isRevealed }: SkillItemPr
                 {/* Tooltip Arrow */}
                 <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-neutral-800 border-b border-r border-neutral-700 rotate-45" />
             </div>
-
-            {/* Proficiency Ring on Scroll - Ability Pulse */}
-            <svg
-                className={cn(
-                    "absolute inset-0 w-full h-full pointer-events-none transition-opacity duration-500",
-                    isRevealed ? "opacity-100" : "opacity-0"
-                )}
-                viewBox="0 0 100 100"
-            >
-                <circle
-                    cx="50"
-                    cy="50"
-                    r="45"
-                    fill="none"
-                    stroke="rgba(168, 85, 247, 0.1)"
-                    strokeWidth="2"
-                />
-                <circle
-                    cx="50"
-                    cy="50"
-                    r="45"
-                    fill="none"
-                    stroke="url(#gradient)"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeDasharray="283"
-                    className={cn(
-                        "transition-all duration-1000 ease-out",
-                    )}
-                    style={{
-                        strokeDashoffset: isRevealed ? 0 : 283,
-                        transitionDelay: `${(categoryIndex * 200) + (skillIndex * 100 + 500)}ms`,
-                    }}
-                />
-                <defs>
-                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="#a855f7" />
-                        <stop offset="100%" stopColor="#ec4899" />
-                    </linearGradient>
-                </defs>
-            </svg>
         </div>
     );
 };
