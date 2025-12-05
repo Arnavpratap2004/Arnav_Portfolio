@@ -1,7 +1,8 @@
+"use client";
 import React from "react";
-import { HoverEffect } from "@/components/ui/CardHoverEffect";
 import { IconCode, IconDatabase, IconCloud, IconBrain, IconTool, IconTerminal2 } from "@tabler/icons-react";
 import { AuroraBackground } from "@/components/ui/AuroraBackground";
+import { AnimatedSkillGrid, SkillGridStyles } from "@/components/ui/AnimatedSkillGrid";
 
 export function About() {
     const skillCategories = [
@@ -16,7 +17,7 @@ export function About() {
                 { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
                 { name: "TypeScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
             ],
-            icon: <IconCode className="w-8 h-8 text-blue-500" />
+            icon: <IconCode className="w-6 h-6 text-blue-400" />
         },
         {
             title: "Frameworks",
@@ -27,7 +28,7 @@ export function About() {
                 { name: "Express", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg", className: "invert" },
                 { name: "Tailwind", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg" },
             ],
-            icon: <IconTerminal2 className="w-8 h-8 text-green-500" />
+            icon: <IconTerminal2 className="w-6 h-6 text-green-400" />
         },
         {
             title: "Databases",
@@ -36,7 +37,7 @@ export function About() {
                 { name: "MySQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" },
                 { name: "PostgreSQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" },
             ],
-            icon: <IconDatabase className="w-8 h-8 text-yellow-500" />
+            icon: <IconDatabase className="w-6 h-6 text-yellow-400" />
         },
         {
             title: "Cloud DevOps",
@@ -45,7 +46,7 @@ export function About() {
                 { name: "Docker", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" },
                 { name: "Linux", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" },
             ],
-            icon: <IconCloud className="w-8 h-8 text-orange-500" />
+            icon: <IconCloud className="w-6 h-6 text-orange-400" />
         },
         {
             title: "AI/ML",
@@ -55,7 +56,7 @@ export function About() {
                 { name: "Pandas", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg" },
                 { name: "NumPy", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/numpy/numpy-original.svg" },
             ],
-            icon: <IconBrain className="w-8 h-8 text-purple-500" />
+            icon: <IconBrain className="w-6 h-6 text-purple-400" />
         },
         {
             title: "Tools",
@@ -65,18 +66,23 @@ export function About() {
                 { name: "Postman", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postman/postman-original.svg" },
                 { name: "VS Code", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" },
             ],
-            icon: <IconTool className="w-8 h-8 text-pink-500" />
+            icon: <IconTool className="w-6 h-6 text-pink-400" />
         }
     ];
 
     return (
         <AuroraBackground className="h-auto min-h-screen py-20 w-screen relative left-1/2 -ml-[50vw]">
-            <div className="relative z-10 w-full max-w-5xl mx-auto px-4">
-                <h2 className="text-4xl font-bold text-center mb-10 text-white tracking-tight">Technical Arsenal</h2>
-                <div className="max-w-5xl mx-auto px-4">
-                    <HoverEffect items={skillCategories} />
+            <SkillGridStyles />
+            <div className="relative z-10 w-full max-w-6xl mx-auto px-4">
+                <div className="text-center mb-12">
+                    <h2 className="text-4xl font-bold text-white tracking-tight mb-4">Technical Arsenal</h2>
+                    <p className="text-neutral-400 max-w-lg mx-auto">
+                        Hover to explore • Click to discover • My tools of the trade
+                    </p>
                 </div>
+                <AnimatedSkillGrid categories={skillCategories} />
             </div>
         </AuroraBackground>
     );
 }
+
