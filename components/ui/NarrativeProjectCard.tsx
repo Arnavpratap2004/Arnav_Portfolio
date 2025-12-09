@@ -10,6 +10,7 @@ interface NarrativeProjectCardProps {
     imageAlt: string;
     techStack: string[];
     highlight: string; // e.g., "95% Accuracy", "10k+ Users"
+    projectLink: string;
     className?: string;
 }
 
@@ -20,6 +21,7 @@ export const NarrativeProjectCard = ({
     imageAlt,
     techStack,
     highlight,
+    projectLink,
     className,
 }: NarrativeProjectCardProps) => {
     const cardRef = useRef<HTMLDivElement>(null);
@@ -267,9 +269,12 @@ export const NarrativeProjectCard = ({
                             ? "opacity-100 translate-y-0"
                             : "opacity-0 translate-y-4"
                     )}>
-                        <button
+                        <a
+                            href={projectLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className={cn(
-                                "relative px-6 py-2.5 rounded-full text-sm font-semibold",
+                                "relative inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold",
                                 "bg-gradient-to-r from-purple-600 to-pink-600 text-white",
                                 "overflow-hidden group/btn",
                                 "transition-all duration-300",
@@ -282,10 +287,14 @@ export const NarrativeProjectCard = ({
                                     ? `translate(${(mousePosition.x - 150) / 30}px, ${(mousePosition.y - 200) / 50}px)`
                                     : "translate(0, 0)",
                             }}
+                            onClick={(e) => e.stopPropagation()}
                         >
                             <span className="relative z-10">View Project</span>
+                            <svg className="relative z-10 w-4 h-4 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
                             <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600 opacity-0 group-hover/btn:opacity-100 transition-opacity" />
-                        </button>
+                        </a>
                     </div>
                 </div>
 

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     motion,
     AnimatePresence,
@@ -23,6 +23,52 @@ export const FloatingNav = ({
     const { scrollYProgress } = useScroll();
 
     const [visible, setVisible] = useState(false);
+    const [activeSection, setActiveSection] = useState<string>("/");
+
+    // Track active section based on scroll position
+    useEffect(() => {
+        const sectionIds = navItems
+            .map((item) => item.link)
+            .filter((link) => link.startsWith("#"))
+            .map((link) => link.substring(1));
+
+        const observerOptions = {
+            root: null,
+            rootMargin: "-20% 0px -60% 0px",
+            threshold: 0,
+        };
+
+        const observerCallback: IntersectionObserverCallback = (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    setActiveSection(`#${entry.target.id}`);
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+        sectionIds.forEach((id) => {
+            const element = document.getElementById(id);
+            if (element) {
+                observer.observe(element);
+            }
+        });
+
+        // Handle scroll to top for "Home"
+        const handleScroll = () => {
+            if (window.scrollY < 100) {
+                setActiveSection("/");
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+
+        return () => {
+            observer.disconnect();
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, [navItems]);
 
     useMotionValueEvent(scrollYProgress, "change", (current) => {
         // Check if current is not undefined and is a number
@@ -60,22 +106,67 @@ export const FloatingNav = ({
                     className
                 )}
             >
-                {navItems.map((navItem: any, idx: number) => (
-                    <Link
-                        key={`link=${idx}`}
-                        href={navItem.link}
-                        className={cn(
-                            "relative dark:text-neutral-50 items-center flex space-x-1 text-neutral-600 dark:hover:text-neutral-300 hover:text-neutral-500"
-                        )}
-                    >
-                        <span className="block sm:hidden">{navItem.icon}</span>
-                        <span className="hidden sm:block text-sm font-medium tracking-tight">{navItem.name}</span>
-                    </Link>
-                ))}
-                <button className="border text-sm font-medium relative border-neutral-200 dark:border-white/[0.2] text-black dark:text-white px-4 py-2 rounded-full">
-                    <span>Resume</span>
-                    <span className="absolute inset-x-0 w-1/2 mx-auto -bottom-px bg-gradient-to-r from-transparent via-blue-500 to-transparent  h-px" />
-                </button>
+                {navItems.map((navItem: any, idx: number) => {
+                    const isActive = activeSection === navItem.link;
+                    return (
+                        <Link
+                            key={`link=${idx}`}
+                            href={navItem.link}
+                            className={cn(
+                                "relative items-center flex space-x-1 px-4 py-2 transition-colors duration-200",
+                                isActive
+                                    ? "text-white"
+                                    : "text-neutral-400 hover:text-neutral-200"
+                            )}
+                        >
+                            {isActive && (
+                                <motion.span
+                                    layoutId="activePill"
+                                    className="absolute inset-0 border border-neutral-200 dark:border-white/[0.2] rounded-full bg-black/20"
+                                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                                >
+                                    <span className="absolute left-0 right-0 bottom-0 flex justify-center">
+                                        <span className="w-1/2 h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
+                                    </span>
+                                </motion.span>
+                            )}
+                            <span className="relative z-10 block sm:hidden">{navItem.icon}</span>
+                            <span className="relative z-10 hidden sm:block text-sm font-medium tracking-tight">{navItem.name}</span>
+                        </Link>
+                    );
+                })}
+                <a
+                    href="https://drive.google.com/file/d/1vmWpALCPCccujC0YsqJK0LZgpsu9aFDi/view?usp=sharing"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group relative text-sm font-medium px-5 py-2.5 rounded-full transition-all duration-300 ease-out hover:scale-[1.03] active:scale-[0.98]"
+                    title="View my updated resume"
+                >
+                    {/* Gradient border background */}
+                    <span className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
+
+                    {/* Inner background */}
+                    <span className="absolute inset-[1px] rounded-full bg-black/90 group-hover:bg-black/80 transition-colors duration-300" />
+
+                    {/* Glow effect on hover */}
+                    <span className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-pink-500/30" />
+
+                    {/* Content */}
+                    <span className="relative z-10 flex items-center gap-1.5 text-white">
+                        <span>View Resume</span>
+                        <svg
+                            className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                    </span>
+
+                    {/* Bottom glow accent */}
+                    <span className="absolute inset-x-0 w-2/3 mx-auto -bottom-px bg-gradient-to-r from-transparent via-purple-500 to-transparent h-px opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
+                </a>
             </motion.div>
         </AnimatePresence>
     );

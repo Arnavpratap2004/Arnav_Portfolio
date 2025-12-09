@@ -13,6 +13,7 @@ export function Projects() {
             imageAlt: "Mess Feedback System",
             techStack: ["HTML", "CSS", "JavaScript", "Analytics"],
             highlight: "500+ Daily Users",
+            projectLink: "https://github.com/Arnavpratap2004/Mess_Feedback_System",
         },
         {
             title: "Smart Study Material Organizer",
@@ -21,6 +22,7 @@ export function Projects() {
             imageAlt: "Smart Study Material Organizer",
             techStack: ["AWS", "Textract", "Lambda", "Python"],
             highlight: "95% Accuracy",
+            projectLink: "https://github.com/Arnavpratap2004/Study-Mate",
         },
         {
             title: "CAD-RAG Framework",
@@ -29,6 +31,7 @@ export function Projects() {
             imageAlt: "CAD-RAG Framework",
             techStack: ["Python", "NLP", "RAG", "Research"],
             highlight: "IIT Research",
+            projectLink: "https://github.com/Arnavpratap2004/HateSpeech_using_CAD-RAG",
         },
         {
             title: "Real-time Auction Platform",
@@ -37,6 +40,7 @@ export function Projects() {
             imageAlt: "Real-time Auction Platform",
             techStack: ["React", "WebSocket", "Node.js", "MongoDB"],
             highlight: "200+ Concurrent Users",
+            projectLink: "https://github.com/Arnavpratap2004/Auction-Platform",
         },
     ];
 
@@ -67,6 +71,7 @@ export function Projects() {
                                 imageAlt={project.imageAlt}
                                 techStack={project.techStack}
                                 highlight={project.highlight}
+                                projectLink={project.projectLink}
                                 className={cn(
                                     // Stagger animation delay
                                     index === 0 && "md:delay-0",
