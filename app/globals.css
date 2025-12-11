@@ -141,15 +141,44 @@
     @apply bg-background text-foreground;
   }
 
-  /* Performance optimizations */
+  /* Performance optimizations for 120Hz smoothness */
   html {
     scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   /* GPU acceleration for animated elements */
   canvas {
     will-change: transform;
     transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  /* GPU acceleration for sections with heavy animations */
+  section {
+    will-change: transform;
+    transform: translateZ(0);
+  }
+
+  /* Optimize cards and interactive elements */
+  [class*="card"],
+  [class*="Card"] {
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
+  /* Hardware acceleration for motion elements */
+  [class*="motion"],
+  [class*="animate"] {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+  }
+
+  /* Content visibility for off-screen optimization */
+  .lazy-section {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 500px;
   }
 
   /* Reduce animations for users who prefer reduced motion */

@@ -22,7 +22,7 @@ interface VortexProps {
 export const Vortex = (props: VortexProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
-    const particleCount = props.particleCount || 150;
+    const particleCount = props.particleCount || 100;
     const particlePropCount = 9;
     const particlePropsLength = particleCount * particlePropCount;
     const rangeY = props.rangeY || 100;
@@ -111,8 +111,8 @@ export const Vortex = (props: VortexProps) => {
 
         drawParticles(ctx);
 
-        // Only render glow every 3 frames for better scroll performance
-        if (tick % 3 === 0) {
+        // Only render glow every 4 frames for 120Hz smoothness
+        if (tick % 4 === 0) {
             renderGlow(canvas, ctx);
             renderToScreen(canvas, ctx);
         }

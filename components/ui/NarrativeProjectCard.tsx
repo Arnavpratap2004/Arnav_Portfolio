@@ -62,23 +62,45 @@ export const NarrativeProjectCard = ({
         return () => observer.disconnect();
     }, []);
 
-    // Magnetic button effect
+    // RAF reference for throttling
+    const rafRef = useRef<number | null>(null);
+
+    // Magnetic button effect - throttled with requestAnimationFrame for 120Hz smoothness
     const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
         if (!cardRef.current) return;
 
-        const rect = cardRef.current.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        // Cancel any pending animation frame to prevent buildup
+        if (rafRef.current) {
+            cancelAnimationFrame(rafRef.current);
+        }
 
-        setMousePosition({ x, y });
+        // Schedule the update on the next animation frame
+        rafRef.current = requestAnimationFrame(() => {
+            if (!cardRef.current) return;
 
-        // Calculate tilt based on mouse position
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const rotateX = (y - centerY) / 20;
-        const rotateY = (centerX - x) / 20;
+            const rect = cardRef.current.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
 
-        setCursorPosition({ x: rotateY, y: rotateX });
+            setMousePosition({ x, y });
+
+            // Calculate tilt based on mouse position
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = (y - centerY) / 20;
+            const rotateY = (centerX - x) / 20;
+
+            setCursorPosition({ x: rotateY, y: rotateX });
+        });
+    }, []);
+
+    // Cleanup RAF on unmount
+    useEffect(() => {
+        return () => {
+            if (rafRef.current) {
+                cancelAnimationFrame(rafRef.current);
+            }
+        };
     }, []);
 
     const handleMouseEnter = () => {

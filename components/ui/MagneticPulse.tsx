@@ -68,7 +68,7 @@ export const MagneticPulse = ({ className, children }: MagneticPulseProps) => {
         }
 
         const particles: AttractedParticle[] = [];
-        const particleCount = 15; // Reduced for better scroll performance
+        const particleCount = 10; // Reduced for 120Hz smoothness
 
         const initParticles = (width: number, height: number) => {
             particles.length = 0;
@@ -215,9 +215,9 @@ export const MagneticPulse = ({ className, children }: MagneticPulseProps) => {
 
             // Draw and update attracted particles
             particles.forEach((particle) => {
-                // Store trail (reduced length for performance)
+                // Store trail (reduced length for 120Hz smoothness)
                 particle.trail.push({ x: particle.x, y: particle.y });
-                if (particle.trail.length > 8) {
+                if (particle.trail.length > 5) {
                     particle.trail.shift();
                 }
 

@@ -192,8 +192,8 @@ const SkillItem = ({ skill, skillIndex, categoryIndex, isRevealed }: SkillItemPr
     const [ripplePosition, setRipplePosition] = useState({ x: 0, y: 0 });
     const itemRef = useRef<HTMLDivElement>(null);
 
-    // Skill experience data (simulated - you can customize these)
-    const skillData: Record<string, { experience: string; projects: number }> = {
+    // Skill experience data - memoized for 120Hz performance
+    const skillData = React.useMemo<Record<string, { experience: string; projects: number }>>(() => ({
         "C++": { experience: "3 yrs", projects: 5 },
         "Python": { experience: "4 yrs", projects: 8 },
         "Java": { experience: "2 yrs", projects: 3 },
@@ -208,7 +208,7 @@ const SkillItem = ({ skill, skillIndex, categoryIndex, isRevealed }: SkillItemPr
         "TensorFlow": { experience: "1 yr", projects: 2 },
         "PyTorch": { experience: "1 yr", projects: 2 },
         "Git": { experience: "4 yrs", projects: 15 },
-    };
+    }), []);
 
     const data = skillData[skill.name] || { experience: "1+ yr", projects: 2 };
 

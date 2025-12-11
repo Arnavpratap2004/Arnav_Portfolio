@@ -48,7 +48,7 @@ export const FloatingBubbles = ({ className, children }: FloatingBubblesProps) =
         }
 
         const bubbles: Bubble[] = [];
-        const bubbleCount = 25;
+        const bubbleCount = 18;
         const width = window.innerWidth;
         const height = canvas.parentElement?.offsetHeight || window.innerHeight;
 
@@ -81,7 +81,7 @@ export const FloatingBubbles = ({ className, children }: FloatingBubblesProps) =
         }
 
         const sparkles: Sparkle[] = [];
-        const sparkleCount = 40;
+        const sparkleCount = 25;
 
         for (let i = 0; i < sparkleCount; i++) {
             sparkles.push({

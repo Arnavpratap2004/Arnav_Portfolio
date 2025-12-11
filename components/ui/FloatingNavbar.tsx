@@ -55,14 +55,21 @@ export const FloatingNav = ({
             }
         });
 
-        // Handle scroll to top for "Home"
+        // Handle scroll to top for "Home" - throttled for 120Hz smoothness
+        let scrollThrottled = false;
         const handleScroll = () => {
-            if (window.scrollY < 100) {
-                setActiveSection("/");
-            }
+            if (scrollThrottled) return;
+            scrollThrottled = true;
+
+            requestAnimationFrame(() => {
+                if (window.scrollY < 100) {
+                    setActiveSection("/");
+                }
+                scrollThrottled = false;
+            });
         };
 
-        window.addEventListener("scroll", handleScroll);
+        window.addEventListener("scroll", handleScroll, { passive: true });
 
         return () => {
             observer.disconnect();
@@ -102,7 +109,7 @@ export const FloatingNav = ({
                     duration: 0.2,
                 }}
                 className={cn(
-                    "flex max-w-fit  fixed top-10 inset-x-0 mx-auto border border-white/[0.2] rounded-full bg-black/50 backdrop-blur-md shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] z-[5000] pr-2 pl-8 py-2  items-center justify-center space-x-4",
+                    "flex max-w-fit fixed top-10 inset-x-0 mx-auto border border-white/[0.2] rounded-full bg-black/50 backdrop-blur-md shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] z-[5000] px-2 sm:pl-8 sm:pr-2 py-2 items-center justify-center space-x-1 sm:space-x-4",
                     className
                 )}
             >
@@ -113,7 +120,7 @@ export const FloatingNav = ({
                             key={`link=${idx}`}
                             href={navItem.link}
                             className={cn(
-                                "relative items-center flex space-x-1 px-4 py-2 transition-colors duration-200",
+                                "relative items-center flex space-x-1 px-2 sm:px-4 py-2 transition-colors duration-200",
                                 isActive
                                     ? "text-white"
                                     : "text-neutral-400 hover:text-neutral-200"
@@ -130,7 +137,10 @@ export const FloatingNav = ({
                                     </span>
                                 </motion.span>
                             )}
-                            <span className="relative z-10 block sm:hidden">{navItem.icon}</span>
+                            {/* Show icon on mobile if available, otherwise show shortened text */}
+                            <span className="relative z-10 block sm:hidden">
+                                {navItem.icon || <span className="text-xs font-medium">{navItem.name.slice(0, 3)}</span>}
+                            </span>
                             <span className="relative z-10 hidden sm:block text-sm font-medium tracking-tight">{navItem.name}</span>
                         </Link>
                     );
@@ -139,7 +149,7 @@ export const FloatingNav = ({
                     href="https://drive.google.com/file/d/1vmWpALCPCccujC0YsqJK0LZgpsu9aFDi/view?usp=sharing"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group relative text-sm font-medium px-5 py-2.5 rounded-full transition-all duration-300 ease-out hover:scale-[1.03] active:scale-[0.98]"
+                    className="group relative text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full transition-all duration-300 ease-out hover:scale-[1.03] active:scale-[0.98]"
                     title="View my updated resume"
                 >
                     {/* Gradient border background */}
@@ -152,10 +162,11 @@ export const FloatingNav = ({
                     <span className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-pink-500/30" />
 
                     {/* Content */}
-                    <span className="relative z-10 flex items-center gap-1.5 text-white">
-                        <span>View Resume</span>
+                    <span className="relative z-10 flex items-center gap-1 sm:gap-1.5 text-white whitespace-nowrap">
+                        <span className="hidden sm:inline">View Resume</span>
+                        <span className="sm:hidden">Resume</span>
                         <svg
-                            className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                            className="w-3 h-3 sm:w-3.5 sm:h-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
