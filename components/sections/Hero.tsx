@@ -221,13 +221,13 @@ export function Hero() {
 
                                     {/* Photo container */}
                                     <div className="relative w-72 h-72 md:w-80 md:h-80 rounded-full overflow-hidden border-2 border-white/20">
-                                        {/* Placeholder - Replace with actual photo */}
-                                        <div className="w-full h-full bg-gradient-to-br from-neutral-800 to-neutral-900 flex items-center justify-center">
-                                            <div className="text-center">
-                                                <div className="text-6xl mb-2">👨‍💻</div>
-                                                <span className="text-neutral-400 text-sm">Your Photo</span>
-                                            </div>
-                                        </div>
+                                        <Image
+                                            src="/profile-photo.png"
+                                            alt="Arnav Pratap"
+                                            fill
+                                            className="object-cover"
+                                            priority
+                                        />
 
                                         {/* Gradient overlay on hover */}
                                         <div className={cn(
