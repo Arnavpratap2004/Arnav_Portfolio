@@ -1,36 +1,186 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<p align="center">
+  <img src="public/favicon-192.png" alt="Arnav Pratap Logo" width="100" height="100"/>
+</p>
 
-## Getting Started
+<h1 align="center">Arnav Pratap — Portfolio</h1>
 
-First, run the development server:
+<p align="center">
+  <strong>A premium, minimal, 120Hz-smooth personal portfolio showcasing my work, skills, and projects.</strong>
+</p>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+<p align="center">
+  <a href="#features">Features</a> •
+  <a href="#tech-stack">Tech Stack</a> •
+  <a href="#sections">Sections</a> •
+  <a href="#run-locally">Run Locally</a> •
+  <a href="#contact">Contact</a>
+</p>
+
+---
+
+## 👋 About Me
+
+I'm **Arnav Pratap** — a **Full Stack Developer**, **AI/ML Explorer**, and **UI/UX Enthusiast** passionate about crafting elegant solutions and building impactful digital experiences. This portfolio represents my work, achievements, and personality through a clean, premium dark UI.
+
+---
+
+## 🔥 Website Preview
+
+<p align="center">
+  <img src="public/hero-bg.jpg" alt="Portfolio Hero Preview" width="100%" style="border-radius: 12px;" />
+</p>
+
+---
+
+## ✨ Features
+
+| Feature | Description |
+|---------|-------------|
+| 🎨 **Premium Dark UI** | Minimal, elegant dark theme with gradient accents |
+| 🚀 **120Hz-Smooth Animations** | GPU-accelerated transitions with Framer Motion |
+| 🌀 **Custom Background Effects** | Vortex particles, Aurora background, Floating bubbles |
+| 🖱️ **Interactive Elements** | Magnetic hover effects, cursor-responsive glows |
+| 📱 **Fully Responsive** | Optimized for all screen sizes |
+| ⚡ **Performance Optimized** | Lazy loading, debounced events, minimal re-renders |
+| 🎯 **Floating Navigation** | Smart navbar with active section detection |
+| ✨ **Micro-Animations** | Breathing effects, skill loops, staggered reveals |
+
+---
+
+## 📂 Sections
+
+| Section | Highlights |
+|---------|------------|
+| **Hero** | Animated intro with skill rotation, profile photo with cursor glow |
+| **About (Technical Arsenal)** | Interactive skill grid with 25+ technologies |
+| **Experience** | Timeline with animated reveals |
+| **Projects** | Narrative project cards with hover effects |
+| **Contact** | Social links and connection options |
+
+---
+
+## 🛠️ Tech Stack
+
+### Core
+- **Next.js 16** — React framework with App Router
+- **React 19** — Latest React with concurrent features
+- **TypeScript** — Type-safe development
+
+### Styling & Animation
+- **Tailwind CSS** — Utility-first styling
+- **Framer Motion** — Production-ready motion library
+- **Lenis** — Smooth scroll library
+
+### UI Components (25+ Custom)
+```
+├── Vortex              — Particle background animation
+├── Aurora Background   — Gradient aurora effect
+├── Floating Bubbles    — Interactive bubble animation
+├── Magnetic Pulse      — Magnetic hover effects
+├── Tracing Beam        — Scroll progress indicator
+├── Narrative Cards     — Project showcase cards
+├── HyperText           — Scramble text effect
+├── Animated Skill Grid — Interactive technology grid
+├── And many more...
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Additional Libraries
+- **tsParticles** — Particle system
+- **Lucide React** — Icon library
+- **Tabler Icons** — Additional icons
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🚀 Run Locally
 
-## Learn More
+```bash
+# Clone the repository
+git clone https://github.com/Arnavpratap2004/portfolio.git
 
-To learn more about Next.js, take a look at the following resources:
+# Navigate to the project
+cd portfolio
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Install dependencies
+npm install
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Start development server
+npm run dev
+```
 
-## Deploy on Vercel
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Build for Production
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run build
+npm run start
+```
+
+---
+
+## 🧪 Performance Optimizations
+
+- ✅ **Lazy-loaded components** — Reduced initial bundle size
+- ✅ **GPU-accelerated animations** — `transform: translateZ(0)` for smooth renders
+- ✅ **Debounced scroll events** — Optimized event handlers
+- ✅ **Optimized particle counts** — Balanced visual appeal and performance
+- ✅ **Will-change hints** — Browser compositor layer hints
+- ✅ **Image optimization** — Next.js automatic image optimization
+
+---
+
+## 📸 Project Highlights
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="public/mess-feedback.jpg" width="300px" alt="Mess Feedback System" /><br />
+      <strong>Mess Feedback System</strong><br />
+      <em>500+ Daily Users</em>
+    </td>
+    <td align="center">
+      <img src="public/smart-study-organizer.jpg" width="300px" alt="Smart Study Organizer" /><br />
+      <strong>Smart Study Organizer</strong><br />
+      <em>AWS-Powered AI</em>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="public/cad-rag-framework.jpg" width="300px" alt="CAD-RAG Framework" /><br />
+      <strong>CAD-RAG Framework</strong><br />
+      <em>IIT Research Project</em>
+    </td>
+    <td align="center">
+      <img src="public/auction-platform.jpg" width="300px" alt="Auction Platform" /><br />
+      <strong>Real-time Auction Platform</strong><br />
+      <em>200+ Concurrent Users</em>
+    </td>
+  </tr>
+</table>
+
+---
+
+## 📬 Contact
+
+<p align="center">
+  <a href="https://github.com/Arnavpratap2004"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" /></a>
+  <a href="https://linkedin.com/in/arnavpratap2004"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" /></a>
+</p>
+
+---
+
+## 🙌 Acknowledgements
+
+- Design inspiration from **Dribbble**, **Behance**, and premium dark UI concepts
+- UI components inspired by **Aceternity UI** patterns
+- Icon libraries: **Lucide**, **Tabler Icons**, **Devicons**
+
+---
+
+<p align="center">
+  <strong>⭐ Star this repo if you find it inspiring!</strong>
+</p>
+
+<p align="center">
+  Made with 💜 by <strong>Arnav Pratap</strong>
+</p>
