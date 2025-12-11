@@ -9,6 +9,10 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Arnav's Portfolio",
   description: "Modern Portfolio built with Next.js",
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/favicon-192.png',
+  },
 };
 
 export default function RootLayout({

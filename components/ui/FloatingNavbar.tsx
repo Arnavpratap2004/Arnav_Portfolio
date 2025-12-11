@@ -95,7 +95,7 @@ export const FloatingNav = ({
     });
 
     return (
-        <AnimatePresence mode="wait">
+        <AnimatePresence>
             <motion.div
                 initial={{
                     opacity: 1,
