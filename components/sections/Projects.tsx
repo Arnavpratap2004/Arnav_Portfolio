@@ -56,7 +56,7 @@ export function Projects() {
             imageAlt: "StockSense Inventory Management System",
             techStack: ["Next.js", "Tailwind CSS", "PostgreSQL", "Prisma"],
             highlight: "Full-Stack App",
-            projectLink: "https://github.com/Arnavpratap2004",
+            projectLink: "https://github.com/Arnavpratap2004/StockSense",
         },
         {
             title: "Homelia — E-Commerce Platform",
@@ -66,7 +66,7 @@ export function Projects() {
             imageAlt: "Homelia E-Commerce Platform",
             techStack: ["React", "Prisma", "Node.js", "Tailwind CSS"],
             highlight: "Full E2E Tested",
-            projectLink: "https://github.com/Arnavpratap2004",
+            projectLink: "https://github.com/Arnavpratap2004/Homelia",
         },
         {
             title: "Nodebase — Workflow Automation",
@@ -77,7 +77,7 @@ export function Projects() {
             techStack: ["Next.js", "AWS EC2", "Aurora", "Better Auth"],
             highlight: "Enterprise SaaS",
             badge: "AWS Deployed",
-            projectLink: "https://github.com/Arnavpratap2004",
+            projectLink: "https://github.com/Arnavpratap2004/Nodebase",
         },
     ];
 

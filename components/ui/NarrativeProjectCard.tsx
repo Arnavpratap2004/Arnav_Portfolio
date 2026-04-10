@@ -211,7 +211,7 @@ export const NarrativeProjectCard = ({
                                 {highlight}
                             </div>
                             <div className="text-sm text-neutral-300">
-                                Click to explore
+                                View on GitHub →
                             </div>
                         </div>
                     </div>
