@@ -55,21 +55,21 @@ export function Experience() {
     ];
 
     return (
-        <section className="py-20 w-screen relative overflow-hidden -mx-[calc((100vw-100%)/2)]">
+        <section className="py-12 md:py-20 w-full relative overflow-hidden">
             <TimelineStyles />
 
-            {/* Animated Background - Full viewport width */}
-            <div className="absolute inset-0 w-screen bg-gradient-to-b from-neutral-950 via-neutral-900 to-neutral-950" />
-            <GridBackground className="absolute inset-0 w-screen h-full" />
+            {/* Animated Background */}
+            <div className="absolute inset-0 bg-gradient-to-b from-neutral-950 via-neutral-900 to-neutral-950" />
+            <GridBackground className="absolute inset-0 h-full" />
 
             {/* Content */}
             <div className="relative z-10">
-                <div className="text-center mb-16">
-                    <h2 className="text-4xl font-bold text-white tracking-tight mb-4">
+                <div className="text-center mb-10 md:mb-16 px-4">
+                    <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-3 md:mb-4">
                         Experience & Education
                     </h2>
-                    <p className="text-neutral-400 max-w-lg mx-auto">
-                        Scroll through my journey • Hover to explore achievements
+                    <p className="text-neutral-400 max-w-lg mx-auto text-sm md:text-base">
+                        Scroll through my journey
                     </p>
                 </div>
 

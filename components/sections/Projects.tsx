@@ -82,23 +82,23 @@ export function Projects() {
     ];
 
     return (
-        <section className="py-32 w-screen relative overflow-hidden -mx-[calc((100vw-100%)/2)]">
-            {/* Animated Background - Full viewport width */}
-            <div className="absolute inset-0 w-screen bg-gradient-to-b from-neutral-950 via-neutral-900 to-neutral-950" />
-            <FloatingBubbles className="absolute inset-0 w-screen h-full" />
+        <section className="py-16 md:py-32 w-full relative overflow-hidden">
+            {/* Animated Background */}
+            <div className="absolute inset-0 bg-gradient-to-b from-neutral-950 via-neutral-900 to-neutral-950" />
+            <FloatingBubbles className="absolute inset-0 h-full" />
 
             {/* Content */}
             <div className="relative z-10">
-                <div className="text-center mb-16">
-                    <h2 className="text-4xl font-bold text-white tracking-tight mb-4">Selected Projects</h2>
-                    <p className="text-neutral-400 max-w-lg mx-auto">
+                <div className="text-center mb-10 md:mb-16 px-4">
+                    <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-3 md:mb-4">Selected Projects</h2>
+                    <p className="text-neutral-400 max-w-lg mx-auto text-sm md:text-base">
                         From research frameworks to production systems — each project solves a real problem
                     </p>
                 </div>
 
                 {/* Project Grid with Narrative Cards */}
                 <div className="max-w-6xl mx-auto px-4">
-                    <div className="grid md:grid-cols-2 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                         {projects.map((project, index) => (
                             <NarrativeProjectCard
                                 key={index}

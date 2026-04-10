@@ -34,6 +34,12 @@ export const NarrativeProjectCard = ({
     const [showHighlight, setShowHighlight] = useState(false);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+    const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+    // Detect touch device
+    useEffect(() => {
+        setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    }, []);
 
     // Progressive discovery layers
     const [layer1Visible, setLayer1Visible] = useState(false);
@@ -126,7 +132,7 @@ export const NarrativeProjectCard = ({
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             style={{
-                transform: isHovered
+                transform: isHovered && !isTouchDevice
                     ? `perspective(1000px) rotateX(${cursorPosition.y}deg) rotateY(${cursorPosition.x}deg) scale(1.02)`
                     : "perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)",
                 transition: "transform 0.3s ease-out",
@@ -177,7 +183,7 @@ export const NarrativeProjectCard = ({
 
                 {/* Image with Reveal Effect */}
                 <div className={cn(
-                    "relative h-48 overflow-hidden",
+                    "relative h-40 sm:h-48 overflow-hidden",
                     "transition-all duration-700",
                     isVisible ? "opacity-100" : "opacity-0"
                 )}>
@@ -218,10 +224,10 @@ export const NarrativeProjectCard = ({
                 </div>
 
                 {/* Content Area */}
-                <div className="p-6 space-y-4">
+                <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
                     {/* Layer 1: Title */}
                     <h3 className={cn(
-                        "text-xl font-bold text-white",
+                        "text-lg sm:text-xl font-bold text-white",
                         "transition-all duration-500",
                         layer1Visible
                             ? "opacity-100 translate-y-0"
@@ -264,7 +270,7 @@ export const NarrativeProjectCard = ({
                             ? "opacity-100 translate-y-0"
                             : "opacity-0 translate-y-4"
                     )}>
-                        <p className="text-neutral-400 text-sm leading-relaxed">
+                        <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed">
                             {description}
                         </p>
                     </div>
@@ -282,7 +288,7 @@ export const NarrativeProjectCard = ({
                             target="_blank"
                             rel="noopener noreferrer"
                             className={cn(
-                                "inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-semibold",
+                                "inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold",
                                 "bg-gradient-to-r from-teal-600 to-cyan-600 text-white",
                                 "overflow-hidden group/btn",
                                 "transition-all duration-300",

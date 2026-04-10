@@ -110,7 +110,7 @@ export function Hero() {
 
                 {/* Main Content — centered, no Vortex wrapper to prevent clipping */}
                 <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
-                    <div className="relative z-20 max-w-7xl w-full mx-auto px-6 md:px-10 flex flex-col md:flex-row items-center justify-between gap-8 pointer-events-auto">
+                    <div className="relative z-20 max-w-7xl w-full mx-auto px-4 sm:px-6 md:px-10 flex flex-col-reverse md:flex-row items-center justify-between gap-6 md:gap-8 pointer-events-auto">
 
                         {/* Left Side Vertical Accent Line */}
                         <motion.div
@@ -147,7 +147,7 @@ export function Hero() {
                             >
                                 <HyperText
                                     text="Arnav Pratap"
-                                    className="text-4xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight drop-shadow-lg"
+                                    className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight drop-shadow-lg"
                                 />
                             </motion.div>
 
@@ -171,7 +171,7 @@ export function Hero() {
                                 <span className="text-neutral-500 mr-2 font-mono">{">"}</span>
                                 <span
                                     className={cn(
-                                        "text-xl md:text-2xl font-medium bg-gradient-to-r from-teal-400 via-cyan-300 to-purple-400 bg-clip-text text-transparent transition-all duration-150",
+                                        "text-lg sm:text-xl md:text-2xl font-medium bg-gradient-to-r from-teal-400 via-cyan-300 to-purple-400 bg-clip-text text-transparent transition-all duration-150",
                                         isSkillVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
                                     )}
                                 >
@@ -313,14 +313,14 @@ export function Hero() {
                                 )}
 
                                 {/* Photo */}
-                                <div className="relative w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 rounded-full overflow-hidden border-2 border-white/20">
+                                <div className="relative w-36 h-36 sm:w-48 sm:h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 xl:w-72 xl:h-72 rounded-full overflow-hidden border-2 border-white/20">
                                     <Image
                                         src="/profile-photo.webp"
                                         alt="Arnav Pratap – Full-Stack & AI Engineer"
                                         fill
                                         className="object-cover"
                                         priority
-                                        sizes="(max-width: 640px) 192px, (max-width: 768px) 224px, (max-width: 1024px) 256px, 288px"
+                                        sizes="(max-width: 640px) 144px, (max-width: 768px) 192px, (max-width: 1024px) 224px, 288px"
                                     />
                                     <div className={cn(
                                         "absolute inset-0 bg-gradient-to-t from-teal-500/20 to-transparent transition-opacity duration-300",
@@ -334,7 +334,7 @@ export function Hero() {
 
                 {/* Scroll Hint */}
                 <motion.div
-                    className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 pointer-events-auto"
+                    className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 z-20 hidden sm:flex flex-col items-center gap-2 pointer-events-auto"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1.2 }}

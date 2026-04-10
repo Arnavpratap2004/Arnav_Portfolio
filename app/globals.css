@@ -146,12 +146,14 @@
 
   body {
     @apply bg-background text-foreground;
+    overflow-x: hidden;
   }
 
-  /* Performance optimizations for 120Hz smoothness */
+  /* Prevent horizontal overflow from any rogue element */
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
 
   /* GPU acceleration for animated elements */
@@ -196,6 +198,29 @@
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Touch-friendly horizontal scroll containers */
+  .overflow-x-auto,
+  .overflow-x-scroll {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+  }
+  .overflow-x-auto::-webkit-scrollbar,
+  .overflow-x-scroll::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+
+  /* Reduce GPU cost on mobile for will-change */
+  @media (max-width: 768px) {
+    section {
+      will-change: auto;
+    }
+    [class*="card"],
+    [class*="Card"] {
+      will-change: auto;
+      backface-visibility: visible;
     }
   }
 }

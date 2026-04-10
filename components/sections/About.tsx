@@ -79,7 +79,7 @@ export function About() {
     ];
 
     return (
-        <AuroraBackground className="h-auto min-h-screen py-20 w-screen relative left-1/2 -ml-[50vw]">
+        <AuroraBackground className="h-auto min-h-screen py-12 md:py-20 w-full relative">
             <SkillGridStyles />
             <div className="relative z-10 w-full max-w-6xl mx-auto px-4">
 
@@ -91,9 +91,9 @@ export function About() {
                     transition={{ type: "spring", stiffness: 100, damping: 20 }}
                     className="mb-20"
                 >
-                    <div className="grid md:grid-cols-5 gap-10 items-center">
+                    <div className="grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-10 items-center">
                         {/* Left - Story */}
-                        <div className="md:col-span-3 space-y-5">
+                        <div className="md:col-span-3 space-y-4 md:space-y-5">
                             <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
                                 About Me
                             </h2>
@@ -126,9 +126,9 @@ export function About() {
                                         whileInView={{ opacity: 1, scale: 1 }}
                                         viewport={{ once: true }}
                                         transition={{ delay: 0.1 + i * 0.1, type: "spring", stiffness: 150, damping: 15 }}
-                                        className="relative p-5 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm text-center group hover:border-teal-500/30 hover:bg-white/10 transition-all duration-300"
+                                        className="relative p-4 md:p-5 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm text-center group hover:border-teal-500/30 hover:bg-white/10 transition-all duration-300"
                                     >
-                                        <div className="text-3xl md:text-4xl font-bold bg-gradient-to-br from-teal-400 to-cyan-300 bg-clip-text text-transparent">
+                                        <div className="text-2xl md:text-4xl font-bold bg-gradient-to-br from-teal-400 to-cyan-300 bg-clip-text text-transparent">
                                             {stat.value}{stat.suffix}
                                         </div>
                                         <div className="text-xs text-neutral-400 mt-1 font-medium tracking-wide uppercase">
@@ -142,10 +142,10 @@ export function About() {
                 </motion.div>
 
                 {/* Skills Section */}
-                <div className="text-center mb-12">
-                    <h2 className="text-4xl font-bold text-white tracking-tight mb-4">Technical Arsenal</h2>
-                    <p className="text-neutral-400 max-w-lg mx-auto">
-                        Hover to explore • Click to discover • My tools of the trade
+                <div className="text-center mb-8 md:mb-12">
+                    <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-3 md:mb-4">Technical Arsenal</h2>
+                    <p className="text-neutral-400 max-w-lg mx-auto text-sm md:text-base">
+                        Tap to explore • My tools of the trade
                     </p>
                 </div>
                 <AnimatedSkillGrid categories={skillCategories} />

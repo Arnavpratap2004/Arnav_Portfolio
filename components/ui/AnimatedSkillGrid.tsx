@@ -38,7 +38,7 @@ export const AnimatedSkillGrid = ({ categories, className }: AnimatedSkillGridPr
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.1, margin: "-50px" }}
-            className={cn("grid md:grid-cols-2 lg:grid-cols-3 gap-6", className)}
+            className={cn("grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6", className)}
         >
             {categories.map((category) => (
                 <CategoryCard
@@ -126,7 +126,7 @@ const CategoryCard = ({ category }: CategoryCardProps) => {
             </div>
 
             {/* Skills Grid with Staggered Reveal */}
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-3">
                 {category.skills.map((skill) => (
                     <SkillItem
                         key={skill.name}
@@ -191,9 +191,8 @@ const SkillItem = ({ skill }: { skill: Skill }) => {
             y: e.clientY - rect.top,
         });
         setIsClicked(true);
-        setShowTooltip(true);
+        setShowTooltip(prev => !prev);
 
-        setTimeout(() => setShowTooltip(false), 1500);
         setTimeout(() => setIsClicked(false), 600);
     }, []);
 

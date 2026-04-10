@@ -56,18 +56,18 @@ export function Contact() {
     return (
         <section
             ref={sectionRef}
-            className="py-32 w-screen relative overflow-hidden -mx-[calc((100vw-100%)/2)]"
+            className="py-16 md:py-32 w-full relative overflow-hidden"
         >
-            {/* Animated Background - Full viewport width */}
-            <div className="absolute inset-0 w-screen bg-gradient-to-b from-neutral-950 via-indigo-950/20 to-neutral-950" />
-            <MagneticPulse className="absolute inset-0 w-screen h-full" />
+            {/* Animated Background */}
+            <div className="absolute inset-0 bg-gradient-to-b from-neutral-950 via-indigo-950/20 to-neutral-950" />
+            <MagneticPulse className="absolute inset-0 h-full" />
 
             {/* Content */}
             <div className="relative z-10 max-w-5xl mx-auto px-4">
                 {/* Warm Invitation Animation - Headline */}
                 <div className="text-center mb-16">
                     <h2 className={cn(
-                        "text-4xl font-bold text-white tracking-tight mb-2 transition-all duration-700",
+                        "text-3xl md:text-4xl font-bold text-white tracking-tight mb-2 transition-all duration-700",
                         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                     )}>
                         Get in Touch
@@ -90,7 +90,7 @@ export function Contact() {
                     </p>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-12 items-start">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start">
                     {/* Left Side - Contact Info */}
                     <div className={cn(
                         "space-y-8 transition-all duration-700 delay-400",
@@ -191,7 +191,7 @@ export function Contact() {
                                         onFocus={() => setEmailFocused(true)}
                                         onBlur={() => setEmailFocused(false)}
                                         className={cn(
-                                            "peer w-full rounded-xl bg-black/50 text-white p-4 pt-6 transition-all duration-300 outline-none",
+                                            "peer w-full rounded-xl bg-black/50 text-white p-4 pt-6 text-[16px] transition-all duration-300 outline-none",
                                             "border-2",
                                             emailFocused
                                                 ? "border-teal-500 shadow-lg shadow-teal-500/20"
@@ -224,7 +224,7 @@ export function Contact() {
                                         onFocus={() => setMessageFocused(true)}
                                         onBlur={() => setMessageFocused(false)}
                                         className={cn(
-                                            "peer w-full rounded-xl bg-black/50 text-white p-4 pt-6 transition-all duration-300 outline-none resize-none",
+                                            "peer w-full rounded-xl bg-black/50 text-white p-4 pt-6 text-[16px] transition-all duration-300 outline-none resize-none",
                                             "border-2",
                                             messageFocused
                                                 ? "border-teal-500 shadow-lg shadow-teal-500/20"
