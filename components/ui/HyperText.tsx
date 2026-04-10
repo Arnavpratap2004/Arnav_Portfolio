@@ -1,12 +1,11 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, Variants } from "framer-motion";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface HyperTextProps {
     text: string;
     duration?: number;
-    framerProps?: Variants;
     className?: string;
     animateOnLoad?: boolean;
 }
@@ -16,23 +15,14 @@ const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 export function HyperText({
     text,
     duration = 800,
-    framerProps = {
-        initial: { opacity: 0, y: -10 },
-        animate: { opacity: 1, y: 0 },
-        exit: { opacity: 0, y: 3 },
-    },
     className,
     animateOnLoad = true,
 }: HyperTextProps) {
     const [displayText, setDisplayText] = useState(text.split(""));
     const [trigger, setTrigger] = useState(false);
-    const interations = useRef(0);
+    const iterations = useRef(0);
     const isFirstRender = useRef(true);
-
-    const triggerAnimation = () => {
-        interations.current = 0;
-        setTrigger(true);
-    };
+    const rafRef = useRef<number | null>(null);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -41,41 +31,57 @@ export function HyperText({
                 isFirstRender.current = false;
                 return;
             }
-            if (interations.current < text.length) {
+            if (iterations.current < text.length) {
                 setDisplayText((t) =>
                     t.map((l, i) =>
                         l === " "
                             ? l
-                            : i <= interations.current
+                            : i <= iterations.current
                                 ? text[i]
                                 : alphabets[Math.floor(Math.random() * alphabets.length)]
                     )
                 );
-                interations.current = interations.current + 0.1;
+                iterations.current = iterations.current + 0.1;
             } else {
                 setTrigger(false);
                 clearInterval(interval);
             }
         }, duration / (text.length * 10));
-        // Clean up interval on unmount
+
         return () => clearInterval(interval);
     }, [text, duration, trigger, animateOnLoad]);
 
     return (
-        <div
-            className="overflow-hidden py-2 flex cursor-default scale-100"
+        <motion.div
+            className="overflow-hidden py-2 flex cursor-default"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            style={{
+                willChange: "transform",
+                transform: "translateZ(0)",
+                backfaceVisibility: "hidden",
+            }}
         >
-            <AnimatePresence mode="sync">
-                {displayText.map((letter, i) => (
-                    <motion.h1
-                        key={i}
-                        className={cn("font-mono", letter === " " ? "w-3" : "", className)}
-                        {...framerProps}
-                    >
-                        {letter}
-                    </motion.h1>
-                ))}
-            </AnimatePresence>
-        </div>
+            {displayText.map((letter, i) => (
+                <motion.span
+                    key={i}
+                    className={cn("font-mono", letter === " " ? "w-3" : "", className)}
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                        duration: 0.3,
+                        delay: i * 0.02,
+                        ease: "easeOut",
+                    }}
+                    style={{
+                        willChange: "transform, opacity",
+                        transform: "translateZ(0)",
+                    }}
+                >
+                    {letter}
+                </motion.span>
+            ))}
+        </motion.div>
     );
 }

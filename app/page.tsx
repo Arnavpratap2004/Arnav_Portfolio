@@ -3,6 +3,7 @@ import { About } from "@/components/sections/About";
 import { Experience } from "@/components/sections/Experience";
 import { Projects } from "@/components/sections/Projects";
 import { Contact } from "@/components/sections/Contact";
+import { Footer } from "@/components/sections/Footer";
 import { FloatingNav } from "@/components/ui/FloatingNavbar";
 
 export default function Home() {
@@ -15,7 +16,7 @@ export default function Home() {
   ];
 
   return (
-    <main className="min-h-screen bg-black/[0.96] antialiased bg-grid-white/[0.02] relative overflow-x-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+    <main className="min-h-screen bg-[#0A1428] antialiased bg-grid-white/[0.02] relative overflow-x-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
       <FloatingNav navItems={navItems} />
       <Hero />
       <div id="about">
@@ -30,7 +31,7 @@ export default function Home() {
       <div id="contact">
         <Contact />
       </div>
+      <Footer />
     </main>
   );
 }
-

@@ -3,6 +3,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { MagneticPulse } from "@/components/ui/MagneticPulse";
 import { cn } from "@/lib/utils";
 
+const RESUME_URL =
+    "https://drive.google.com/file/d/1vmWpALCPCccujC0YsqJK0LZgpsu9aFDi/view?usp=sharing";
+
 export function Contact() {
     const [isVisible, setIsVisible] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -73,7 +76,7 @@ export function Contact() {
                     {/* Animated underline that grows from center */}
                     <div className="flex justify-center mb-4">
                         <div className={cn(
-                            "h-1 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-all duration-700 delay-200",
+                            "h-1 rounded-full bg-gradient-to-r from-teal-500 via-cyan-400 to-teal-500 transition-all duration-700 delay-200",
                             isVisible ? "w-24 opacity-100" : "w-0 opacity-0"
                         )} />
                     </div>
@@ -83,7 +86,7 @@ export function Contact() {
                         "text-neutral-400 max-w-lg mx-auto transition-all duration-700 delay-300",
                         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                     )}>
-                        Let's create something amazing together
+                        Let&apos;s create something amazing together
                     </p>
                 </div>
 
@@ -93,10 +96,24 @@ export function Contact() {
                         "space-y-8 transition-all duration-700 delay-400",
                         isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"
                     )}>
-                        <h3 className="text-2xl font-semibold text-white">Let's collaborate</h3>
+                        <h3 className="text-2xl font-semibold text-white">Let&apos;s collaborate</h3>
                         <p className="text-neutral-400 leading-relaxed">
-                            I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions.
+                            I&apos;m always open to discussing new projects, creative ideas, or opportunities to be part of your visions.
                         </p>
+
+                        {/* Availability Statement */}
+                        <div className="p-4 rounded-xl border border-teal-500/20 bg-teal-500/5 backdrop-blur-sm">
+                            <div className="flex items-center gap-2 mb-2">
+                                <span className="relative flex h-2.5 w-2.5">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+                                </span>
+                                <span className="text-sm font-semibold text-emerald-400">Currently Available</span>
+                            </div>
+                            <p className="text-sm text-neutral-300">
+                                Open to internships &amp; full-time roles in <span className="text-white font-medium">Full-Stack</span>, <span className="text-white font-medium">AI/ML</span>, or <span className="text-white font-medium">Product Engineering</span> — graduating 2027.
+                            </p>
+                        </div>
 
                         <div className="space-y-4">
                             {/* Email with Presence Pulse */}
@@ -134,12 +151,32 @@ export function Contact() {
                                     </svg>
                                 </SocialIcon>
                             </div>
+
+                            {/* Resume Download Button */}
+                            <div className="pt-4">
+                                <a
+                                    href={RESUME_URL}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={cn(
+                                        "inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold",
+                                        "border border-white/20 text-white bg-white/5 backdrop-blur-sm",
+                                        "hover:border-teal-500/50 hover:bg-white/10 transition-all duration-300",
+                                        "hover:scale-105"
+                                    )}
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    Download Resume (PDF)
+                                </a>
+                            </div>
                         </div>
                     </div>
 
                     {/* Right Side - Form with Interactive Animations */}
                     <div className={cn(
-                        "relative p-[2px] rounded-3xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-all duration-700 delay-500",
+                        "relative p-[2px] rounded-3xl bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-400 transition-all duration-700 delay-500",
                         isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
                     )}>
                         <div className="bg-neutral-900/95 rounded-3xl p-8 h-full backdrop-blur-md">
@@ -148,7 +185,7 @@ export function Contact() {
                                 <div className="relative">
                                     <input
                                         type="email"
-                                        id="email"
+                                        id="contact-email"
                                         value={emailValue}
                                         onChange={(e) => setEmailValue(e.target.value)}
                                         onFocus={() => setEmailFocused(true)}
@@ -157,7 +194,7 @@ export function Contact() {
                                             "peer w-full rounded-xl bg-black/50 text-white p-4 pt-6 transition-all duration-300 outline-none",
                                             "border-2",
                                             emailFocused
-                                                ? "border-indigo-500 shadow-lg shadow-indigo-500/20"
+                                                ? "border-teal-500 shadow-lg shadow-teal-500/20"
                                                 : "border-neutral-700 hover:border-neutral-600"
                                         )}
                                         placeholder=" "
@@ -165,11 +202,11 @@ export function Contact() {
                                     />
                                     {/* Floating Label */}
                                     <label
-                                        htmlFor="email"
+                                        htmlFor="contact-email"
                                         className={cn(
                                             "absolute left-4 transition-all duration-300 pointer-events-none",
                                             emailFocused || emailValue
-                                                ? "top-2 text-xs text-indigo-400"
+                                                ? "top-2 text-xs text-teal-400"
                                                 : "top-5 text-sm text-neutral-400"
                                         )}
                                     >
@@ -180,7 +217,7 @@ export function Contact() {
                                 {/* Message Field with Floating Label */}
                                 <div className="relative">
                                     <textarea
-                                        id="message"
+                                        id="contact-message"
                                         rows={4}
                                         value={messageValue}
                                         onChange={(e) => setMessageValue(e.target.value)}
@@ -190,7 +227,7 @@ export function Contact() {
                                             "peer w-full rounded-xl bg-black/50 text-white p-4 pt-6 transition-all duration-300 outline-none resize-none",
                                             "border-2",
                                             messageFocused
-                                                ? "border-indigo-500 shadow-lg shadow-indigo-500/20"
+                                                ? "border-teal-500 shadow-lg shadow-teal-500/20"
                                                 : "border-neutral-700 hover:border-neutral-600"
                                         )}
                                         placeholder=" "
@@ -198,11 +235,11 @@ export function Contact() {
                                     />
                                     {/* Floating Label */}
                                     <label
-                                        htmlFor="message"
+                                        htmlFor="contact-message"
                                         className={cn(
                                             "absolute left-4 transition-all duration-300 pointer-events-none",
                                             messageFocused || messageValue
-                                                ? "top-2 text-xs text-indigo-400"
+                                                ? "top-2 text-xs text-teal-400"
                                                 : "top-5 text-sm text-neutral-400"
                                         )}
                                     >
@@ -218,8 +255,8 @@ export function Contact() {
                                         "relative w-full py-4 px-6 rounded-full font-bold transition-all duration-300 overflow-hidden",
                                         isSubmitted
                                             ? "bg-green-500 text-white"
-                                            : "bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white",
-                                        !isSubmitting && !isSubmitted && "hover:shadow-lg hover:shadow-purple-500/30 hover:scale-[1.02]",
+                                            : "bg-gradient-to-r from-teal-600 via-cyan-600 to-teal-500 text-white",
+                                        !isSubmitting && !isSubmitted && "hover:shadow-lg hover:shadow-teal-500/30 hover:scale-[1.02]",
                                         isSubmitting && "scale-[0.98]"
                                     )}
                                 >
@@ -249,7 +286,7 @@ export function Contact() {
 
                                     {/* Hover Gradient */}
                                     <div className={cn(
-                                        "absolute inset-0 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-opacity",
+                                        "absolute inset-0 bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-400 transition-opacity",
                                         isSubmitted ? "opacity-0" : "opacity-0 hover:opacity-100"
                                     )} />
                                 </button>
@@ -276,8 +313,8 @@ export function Contact() {
                     animation: fade-in 0.3s ease-out forwards;
                 }
                 @keyframes gentle-pulse {
-                    0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
-                    50% { transform: scale(1.02); box-shadow: 0 0 20px 2px rgba(139, 92, 246, 0.3); }
+                    0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 245, 212, 0); }
+                    50% { transform: scale(1.02); box-shadow: 0 0 20px 2px rgba(0, 245, 212, 0.3); }
                 }
                 .animate-gentle-pulse {
                     animation: gentle-pulse 4s ease-in-out infinite;
@@ -314,9 +351,9 @@ const ContactIcon = ({ children, pulseDelay }: ContactIconProps) => {
 
     return (
         <span className={cn(
-            "w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center transition-all duration-300",
-            "group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-purple-500/40",
-            isPulsing && "scale-[1.05] shadow-lg shadow-purple-500/30"
+            "w-10 h-10 rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 flex items-center justify-center transition-all duration-300",
+            "group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-teal-500/40",
+            isPulsing && "scale-[1.05] shadow-lg shadow-teal-500/30"
         )}>
             {children}
         </span>
@@ -359,9 +396,9 @@ const SocialIcon = ({ href, children, pulseDelay, hoverColor }: SocialIconProps)
             className={cn(
                 "w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300",
                 isHovered
-                    ? `bg-gradient-to-r ${hoverColor} scale-110 shadow-lg shadow-purple-500/30`
+                    ? `bg-gradient-to-r ${hoverColor} scale-110 shadow-lg shadow-teal-500/30`
                     : "bg-neutral-800",
-                isPulsing && !isHovered && "scale-[1.03] shadow-md shadow-purple-500/20"
+                isPulsing && !isHovered && "scale-[1.03] shadow-md shadow-teal-500/20"
             )}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
@@ -370,5 +407,3 @@ const SocialIcon = ({ href, children, pulseDelay, hoverColor }: SocialIconProps)
         </a>
     );
 };
-
-

@@ -1,14 +1,15 @@
 "use client";
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 interface Skill {
     name: string;
     icon: string;
     className?: string;
-    experience?: string; // e.g., "2 yrs experience"
-    projects?: number; // e.g., 4 projects
+    experience?: string;
+    projects?: number;
 }
 
 interface SkillCategory {
@@ -22,106 +23,75 @@ interface AnimatedSkillGridProps {
     className?: string;
 }
 
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+        opacity: 1,
+        transition: { staggerChildren: 0.2 }
+    }
+};
+
 export const AnimatedSkillGrid = ({ categories, className }: AnimatedSkillGridProps) => {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const [isVisible, setIsVisible] = useState(false);
-    const [revealedCategories, setRevealedCategories] = useState<Set<number>>(new Set());
-
-    // Intersection Observer for scroll-triggered reveal
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    setIsVisible(true);
-                    // Faster staggered category reveal
-                    categories.forEach((_, index) => {
-                        setTimeout(() => {
-                            setRevealedCategories(prev => new Set([...prev, index]));
-                        }, index * 100);
-                    });
-                }
-            },
-            { threshold: 0.15 }
-        );
-
-        if (containerRef.current) {
-            observer.observe(containerRef.current);
-        }
-
-        return () => observer.disconnect();
-    }, [categories]);
-
     return (
-        <div ref={containerRef} className={cn("grid md:grid-cols-2 lg:grid-cols-3 gap-6", className)}>
-            {categories.map((category, categoryIndex) => (
+        <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1, margin: "-50px" }}
+            className={cn("grid md:grid-cols-2 lg:grid-cols-3 gap-6", className)}
+        >
+            {categories.map((category) => (
                 <CategoryCard
                     key={category.title}
                     category={category}
-                    categoryIndex={categoryIndex}
-                    isRevealed={revealedCategories.has(categoryIndex)}
-                    isVisible={isVisible}
                 />
             ))}
-        </div>
+        </motion.div>
     );
 };
 
 // Category Card Component
 interface CategoryCardProps {
     category: SkillCategory;
-    categoryIndex: number;
-    isRevealed: boolean;
-    isVisible: boolean;
 }
 
-const CategoryCard = ({ category, categoryIndex, isRevealed, isVisible }: CategoryCardProps) => {
-    const [activeCategory, setActiveCategory] = useState(false);
-    const [proficiencyPulsed, setProficiencyPulsed] = useState(false);
-
-    // Trigger proficiency pulse when revealed
-    useEffect(() => {
-        if (isRevealed && !proficiencyPulsed) {
-            const timer = setTimeout(() => setProficiencyPulsed(true), 300);
-            return () => clearTimeout(timer);
+const cardVariants = {
+    hidden: { opacity: 0, y: 40, scale: 0.95 },
+    visible: { 
+        opacity: 1, 
+        y: 0, 
+        scale: 1,
+        transition: { 
+            type: "spring" as const, 
+            stiffness: 100, 
+            damping: 18,
+            mass: 0.8,
+            staggerChildren: 0.08,
+            delayChildren: 0.1
         }
-    }, [isRevealed, proficiencyPulsed]);
+    }
+};
+
+const CategoryCard = ({ category }: CategoryCardProps) => {
+    const [activeCategory, setActiveCategory] = useState(false);
 
     return (
-        <div
+        <motion.div
+            variants={cardVariants}
             className={cn(
-                "group relative p-6 rounded-2xl transition-all duration-500",
+                "group relative p-6 rounded-2xl transition-all duration-300",
                 "bg-neutral-900/50 border border-neutral-800 backdrop-blur-sm",
                 "hover:border-purple-500/50 hover:shadow-xl hover:shadow-purple-500/10",
-                // Category Reveal Animation
-                isRevealed
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-12",
                 activeCategory && "border-purple-500/50 bg-neutral-900/80 scale-[1.02]"
             )}
-            style={{ transitionDelay: `${categoryIndex * 100}ms` }}
             onMouseEnter={() => setActiveCategory(true)}
             onMouseLeave={() => setActiveCategory(false)}
         >
-            {/* Proficiency Pulse Indicator - Ability Pulse Animation */}
-            <div className="absolute top-4 right-4">
-                <div className={cn(
-                    "w-3 h-3 rounded-full transition-all duration-700",
-                    proficiencyPulsed
-                        ? "bg-green-500 shadow-lg shadow-green-500/50"
-                        : "bg-neutral-700"
-                )}>
-                    {proficiencyPulsed && (
-                        <div className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-75" />
-                    )}
-                </div>
-            </div>
-
             {/* Category Header */}
             <div className="flex items-center gap-3 mb-6">
                 <div className={cn(
                     "p-2.5 rounded-xl transition-all duration-300",
                     "bg-neutral-800 group-hover:bg-gradient-to-br group-hover:from-purple-500/20 group-hover:to-pink-500/20",
-                    // Competency Micro-Movement
                     "group-hover:-translate-y-0.5 group-hover:scale-105"
                 )}>
                     {category.icon}
@@ -133,13 +103,14 @@ const CategoryCard = ({ category, categoryIndex, isRevealed, isVisible }: Catego
                     )}>
                         {category.title}
                     </h3>
-                    {/* Proficiency bar that fills on scroll */}
+                    {/* Proficiency bar that fills on view */}
                     <div className="w-24 h-1 bg-neutral-800 rounded-full mt-1.5 overflow-hidden">
-                        <div
-                            className={cn(
-                                "h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-1000 ease-out",
-                            )}
-                            style={{ width: proficiencyPulsed ? "100%" : "0%" }}
+                        <motion.div
+                            className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
+                            initial={{ width: "0%" }}
+                            whileInView={{ width: "100%" }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
                         />
                     </div>
                 </div>
@@ -156,13 +127,10 @@ const CategoryCard = ({ category, categoryIndex, isRevealed, isVisible }: Catego
 
             {/* Skills Grid with Staggered Reveal */}
             <div className="grid grid-cols-4 gap-3">
-                {category.skills.map((skill, skillIndex) => (
+                {category.skills.map((skill) => (
                     <SkillItem
                         key={skill.name}
                         skill={skill}
-                        skillIndex={skillIndex}
-                        categoryIndex={categoryIndex}
-                        isRevealed={isRevealed}
                     />
                 ))}
             </div>
@@ -173,26 +141,29 @@ const CategoryCard = ({ category, categoryIndex, isRevealed, isVisible }: Catego
                 "bg-gradient-to-r from-transparent via-purple-500 to-transparent",
                 activeCategory ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0"
             )} />
-        </div>
+        </motion.div>
     );
 };
 
 // Individual Skill Item Component
-interface SkillItemProps {
-    skill: Skill;
-    skillIndex: number;
-    categoryIndex: number;
-    isRevealed: boolean;
-}
+const skillVariants = {
+    hidden: { opacity: 0, y: 15, scale: 0.5 },
+    visible: { 
+        opacity: 1, 
+        y: 0, 
+        scale: 1, 
+        transition: { type: "spring" as const, stiffness: 200, damping: 15 }
+    }
+};
 
-const SkillItem = ({ skill, skillIndex, categoryIndex, isRevealed }: SkillItemProps) => {
+const SkillItem = ({ skill }: { skill: Skill }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [isClicked, setIsClicked] = useState(false);
     const [showTooltip, setShowTooltip] = useState(false);
     const [ripplePosition, setRipplePosition] = useState({ x: 0, y: 0 });
     const itemRef = useRef<HTMLDivElement>(null);
 
-    // Skill experience data - memoized for 120Hz performance
+    // Skill experience data
     const skillData = React.useMemo<Record<string, { experience: string; projects: number }>>(() => ({
         "C++": { experience: "3 yrs", projects: 5 },
         "Python": { experience: "4 yrs", projects: 8 },
@@ -212,10 +183,8 @@ const SkillItem = ({ skill, skillIndex, categoryIndex, isRevealed }: SkillItemPr
 
     const data = skillData[skill.name] || { experience: "1+ yr", projects: 2 };
 
-    // Handle click with ripple effect
     const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
         if (!itemRef.current) return;
-
         const rect = itemRef.current.getBoundingClientRect();
         setRipplePosition({
             x: e.clientX - rect.left,
@@ -224,29 +193,23 @@ const SkillItem = ({ skill, skillIndex, categoryIndex, isRevealed }: SkillItemPr
         setIsClicked(true);
         setShowTooltip(true);
 
-        // Hide tooltip after 1.5 seconds
         setTimeout(() => setShowTooltip(false), 1500);
-        // Reset click state
         setTimeout(() => setIsClicked(false), 600);
     }, []);
 
     return (
-        <div
+        <motion.div
             ref={itemRef}
+            variants={skillVariants}
             className={cn(
                 "relative flex flex-col items-center gap-2 p-3 rounded-xl cursor-pointer transition-all duration-300",
-                "hover:bg-neutral-800/80 group/skill",
-                // Category Reveal - Staggered skill appearance
-                isRevealed ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
+                "hover:bg-neutral-800/80 group/skill"
             )}
-            style={{
-                transitionDelay: `${(categoryIndex * 200) + (skillIndex * 100 + 300)}ms`,
-            }}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             onClick={handleClick}
         >
-            {/* Ripple Effect on Click - Skill Interaction Feedback */}
+            {/* Ripple Effect */}
             {isClicked && (
                 <div
                     className="absolute rounded-full bg-purple-500/30 animate-ripple pointer-events-none"
@@ -259,10 +222,9 @@ const SkillItem = ({ skill, skillIndex, categoryIndex, isRevealed }: SkillItemPr
                 />
             )}
 
-            {/* Skill Icon with Micro-Movement */}
+            {/* Skill Icon */}
             <div className={cn(
                 "relative w-10 h-10 transition-all duration-300",
-                // Competency Micro-Movement
                 isHovered && "-translate-y-1 scale-[1.08]"
             )}>
                 <Image
@@ -275,35 +237,29 @@ const SkillItem = ({ skill, skillIndex, categoryIndex, isRevealed }: SkillItemPr
                         isHovered && "drop-shadow-lg"
                     )}
                 />
-
-                {/* Glow effect on hover */}
                 <div className={cn(
-                    "absolute inset-0 rounded-full transition-all duration-300",
-                    "bg-purple-500/0 blur-xl",
-                    isHovered && "bg-purple-500/40"
-                )} />
+                     "absolute inset-0 rounded-full transition-all duration-300 bg-purple-500/0 blur-xl",
+                     isHovered && "bg-purple-500/40"
+                 )} />
             </div>
 
-            {/* Skill Name with Micro-Movement */}
+            {/* Skill Name */}
             <span className={cn(
                 "text-xs text-neutral-400 text-center transition-all duration-300",
-                // Competency Micro-Movement
                 isHovered && "text-white -translate-y-0.5"
             )}>
                 {skill.name}
             </span>
 
-            {/* Hover Underline - Micro Animation */}
+            {/* Hover Underline */}
             <div className={cn(
-                "absolute bottom-2 left-1/2 -translate-x-1/2 h-0.5 rounded-full transition-all duration-300",
-                "bg-gradient-to-r from-purple-500 to-pink-500",
+                "absolute bottom-2 left-1/2 -translate-x-1/2 h-0.5 rounded-full transition-all duration-300 bg-gradient-to-r from-purple-500 to-pink-500",
                 isHovered ? "w-8 opacity-100" : "w-0 opacity-0"
             )} />
 
-            {/* Click Tooltip - Skill Interaction Feedback */}
+            {/* Tooltip */}
             <div className={cn(
-                "absolute -top-16 left-1/2 -translate-x-1/2 z-50 transition-all duration-300",
-                "px-3 py-2 rounded-lg bg-neutral-800 border border-neutral-700 shadow-xl",
+                "absolute -top-16 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 px-3 py-2 rounded-lg bg-neutral-800 border border-neutral-700 shadow-xl",
                 showTooltip ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-2 scale-95 pointer-events-none"
             )}>
                 <div className="text-center whitespace-nowrap">
@@ -311,25 +267,17 @@ const SkillItem = ({ skill, skillIndex, categoryIndex, isRevealed }: SkillItemPr
                     <div className="text-purple-400 text-xs mt-1">{data.experience} experience</div>
                     <div className="text-neutral-400 text-xs">Used in {data.projects} projects</div>
                 </div>
-                {/* Tooltip Arrow */}
                 <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-neutral-800 border-b border-r border-neutral-700 rotate-45" />
             </div>
-        </div>
+        </motion.div>
     );
 };
 
-// Add ripple animation to globals or use inline style
 export const SkillGridStyles = () => (
     <style jsx global>{`
         @keyframes ripple {
-            0% {
-                transform: scale(0);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(2);
-                opacity: 0;
-            }
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
         }
         .animate-ripple {
             animation: ripple 0.6s ease-out forwards;

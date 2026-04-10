@@ -101,27 +101,34 @@
   }
 
   .dark {
-    --background: 0 0% 0%;
-    /* Deep Black */
+    /* Deep Navy Base */
+    --background: 220 60% 5%;
     --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
+    --card: 220 50% 7%;
     --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
+    --popover: 220 50% 7%;
     --popover-foreground: 0 0% 98%;
     --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
+    --primary-foreground: 220 60% 5%;
+    --secondary: 220 30% 15%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    /* Apple Gray */
-    --accent: 240 3.7% 15.9%;
+    --muted: 220 30% 15%;
+    --muted-foreground: 220 10% 65%;
+    --accent: 220 30% 15%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+    --border: 220 20% 18%;
+    --input: 220 20% 18%;
+    --ring: 168 95% 55%;
+
+    /* Branded Palette */
+    --brand-teal: 168 95% 55%;
+    --brand-navy: 220 60% 5%;
+    --brand-navy-light: 220 50% 10%;
+    --brand-accent: 168 65% 46%;
+    --brand-purple: 270 100% 63%;
+    --brand-pink: 330 80% 60%;
 
     /* Vibrant Accents */
     --color-1: 0 100% 63%;
@@ -143,7 +150,6 @@
 
   /* Performance optimizations for 120Hz smoothness */
   html {
-    scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
