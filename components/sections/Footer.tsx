@@ -48,7 +48,7 @@ const footerLinks = [
 
 export function Footer() {
     return (
-        <footer className="relative w-screen -mx-[calc((100vw-100%)/2)]">
+        <footer className="relative w-full">
             {/* Gradient Divider */}
             <div className="w-full h-px bg-gradient-to-r from-transparent via-teal-500/50 to-transparent" />
 

@@ -11,7 +11,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://arnavpratap.dev"),
+  metadataBase: new URL("https://arnavpratap.tech"),
   title: "Arnav Pratap | Full-Stack & AI Engineer | IIT Research • VIT 2027",
   description:
     "Final-year CSE student at VIT with 9.16 CGPA. IIT Patna research on RAG-based hate speech detection. Full-stack projects with real users and production impact.",
@@ -58,6 +58,9 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.ico",
     apple: "/favicon-192.png",
+  },
+  alternates: {
+    canonical: "https://arnavpratap.tech",
   },
 };
 

@@ -315,7 +315,7 @@ export function Hero() {
                                 {/* Photo */}
                                 <div className="relative w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 rounded-full overflow-hidden border-2 border-white/20">
                                     <Image
-                                        src="/profile-photo.png"
+                                        src="/profile-photo.webp"
                                         alt="Arnav Pratap – Full-Stack & AI Engineer"
                                         fill
                                         className="object-cover"

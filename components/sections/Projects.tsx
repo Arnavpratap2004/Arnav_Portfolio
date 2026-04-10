@@ -10,7 +10,7 @@ export function Projects() {
             title: "CAD-RAG Framework",
             description:
                 "Research project at IIT Patna addressing the challenge of detecting hate speech in evolving online discourse. Proposed a novel Context-Aware Dynamic Rationale Generation (CAD-RAG) framework combining retrieval-augmented generation with socio-temporal context. Built a dynamic knowledge base integrating evolving slur lexicons and incident reports, with a multi-query retrieval mechanism for detecting emerging 'zero-day' hate speech patterns.",
-            imageSrc: "/cad-rag-framework.jpg",
+            imageSrc: "/cad-rag-framework.webp",
             imageAlt: "CAD-RAG Framework — IIT Patna Research",
             techStack: ["Python", "NLP", "RAG", "PyTorch", "Research"],
             highlight: "IIT Research",
@@ -21,7 +21,7 @@ export function Projects() {
             title: "Real-time Auction Platform",
             description:
                 "Built and deployed a production-grade real-time auction platform for a college club event. Engineered WebSocket-based live bidding with instant notifications, handling 200+ concurrent users with zero downtime. Features include real-time bid updates, countdown timers, user authentication, bid history tracking, and admin dashboard for item management.",
-            imageSrc: "/auction-platform.jpg",
+            imageSrc: "/auction-platform.webp",
             imageAlt: "Real-time Auction Platform",
             techStack: ["React", "WebSocket", "Node.js", "MongoDB", "Express"],
             highlight: "200+ Concurrent Users",
@@ -31,7 +31,7 @@ export function Projects() {
             title: "Mess Feedback System",
             description:
                 "Designed and built a comprehensive feedback platform for hostel dining services, now used by 500+ students daily. Implemented dynamic reporting with real-time analytics dashboards showing meal-wise satisfaction trends, complaint categorization, and targeted insights that helped improve dining quality scores by 30%.",
-            imageSrc: "/mess-feedback.jpg",
+            imageSrc: "/mess-feedback.webp",
             imageAlt: "Mess Feedback System",
             techStack: ["HTML", "CSS", "JavaScript", "Analytics"],
             highlight: "500+ Daily Users",
@@ -41,7 +41,7 @@ export function Projects() {
             title: "Smart Study Material Organizer",
             description:
                 "Engineered an AI-driven document intelligence pipeline using AWS cloud services. Automated text extraction via Textract, intelligent document categorization with Comprehend, and semantic indexing through Lambda functions — achieving 95% classification accuracy. Enables lightning-fast retrieval of study materials across thousands of uploaded documents.",
-            imageSrc: "/smart-study-organizer.jpg",
+            imageSrc: "/smart-study-organizer.webp",
             imageAlt: "Smart Study Material Organizer",
             techStack: ["AWS", "Textract", "Comprehend", "Lambda", "Python"],
             highlight: "95% Accuracy",
@@ -52,7 +52,7 @@ export function Projects() {
             title: "StockSense — Inventory Management",
             description:
                 "Full-stack inventory management system with a premium 'Dark Industrial Precision' UI. Features real-time stock tracking, automated transaction logging, role-based access control, comprehensive reporting dashboards, and audit trail functionality. Built with a data-dense dark aesthetic optimized for warehouse operations.",
-            imageSrc: "/smart-study-organizer.jpg",
+            imageSrc: "/stocksense.webp",
             imageAlt: "StockSense Inventory Management System",
             techStack: ["Next.js", "Tailwind CSS", "PostgreSQL", "Prisma"],
             highlight: "Full-Stack App",
@@ -62,7 +62,7 @@ export function Projects() {
             title: "Homelia — E-Commerce Platform",
             description:
                 "Modern e-commerce platform for home decor and furnishings with complete shopping experience. Implemented user authentication with role-based access, shopping cart management, product search and filtering, order processing, and responsive mobile-first design. Comprehensive E2E test suite covering all critical user journeys.",
-            imageSrc: "/mess-feedback.jpg",
+            imageSrc: "/homelia.webp",
             imageAlt: "Homelia E-Commerce Platform",
             techStack: ["React", "Prisma", "Node.js", "Tailwind CSS"],
             highlight: "Full E2E Tested",
@@ -72,7 +72,7 @@ export function Projects() {
             title: "Nodebase — Workflow Automation",
             description:
                 "Enterprise-grade workflow automation platform enabling users to build multi-step automated pipelines. Features Better Auth-based authentication, Polar.sh billing integration, encrypted credential management, database node integrations for PostgreSQL and MongoDB, and a visual workflow builder. Deployed on AWS EC2 with Aurora database.",
-            imageSrc: "/auction-platform.jpg",
+            imageSrc: "/nodebase.webp",
             imageAlt: "Nodebase Workflow Automation Platform",
             techStack: ["Next.js", "AWS EC2", "Aurora", "Better Auth"],
             highlight: "Enterprise SaaS",
