@@ -95,7 +95,7 @@ const TimelineCard = ({ item, index, onInView }: TimelineCardProps) => {
         <m.div
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: false, amount: 0.3, margin: "-100px 0px" }}
+            viewport={{ once: true, amount: 0.3, margin: "-100px 0px" }}
             onViewportEnter={onInView}
             className={cn(
                 "relative",

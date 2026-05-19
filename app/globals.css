@@ -154,6 +154,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
+    scroll-padding-top: 80px; /* offset for fixed navbar on anchor links */
   }
 
   /* GPU acceleration for canvas elements */
@@ -167,6 +168,11 @@
   .lazy-section {
     content-visibility: auto;
     contain-intrinsic-size: 0 800px; /* estimated height to prevent scroll jump */
+  }
+
+  /* Paint isolation for project cards — repaint on hover won't propagate */
+  .project-card-container {
+    contain: layout style paint;
   }
 
   /* Reduce animations for users who prefer reduced motion */

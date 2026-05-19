@@ -106,9 +106,9 @@ const CategoryCard = ({ category }: CategoryCardProps) => {
                     {/* Proficiency bar that fills on view */}
                     <div className="w-24 h-1 bg-neutral-800 rounded-full mt-1.5 overflow-hidden">
                         <m.div
-                            className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
-                            initial={{ width: "0%" }}
-                            whileInView={{ width: "100%" }}
+                            className="h-full w-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full origin-left"
+                            initial={{ scaleX: 0 }}
+                            whileInView={{ scaleX: 1 }}
                             viewport={{ once: true }}
                             transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
                         />

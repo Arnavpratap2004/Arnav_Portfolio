@@ -55,25 +55,25 @@ export const FloatingNav = ({
             }
         });
 
-        // Handle scroll to top for "Home" - throttled for 120Hz smoothness
-        let scrollThrottled = false;
-        const handleScroll = () => {
-            if (scrollThrottled) return;
-            scrollThrottled = true;
-
-            requestAnimationFrame(() => {
-                if (window.scrollY < 100) {
-                    setActiveSection("/");
-                }
-                scrollThrottled = false;
-            });
-        };
-
-        window.addEventListener("scroll", handleScroll, { passive: true });
+        // Use IntersectionObserver for "Home" state instead of scroll listener
+        // Fires only on hero enter/exit — zero cost during scroll
+        const heroElement = document.querySelector('section');
+        let heroObserver: IntersectionObserver | null = null;
+        if (heroElement) {
+            heroObserver = new IntersectionObserver(
+                ([entry]) => {
+                    if (entry.isIntersecting) {
+                        setActiveSection("/");
+                    }
+                },
+                { threshold: 0.1 }
+            );
+            heroObserver.observe(heroElement);
+        }
 
         return () => {
             observer.disconnect();
-            window.removeEventListener("scroll", handleScroll);
+            heroObserver?.disconnect();
         };
     }, [navItems]);
 
