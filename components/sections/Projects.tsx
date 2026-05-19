@@ -68,17 +68,6 @@ export function Projects() {
             highlight: "Full E2E Tested",
             projectLink: "https://github.com/Arnavpratap2004/Homelia",
         },
-        {
-            title: "Nodebase — Workflow Automation",
-            description:
-                "Enterprise-grade workflow automation platform enabling users to build multi-step automated pipelines. Features Better Auth-based authentication, Polar.sh billing integration, encrypted credential management, database node integrations for PostgreSQL and MongoDB, and a visual workflow builder. Deployed on AWS EC2 with Aurora database.",
-            imageSrc: "/nodebase.webp",
-            imageAlt: "Nodebase Workflow Automation Platform",
-            techStack: ["Next.js", "AWS EC2", "Aurora", "Better Auth"],
-            highlight: "Enterprise SaaS",
-            badge: "AWS Deployed",
-            projectLink: "https://github.com/Arnavpratap2004/Nodebase",
-        },
     ];
 
     return (
@@ -117,7 +106,6 @@ export function Projects() {
                                     index === 3 && "md:delay-300",
                                     index === 4 && "md:delay-400",
                                     index === 5 && "md:delay-500",
-                                    index === 6 && "md:delay-600",
                                 )}
                             />
                         ))}

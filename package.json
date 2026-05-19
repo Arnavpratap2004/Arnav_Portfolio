@@ -25,12 +25,14 @@
     "react-dom": "19.2.0",
     "simplex-noise": "^4.0.3",
     "tailwind-merge": "^3.4.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "three": "^0.184.0"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.184.0",
     "autoprefixer": "^10.4.22",
     "eslint": "^9",
     "eslint-config-next": "16.0.7",
