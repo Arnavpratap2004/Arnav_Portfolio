@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { IconCode, IconDatabase, IconCloud, IconBrain, IconTool, IconTerminal2 } from "@tabler/icons-react";
 import { AuroraBackground } from "@/components/ui/AuroraBackground";
 import { AnimatedSkillGrid, SkillGridStyles } from "@/components/ui/AnimatedSkillGrid";
@@ -84,7 +84,7 @@ export function About() {
             <div className="relative z-10 w-full max-w-6xl mx-auto px-4">
 
                 {/* Personal Narrative Section */}
-                <motion.div
+                <m.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-100px" }}
@@ -120,7 +120,7 @@ export function About() {
                         <div className="md:col-span-2">
                             <div className="grid grid-cols-2 gap-4">
                                 {stats.map((stat, i) => (
-                                    <motion.div
+                                    <m.div
                                         key={stat.label}
                                         initial={{ opacity: 0, scale: 0.8 }}
                                         whileInView={{ opacity: 1, scale: 1 }}
@@ -134,12 +134,12 @@ export function About() {
                                         <div className="text-xs text-neutral-400 mt-1 font-medium tracking-wide uppercase">
                                             {stat.label}
                                         </div>
-                                    </motion.div>
+                                    </m.div>
                                 ))}
                             </div>
                         </div>
                     </div>
-                </motion.div>
+                </m.div>
 
                 {/* Skills Section */}
                 <div className="text-center mb-8 md:mb-12">

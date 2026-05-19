@@ -25,6 +25,7 @@ export function BackgroundCanvas({ className }: BackgroundCanvasProps) {
         }
 
         let animationFrameId: number;
+        let isVisible = true;
         let particles: Particle[] = [];
 
         // Determine particle count based on screen size (rough proxy for performance)
@@ -95,6 +96,11 @@ export function BackgroundCanvas({ className }: BackgroundCanvasProps) {
         const bgGradientEnd = "rgb(5, 10, 20)";
 
         const render = () => {
+            if (!isVisible) {
+                animationFrameId = requestAnimationFrame(render);
+                return;
+            }
+
             // Clear screen with a solid fill to prevent trails and set the background
             const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
             gradient.addColorStop(0, bgGradientStart);
@@ -130,11 +136,21 @@ export function BackgroundCanvas({ className }: BackgroundCanvasProps) {
             animationFrameId = requestAnimationFrame(render);
         };
 
+        // Pause canvas when section scrolls off-screen
+        const observer = new IntersectionObserver(
+            ([entry]) => { isVisible = entry.isIntersecting; },
+            { threshold: 0 }
+        );
+        if (canvas.parentElement) {
+            observer.observe(canvas.parentElement);
+        }
+
         render();
 
         return () => {
             window.removeEventListener("resize", resize);
             cancelAnimationFrame(animationFrameId);
+            observer.disconnect();
         };
     }, []);
 

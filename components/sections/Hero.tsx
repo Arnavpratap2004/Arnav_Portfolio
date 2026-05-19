@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import Image from "next/image";
 import { HyperText } from "@/components/ui/HyperText";
 import { BackgroundCanvas } from "@/components/ui/BackgroundCanvas";
@@ -20,7 +20,7 @@ const highlights = [
 
 function CTAButtons() {
     return (
-        <motion.div
+        <m.div
             initial={{ opacity: 0, scale: 0.95, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.8 }}
@@ -62,20 +62,20 @@ function CTAButtons() {
                 </svg>
                 <span className="relative z-10">Download Resume</span>
             </a>
-        </motion.div>
+        </m.div>
     );
 }
 
 function ProfileFrame() {
     return (
-        <motion.div
+        <m.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
             style={{ willChange: "transform, opacity", transform: "translateZ(0)" }}
             className="relative flex-shrink-0 w-full md:w-1/2 flex justify-center md:justify-end mt-10 md:mt-0 pointer-events-none"
         >
-            <motion.div
+            <m.div
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
                 style={{ willChange: "transform", transform: "translateZ(0)" }}
@@ -98,8 +98,8 @@ function ProfileFrame() {
                         />
                     </div>
                 </div>
-            </motion.div>
-        </motion.div>
+            </m.div>
+        </m.div>
     );
 }
 
@@ -124,7 +124,7 @@ function HeroContent() {
     return (
         <div className="flex flex-col items-center md:items-start text-center md:text-left max-w-2xl">
             {/* Availability Badge */}
-            <motion.div
+            <m.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.05 }}
@@ -139,10 +139,10 @@ function HeroContent() {
                     </span>
                     Open to Full-Time Roles — 2027
                 </span>
-            </motion.div>
+            </m.div>
 
             {/* Name */}
-            <motion.div
+            <m.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.15 }}
@@ -152,10 +152,10 @@ function HeroContent() {
                     text="Arnav Pratap"
                     className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight"
                 />
-            </motion.div>
+            </m.div>
 
             {/* Credential Subtitle */}
-            <motion.p
+            <m.p
                 initial={{ opacity: 0, y: 5 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.3 }}
@@ -163,10 +163,10 @@ function HeroContent() {
                 className="text-sm md:text-base text-neutral-400 font-medium tracking-wide mt-1"
             >
                 IIT Patna Research Intern &bull; VIT CSE &bull; 9.16 CGPA
-            </motion.p>
+            </m.p>
 
             {/* Skill Loop (Simplified React animation to CSS keyframes/transitions) */}
-            <motion.div
+            <m.div
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.4, delay: 0.4 }}
@@ -184,10 +184,10 @@ function HeroContent() {
                 </div>
                 {/* Static blinking cursor via CSS */}
                 <span className="ml-1 w-0.5 h-6 bg-teal-400 animate-pulse" />
-            </motion.div>
+            </m.div>
 
             {/* Bio */}
-            <motion.p
+            <m.p
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.5 }}
@@ -197,10 +197,10 @@ function HeroContent() {
                 Building end-to-end systems that solve real problems — from
                 hostel-scale feedback platforms to real-time auction engines
                 and AI-powered research frameworks.
-            </motion.p>
+            </m.p>
 
             {/* Credibility Highlight Strip */}
-            <motion.div
+            <m.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.6 }}
@@ -217,7 +217,7 @@ function HeroContent() {
                         {h.label}
                     </span>
                 ))}
-            </motion.div>
+            </m.div>
 
             <CTAButtons />
         </div>
@@ -231,7 +231,7 @@ export function Hero() {
             <BackgroundCanvas />
 
             {/* Floating Social Icons — Top Right */}
-            <motion.div
+            <m.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.8 }}
@@ -269,14 +269,14 @@ export function Hero() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                 </a>
-            </motion.div>
+            </m.div>
 
             {/* Main Content */}
             <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
                 <div className="relative z-20 max-w-7xl w-full mx-auto px-4 sm:px-6 md:px-10 flex flex-col-reverse md:flex-row items-center justify-between gap-6 md:gap-8 pointer-events-auto">
 
                     {/* Left Side Vertical Accent Line */}
-                    <motion.div
+                    <m.div
                         className="absolute left-4 top-0 w-1 bg-gradient-to-b from-teal-400 via-cyan-400 to-purple-500 rounded-full hidden lg:block"
                         initial={{ scaleY: 0, opacity: 0 }}
                         animate={{ scaleY: 1, opacity: 1 }}
@@ -293,7 +293,7 @@ export function Hero() {
             </div>
 
             {/* Scroll Hint */}
-            <motion.div
+            <m.div
                 className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 z-20 hidden sm:flex flex-col items-center gap-2 pointer-events-auto"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -304,7 +304,7 @@ export function Hero() {
                 <div className="w-6 h-10 rounded-full border-2 border-neutral-600 flex justify-center pt-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-bounce" />
                 </div>
-            </motion.div>
+            </m.div>
         </section>
     );
 }

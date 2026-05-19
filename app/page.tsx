@@ -1,10 +1,13 @@
 import { Hero } from "@/components/sections/Hero";
-import { About } from "@/components/sections/About";
-import { Experience } from "@/components/sections/Experience";
-import { Projects } from "@/components/sections/Projects";
-import { Contact } from "@/components/sections/Contact";
-import { Footer } from "@/components/sections/Footer";
 import { FloatingNav } from "@/components/ui/FloatingNavbar";
+import dynamic from "next/dynamic";
+
+// Below-fold sections: loaded only when the user scrolls near them
+const About = dynamic(() => import("@/components/sections/About").then(m => m.About), { ssr: true });
+const Experience = dynamic(() => import("@/components/sections/Experience").then(m => m.Experience), { ssr: true });
+const Projects = dynamic(() => import("@/components/sections/Projects").then(m => m.Projects), { ssr: true });
+const Contact = dynamic(() => import("@/components/sections/Contact").then(m => m.Contact), { ssr: true });
+const Footer = dynamic(() => import("@/components/sections/Footer").then(m => m.Footer), { ssr: true });
 
 export default function Home() {
   const navItems = [

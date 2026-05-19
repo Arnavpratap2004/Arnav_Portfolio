@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import {
-    motion,
+    m,
     AnimatePresence,
     useScroll,
     useMotionValueEvent,
@@ -96,7 +96,7 @@ export const FloatingNav = ({
 
     return (
         <AnimatePresence>
-            <motion.div
+            <m.div
                 initial={{
                     opacity: 1,
                     y: -100,
@@ -127,7 +127,7 @@ export const FloatingNav = ({
                             )}
                         >
                             {isActive && (
-                                <motion.span
+                                <m.span
                                     layoutId="activePill"
                                     className="absolute inset-0 border border-neutral-200 dark:border-white/[0.2] rounded-full bg-black/20"
                                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
@@ -135,7 +135,7 @@ export const FloatingNav = ({
                                     <span className="absolute left-0 right-0 bottom-0 flex justify-center">
                                         <span className="w-1/2 h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
                                     </span>
-                                </motion.span>
+                                </m.span>
                             )}
                             {/* Show icon on mobile if available, otherwise show shortened text */}
                             <span className="relative z-10 block sm:hidden">
@@ -178,7 +178,7 @@ export const FloatingNav = ({
                     {/* Bottom glow accent */}
                     <span className="absolute inset-x-0 w-2/3 mx-auto -bottom-px bg-gradient-to-r from-transparent via-purple-500 to-transparent h-px opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
                 </a>
-            </motion.div>
+            </m.div>
         </AnimatePresence>
     );
 };

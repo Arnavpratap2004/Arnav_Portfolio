@@ -156,31 +156,11 @@
     overflow-x: hidden;
   }
 
-  /* GPU acceleration for animated elements */
+  /* GPU acceleration for canvas elements */
   canvas {
     will-change: transform;
     transform: translateZ(0);
     backface-visibility: hidden;
-  }
-
-  /* GPU acceleration for sections with heavy animations */
-  section {
-    will-change: transform;
-    transform: translateZ(0);
-  }
-
-  /* Optimize cards and interactive elements */
-  [class*="card"],
-  [class*="Card"] {
-    will-change: transform;
-    backface-visibility: hidden;
-  }
-
-  /* Hardware acceleration for motion elements */
-  [class*="motion"],
-  [class*="animate"] {
-    will-change: transform, opacity;
-    transform: translateZ(0);
   }
 
   /* Content visibility for off-screen optimization */
@@ -212,15 +192,10 @@
     display: none; /* Chrome/Safari */
   }
 
-  /* Reduce GPU cost on mobile for will-change */
+  /* Reduce GPU cost on mobile */
   @media (max-width: 768px) {
-    section {
+    canvas {
       will-change: auto;
-    }
-    [class*="card"],
-    [class*="Card"] {
-      will-change: auto;
-      backface-visibility: visible;
     }
   }
 }

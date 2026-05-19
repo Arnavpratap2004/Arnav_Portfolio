@@ -19,6 +19,7 @@ export const FloatingBubbles = ({ className, children }: FloatingBubblesProps) =
 
         let animationFrameId: number;
         let time = 0;
+        let isVisible = false;
 
         const resize = () => {
             const dpr = window.devicePixelRatio || 1;
@@ -96,6 +97,11 @@ export const FloatingBubbles = ({ className, children }: FloatingBubblesProps) =
         }
 
         const animate = () => {
+            if (!isVisible) {
+                animationFrameId = requestAnimationFrame(animate);
+                return;
+            }
+
             const width = window.innerWidth;
             const height = canvas.parentElement?.offsetHeight || window.innerHeight;
 
@@ -191,11 +197,21 @@ export const FloatingBubbles = ({ className, children }: FloatingBubblesProps) =
             animationFrameId = requestAnimationFrame(animate);
         };
 
+        // Pause canvas when section scrolls off-screen
+        const observer = new IntersectionObserver(
+            ([entry]) => { isVisible = entry.isIntersecting; },
+            { threshold: 0 }
+        );
+        if (canvas.parentElement) {
+            observer.observe(canvas.parentElement);
+        }
+
         animate();
 
         return () => {
             window.removeEventListener("resize", resize);
             cancelAnimationFrame(animationFrameId);
+            observer.disconnect();
         };
     }, []);
 

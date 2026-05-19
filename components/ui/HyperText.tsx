@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface HyperTextProps {
@@ -52,7 +52,7 @@ export function HyperText({
     }, [text, duration, trigger, animateOnLoad]);
 
     return (
-        <motion.div
+        <m.div
             className="overflow-hidden py-2 flex cursor-default"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -64,7 +64,7 @@ export function HyperText({
             }}
         >
             {displayText.map((letter, i) => (
-                <motion.span
+                <m.span
                     key={i}
                     className={cn("font-mono", letter === " " ? "w-3" : "", className)}
                     initial={{ opacity: 0, y: -8 }}
@@ -80,8 +80,8 @@ export function HyperText({
                     }}
                 >
                     {letter}
-                </motion.span>
+                </m.span>
             ))}
-        </motion.div>
+        </m.div>
     );
 }

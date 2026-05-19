@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ScrollProgress } from "@/components/ui/ScrollProgress";
 import { SmoothScrollProvider } from "@/components/ui/SmoothScrollProvider";
+import { LazyMotionProvider } from "@/components/ui/LazyMotionProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -72,10 +73,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={inter.className}>
-        <SmoothScrollProvider>
-          <ScrollProgress />
-          {children}
-        </SmoothScrollProvider>
+        <LazyMotionProvider>
+          <SmoothScrollProvider>
+            <ScrollProgress />
+            {children}
+          </SmoothScrollProvider>
+        </LazyMotionProvider>
       </body>
     </html>
   );

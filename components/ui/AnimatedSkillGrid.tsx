@@ -2,7 +2,7 @@
 import React, { useState, useRef, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 interface Skill {
     name: string;
@@ -33,7 +33,7 @@ const containerVariants = {
 
 export const AnimatedSkillGrid = ({ categories, className }: AnimatedSkillGridProps) => {
     return (
-        <motion.div 
+        <m.div 
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -46,7 +46,7 @@ export const AnimatedSkillGrid = ({ categories, className }: AnimatedSkillGridPr
                     category={category}
                 />
             ))}
-        </motion.div>
+        </m.div>
     );
 };
 
@@ -76,7 +76,7 @@ const CategoryCard = ({ category }: CategoryCardProps) => {
     const [activeCategory, setActiveCategory] = useState(false);
 
     return (
-        <motion.div
+        <m.div
             variants={cardVariants}
             className={cn(
                 "group relative p-6 rounded-2xl transition-all duration-300",
@@ -105,7 +105,7 @@ const CategoryCard = ({ category }: CategoryCardProps) => {
                     </h3>
                     {/* Proficiency bar that fills on view */}
                     <div className="w-24 h-1 bg-neutral-800 rounded-full mt-1.5 overflow-hidden">
-                        <motion.div
+                        <m.div
                             className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
                             initial={{ width: "0%" }}
                             whileInView={{ width: "100%" }}
@@ -141,7 +141,7 @@ const CategoryCard = ({ category }: CategoryCardProps) => {
                 "bg-gradient-to-r from-transparent via-purple-500 to-transparent",
                 activeCategory ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0"
             )} />
-        </motion.div>
+        </m.div>
     );
 };
 
@@ -197,7 +197,7 @@ const SkillItem = ({ skill }: { skill: Skill }) => {
     }, []);
 
     return (
-        <motion.div
+        <m.div
             ref={itemRef}
             variants={skillVariants}
             className={cn(
@@ -230,6 +230,8 @@ const SkillItem = ({ skill }: { skill: Skill }) => {
                     src={skill.icon}
                     alt={skill.name}
                     fill
+                    loading="lazy"
+                    sizes="40px"
                     className={cn(
                         "object-contain transition-all duration-300",
                         skill.className,
@@ -268,7 +270,7 @@ const SkillItem = ({ skill }: { skill: Skill }) => {
                 </div>
                 <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-neutral-800 border-b border-r border-neutral-700 rotate-45" />
             </div>
-        </motion.div>
+        </m.div>
     );
 };
 

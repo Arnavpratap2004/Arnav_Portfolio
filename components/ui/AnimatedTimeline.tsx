@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef, useState } from "react";
-import { motion, useScroll } from "framer-motion";
+import { m, useScroll } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface TimelineItem {
@@ -33,7 +33,7 @@ export const AnimatedTimeline = ({ items, className }: AnimatedTimelineProps) =>
     return (
         <div ref={containerRef} className={cn("relative", className)}>
             {/* Floating Year Indicator */}
-            <motion.div 
+            <m.div 
                 className="sticky top-24 z-20 flex justify-center mb-8 pointer-events-none"
             >
                 <div className={cn(
@@ -44,11 +44,11 @@ export const AnimatedTimeline = ({ items, className }: AnimatedTimelineProps) =>
                         {currentYear}
                     </span>
                 </div>
-            </motion.div>
+            </m.div>
 
             {/* Progress Line — left on mobile, center on desktop */}
             <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-1 bg-neutral-800 md:-translate-x-1/2 rounded-full overflow-hidden origin-top">
-                <motion.div
+                <m.div
                     className="absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-b from-purple-500 via-pink-500 to-orange-500"
                     style={{ scaleY: scrollYProgress, transformOrigin: "top" }}
                 />
@@ -92,7 +92,7 @@ const TimelineCard = ({ item, index, onInView }: TimelineCardProps) => {
     };
 
     return (
-        <motion.div
+        <m.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: false, amount: 0.3, margin: "-100px 0px" }}
@@ -107,7 +107,7 @@ const TimelineCard = ({ item, index, onInView }: TimelineCardProps) => {
             )}
         >
             {/* Connecting Line Dot */}
-            <motion.div 
+            <m.div 
                 className={cn(
                     "absolute z-10",
                     /* Mobile: aligned to left line */
@@ -121,10 +121,10 @@ const TimelineCard = ({ item, index, onInView }: TimelineCardProps) => {
                 }}
             >
                 <div className="w-5 h-5 rounded-full border-4 bg-white border-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.8)]" />
-            </motion.div>
+            </m.div>
 
             {/* Card */}
-            <motion.div 
+            <m.div 
                 variants={{
                     hidden: { 
                         opacity: 0, 
@@ -187,7 +187,7 @@ const TimelineCard = ({ item, index, onInView }: TimelineCardProps) => {
                                 isLeft ? "md:text-right" : "md:text-left"
                             )}>
                                 {item.achievements.map((achievement, achIndex) => (
-                                    <motion.li
+                                    <m.li
                                         key={achIndex}
                                         variants={{
                                             hidden: { opacity: 0, x: isLeft ? -15 : 15 },
@@ -201,17 +201,17 @@ const TimelineCard = ({ item, index, onInView }: TimelineCardProps) => {
                                         onMouseLeave={() => setHoveredAchievement(null)}
                                     >
                                         <span dangerouslySetInnerHTML={{ __html: highlightKeywords(achievement, hoveredAchievement === achIndex) }} />
-                                    </motion.li>
+                                    </m.li>
                                 ))}
                             </ul>
                         )}
                     </div>
                 </div>
-            </motion.div>
+            </m.div>
 
             {/* Spacer for opposite side — hidden on mobile */}
             <div className="hidden md:block md:w-[calc(50%-2.5rem)]" />
-        </motion.div>
+        </m.div>
     );
 };
 

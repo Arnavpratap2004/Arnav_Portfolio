@@ -11,7 +11,7 @@ export const ScrollProgress = () => {
                 window.requestAnimationFrame(() => {
                     const scrollTop = window.scrollY;
                     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-                    const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+                    const scrollPercent = docHeight > 0 ? scrollTop / docHeight : 0;
                     setProgress(scrollPercent);
                     ticking.current = false;
                 });
@@ -26,13 +26,12 @@ export const ScrollProgress = () => {
     return (
         <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-neutral-900/50">
             <div
-                className="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500"
+                className="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 origin-left"
                 style={{
-                    width: `${progress}%`,
-                    willChange: 'width'
+                    transform: `scaleX(${progress})`,
+                    willChange: 'transform',
                 }}
             />
         </div>
     );
 };
-

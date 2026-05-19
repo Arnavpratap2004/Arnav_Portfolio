@@ -19,6 +19,7 @@ export const MagneticPulse = ({ className, children }: MagneticPulseProps) => {
 
         let animationFrameId: number;
         let time = 0;
+        let isVisible = false;
 
         const resize = () => {
             const dpr = window.devicePixelRatio || 1;
@@ -135,6 +136,11 @@ export const MagneticPulse = ({ className, children }: MagneticPulseProps) => {
         }, 2000);
 
         const animate = () => {
+            if (!isVisible) {
+                animationFrameId = requestAnimationFrame(animate);
+                return;
+            }
+
             const width = window.innerWidth;
             const height = canvas.parentElement?.offsetHeight || window.innerHeight;
             const centerX = width / 2;
@@ -291,12 +297,22 @@ export const MagneticPulse = ({ className, children }: MagneticPulseProps) => {
             animationFrameId = requestAnimationFrame(animate);
         };
 
+        // Pause canvas when section scrolls off-screen
+        const observer = new IntersectionObserver(
+            ([entry]) => { isVisible = entry.isIntersecting; },
+            { threshold: 0 }
+        );
+        if (canvas.parentElement) {
+            observer.observe(canvas.parentElement);
+        }
+
         animate();
 
         return () => {
             window.removeEventListener("resize", resize);
             cancelAnimationFrame(animationFrameId);
             clearInterval(pulseInterval);
+            observer.disconnect();
         };
     }, []);
 
