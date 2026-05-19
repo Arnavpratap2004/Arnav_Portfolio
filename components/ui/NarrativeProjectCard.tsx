@@ -144,7 +144,7 @@ export const NarrativeProjectCard = ({
                     "absolute -top-2 left-1/2 -translate-x-1/2 z-30 px-4 py-2 rounded-full",
                     "bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-400",
                     "text-white text-sm font-bold shadow-lg shadow-teal-500/50",
-                    "transition-all duration-500",
+                    "transition-[opacity,transform] duration-500",
                     showHighlight
                         ? "opacity-100 translate-y-0 scale-100"
                         : "opacity-0 -translate-y-4 scale-90"
@@ -158,7 +158,7 @@ export const NarrativeProjectCard = ({
                 "relative overflow-hidden rounded-2xl project-card-container",
                 "bg-gradient-to-br from-neutral-900 via-neutral-900 to-neutral-800",
                 "border border-neutral-700/50",
-                "transition-all duration-500",
+                "transition-[border-color,box-shadow] duration-500",
                 isHovered && "border-teal-500/50 shadow-2xl shadow-teal-500/20"
             )}>
                 {/* Magnetic Glow Effect */}
@@ -184,7 +184,7 @@ export const NarrativeProjectCard = ({
                 {/* Image with Reveal Effect */}
                 <div className={cn(
                     "relative h-40 sm:h-48 overflow-hidden",
-                    "transition-all duration-700",
+                    "transition-opacity duration-700",
                     isVisible ? "opacity-100" : "opacity-0"
                 )}>
                     <Image
@@ -194,7 +194,7 @@ export const NarrativeProjectCard = ({
                         loading="lazy"
                         quality={60}
                         className={cn(
-                            "object-cover transition-all duration-700",
+                            "object-cover transition-transform duration-700",
                             isHovered ? "scale-110 brightness-75" : "scale-100 brightness-100"
                         )}
                         sizes="(max-width: 768px) 100vw, 50vw"
@@ -210,7 +210,7 @@ export const NarrativeProjectCard = ({
                     {/* Layer 3: Preview Highlight on Hover */}
                     <div className={cn(
                         "absolute inset-0 flex items-center justify-center",
-                        "transition-all duration-500",
+                        "transition-opacity duration-500",
                         isHovered && layer3Visible ? "opacity-100" : "opacity-0"
                     )}>
                         <div className="text-center px-4">
@@ -229,7 +229,7 @@ export const NarrativeProjectCard = ({
                     {/* Layer 1: Title */}
                     <h3 className={cn(
                         "text-lg sm:text-xl font-bold text-white",
-                        "transition-all duration-500",
+                        "transition-[opacity,transform] duration-500",
                         layer1Visible
                             ? "opacity-100 translate-y-0"
                             : "opacity-0 translate-y-4",
@@ -241,7 +241,7 @@ export const NarrativeProjectCard = ({
                     {/* Layer 2: Tech Stack Tags */}
                     <div className={cn(
                         "flex flex-wrap gap-2",
-                        "transition-all duration-500 delay-100",
+                        "transition-[opacity,transform] duration-500 delay-100",
                         layer2Visible
                             ? "opacity-100 translate-y-0"
                             : "opacity-0 translate-y-4"
@@ -252,7 +252,7 @@ export const NarrativeProjectCard = ({
                                 className={cn(
                                     "px-3 py-1 text-xs font-medium rounded-full",
                                     "bg-neutral-800 text-neutral-300 border border-neutral-700",
-                                    "transition-all duration-300",
+                                    "transition-[transform,background-color,border-color,color] duration-300",
                                     isHovered && "hover:scale-105 hover:-translate-y-0.5 hover:bg-teal-500/20 hover:border-teal-500/50 hover:text-teal-300"
                                 )}
                                 style={{
@@ -266,7 +266,7 @@ export const NarrativeProjectCard = ({
 
                     {/* Layer 3: Full Description */}
                     <div className={cn(
-                        "transition-all duration-500 delay-200",
+                        "transition-[opacity,transform] duration-500 delay-200",
                         layer3Visible
                             ? "opacity-100 translate-y-0"
                             : "opacity-0 translate-y-4"
@@ -278,7 +278,7 @@ export const NarrativeProjectCard = ({
 
                     {/* Dual CTA Buttons */}
                     <div className={cn(
-                        "pt-2 flex flex-wrap items-center gap-3 transition-all duration-500 delay-300",
+                        "pt-2 flex flex-wrap items-center gap-3 transition-[opacity,transform] duration-500 delay-300",
                         layer3Visible
                             ? "opacity-100 translate-y-0"
                             : "opacity-0 translate-y-4"
@@ -288,11 +288,12 @@ export const NarrativeProjectCard = ({
                             href={projectLink}
                             target="_blank"
                             rel="noopener noreferrer"
+                            aria-label={`View ${title} on GitHub`}
                             className={cn(
                                 "inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold",
                                 "bg-gradient-to-r from-teal-600 to-cyan-600 text-white",
                                 "overflow-hidden group/btn",
-                                "transition-all duration-300",
+                                "transition-[transform,box-shadow] duration-300",
                                 "hover:shadow-lg hover:shadow-teal-500/30 hover:scale-105",
                             )}
                             onClick={(e) => e.stopPropagation()}
@@ -312,7 +313,7 @@ export const NarrativeProjectCard = ({
                                 className={cn(
                                     "inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-semibold",
                                     "border border-white/20 text-white bg-white/5",
-                                    "transition-all duration-300",
+                                    "transition-[transform,border-color,background-color] duration-300",
                                     "hover:border-teal-500/50 hover:bg-white/10 hover:scale-105",
                                 )}
                                 onClick={(e) => e.stopPropagation()}
@@ -330,10 +331,10 @@ export const NarrativeProjectCard = ({
                 <div className="absolute bottom-0 left-0 right-0 h-1 bg-neutral-800">
                     <div
                         className={cn(
-                            "h-full bg-gradient-to-r from-teal-500 via-cyan-400 to-teal-300",
-                            "transition-all duration-1000 ease-out"
+                            "h-full w-full bg-gradient-to-r from-teal-500 via-cyan-400 to-teal-300 origin-left",
+                            "transition-transform duration-1000 ease-out"
                         )}
-                        style={{ width: isVisible ? "100%" : "0%" }}
+                        style={{ transform: isVisible ? "scaleX(1)" : "scaleX(0)" }}
                     />
                 </div>
             </div>

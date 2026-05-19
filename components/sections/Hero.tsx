@@ -53,7 +53,7 @@ function CTAButtons() {
                 className={cn(
                     "relative inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-sm",
                     "border border-white/20 text-white bg-white/10", // Removed backdrop-filter
-                    "hover:bg-white/20 hover:border-teal-500/50 transition-all duration-300",
+                    "hover:bg-white/20 hover:border-teal-500/50 transition-[transform,border-color,background-color] duration-300",
                     "hover:scale-105 active:scale-95 group"
                 )}
             >
@@ -94,7 +94,7 @@ function ProfileFrame() {
                             fill
                             className="object-cover object-top opacity-95 mix-blend-lighten"
                             priority
-                            sizes="(max-width: 768px) 100vw, 50vw"
+                            sizes="(max-width: 640px) 300px, 480px"
                         />
                     </div>
                 </div>
@@ -186,18 +186,13 @@ function HeroContent() {
                 <span className="ml-1 w-0.5 h-6 bg-teal-400 animate-pulse" />
             </m.div>
 
-            {/* Bio */}
-            <m.p
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.5 }}
-
-                className="mt-4 text-neutral-300 text-sm md:text-base leading-relaxed max-w-lg"
-            >
+            {/* Bio — NO animation: this is the LCP element. Starting at
+                opacity:0 delays LCP by ~2.5s on mobile. Render instantly. */}
+            <p className="mt-4 text-neutral-300 text-sm md:text-base leading-relaxed max-w-lg">
                 Building end-to-end systems that solve real problems — from
                 hostel-scale feedback platforms to real-time auction engines
                 and AI-powered research frameworks.
-            </m.p>
+            </p>
 
             {/* Credibility Highlight Strip */}
             <m.div
@@ -242,7 +237,7 @@ export function Hero() {
                     href={GITHUB_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full flex items-center justify-center border border-white/10 bg-white/5 text-neutral-400 hover:text-white hover:border-teal-500/50 hover:bg-white/10 transition-all duration-300 hover:scale-110"
+                    className="w-10 h-10 rounded-full flex items-center justify-center border border-white/10 bg-white/5 text-neutral-400 hover:text-white hover:border-teal-500/50 hover:bg-white/10 transition-[transform,color,border-color,background-color] duration-300 hover:scale-110"
                     aria-label="GitHub"
                 >
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -253,7 +248,7 @@ export function Hero() {
                     href={LINKEDIN_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full flex items-center justify-center border border-white/10 bg-white/5 text-neutral-400 hover:text-white hover:border-blue-500/50 hover:bg-white/10 transition-all duration-300 hover:scale-110"
+                    className="w-10 h-10 rounded-full flex items-center justify-center border border-white/10 bg-white/5 text-neutral-400 hover:text-white hover:border-blue-500/50 hover:bg-white/10 transition-[transform,color,border-color,background-color] duration-300 hover:scale-110"
                     aria-label="LinkedIn"
                 >
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -262,7 +257,7 @@ export function Hero() {
                 </a>
                 <a
                     href="mailto:arnavpratap2003@gmail.com"
-                    className="w-10 h-10 rounded-full flex items-center justify-center border border-white/10 bg-white/5 text-neutral-400 hover:text-white hover:border-purple-500/50 hover:bg-white/10 transition-all duration-300 hover:scale-110"
+                    className="w-10 h-10 rounded-full flex items-center justify-center border border-white/10 bg-white/5 text-neutral-400 hover:text-white hover:border-purple-500/50 hover:bg-white/10 transition-[transform,color,border-color,background-color] duration-300 hover:scale-110"
                     aria-label="Email"
                 >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -223,7 +223,6 @@ export const TimelineStyles = () => (
         .keyword-highlight {
             font-weight: 600;
             color: #c4b5fd;
-            transition: all 0.3s ease;
         }
         .keyword-highlight.active {
             color: #a78bfa;

@@ -27,7 +27,7 @@ const containerVariants = {
     hidden: { opacity: 0 },
     visible: { 
         opacity: 1,
-        transition: { staggerChildren: 0.2 }
+        transition: { staggerChildren: 0.15 }
     }
 };
 
@@ -56,17 +56,15 @@ interface CategoryCardProps {
 }
 
 const cardVariants = {
-    hidden: { opacity: 0, y: 40, scale: 0.95 },
+    hidden: { opacity: 0, y: 20, scale: 0.97 },
     visible: { 
         opacity: 1, 
         y: 0, 
         scale: 1,
         transition: { 
-            type: "spring" as const, 
-            stiffness: 100, 
-            damping: 18,
-            mass: 0.8,
-            staggerChildren: 0.08,
+            duration: 0.5,
+            ease: [0.16, 1, 0.3, 1] as const,
+            staggerChildren: 0.06,
             delayChildren: 0.1
         }
     }
@@ -79,7 +77,7 @@ const CategoryCard = ({ category }: CategoryCardProps) => {
         <m.div
             variants={cardVariants}
             className={cn(
-                "group relative p-6 rounded-2xl transition-all duration-300",
+                "group relative p-6 rounded-2xl transition-[border-color,box-shadow] duration-300",
                 "bg-neutral-900/50 border border-neutral-800 backdrop-blur-sm",
                 "hover:border-purple-500/50 hover:shadow-xl hover:shadow-purple-500/10",
                 activeCategory && "border-purple-500/50 bg-neutral-900/80 scale-[1.02]"
@@ -90,7 +88,7 @@ const CategoryCard = ({ category }: CategoryCardProps) => {
             {/* Category Header */}
             <div className="flex items-center gap-3 mb-6">
                 <div className={cn(
-                    "p-2.5 rounded-xl transition-all duration-300",
+                    "p-2.5 rounded-xl transition-transform duration-300",
                     "bg-neutral-800 group-hover:bg-gradient-to-br group-hover:from-purple-500/20 group-hover:to-pink-500/20",
                     "group-hover:-translate-y-0.5 group-hover:scale-105"
                 )}>
@@ -98,7 +96,7 @@ const CategoryCard = ({ category }: CategoryCardProps) => {
                 </div>
                 <div>
                     <h3 className={cn(
-                        "text-lg font-semibold text-white transition-all duration-300",
+                        "text-lg font-semibold text-white transition-[color,transform] duration-300",
                         "group-hover:text-purple-300 group-hover:-translate-y-px"
                     )}>
                         {category.title}
@@ -117,7 +115,7 @@ const CategoryCard = ({ category }: CategoryCardProps) => {
 
                 {/* Skill count badge */}
                 <span className={cn(
-                    "ml-auto px-2.5 py-1 text-xs font-medium rounded-full transition-all duration-300",
+                    "ml-auto px-2.5 py-1 text-xs font-medium rounded-full transition-[transform,background-color,color] duration-300",
                     "bg-neutral-800 text-neutral-400",
                     "group-hover:bg-purple-500/20 group-hover:text-purple-300 group-hover:scale-110"
                 )}>
@@ -137,7 +135,7 @@ const CategoryCard = ({ category }: CategoryCardProps) => {
 
             {/* Decorative gradient line on hover */}
             <div className={cn(
-                "absolute bottom-0 left-6 right-6 h-0.5 rounded-full transition-all duration-500",
+                "absolute bottom-0 left-6 right-6 h-0.5 rounded-full transition-[opacity,transform] duration-500",
                 "bg-gradient-to-r from-transparent via-purple-500 to-transparent",
                 activeCategory ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0"
             )} />
@@ -147,12 +145,12 @@ const CategoryCard = ({ category }: CategoryCardProps) => {
 
 // Individual Skill Item Component
 const skillVariants = {
-    hidden: { opacity: 0, y: 15, scale: 0.5 },
+    hidden: { opacity: 0, y: 10, scale: 0.8 },
     visible: { 
         opacity: 1, 
         y: 0, 
         scale: 1, 
-        transition: { type: "spring" as const, stiffness: 200, damping: 15 }
+        transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] as const }
     }
 };
 
@@ -201,7 +199,7 @@ const SkillItem = ({ skill }: { skill: Skill }) => {
             ref={itemRef}
             variants={skillVariants}
             className={cn(
-                "relative flex flex-col items-center gap-2 p-3 rounded-xl cursor-pointer transition-all duration-300",
+                "relative flex flex-col items-center gap-2 p-3 rounded-xl cursor-pointer transition-[background-color] duration-300",
                 "hover:bg-neutral-800/80 group/skill"
             )}
             onMouseEnter={() => setIsHovered(true)}
@@ -223,7 +221,7 @@ const SkillItem = ({ skill }: { skill: Skill }) => {
 
             {/* Skill Icon */}
             <div className={cn(
-                "relative w-10 h-10 transition-all duration-300",
+                "relative w-10 h-10 transition-transform duration-300",
                 isHovered && "-translate-y-1 scale-[1.08]"
             )}>
                 <Image
@@ -233,20 +231,20 @@ const SkillItem = ({ skill }: { skill: Skill }) => {
                     loading="lazy"
                     sizes="40px"
                     className={cn(
-                        "object-contain transition-all duration-300",
+                        "object-contain transition-[filter] duration-300",
                         skill.className,
                         isHovered && "drop-shadow-lg"
                     )}
                 />
                 <div className={cn(
-                     "absolute inset-0 rounded-full transition-all duration-300 bg-purple-500/0 blur-xl",
+                     "absolute inset-0 rounded-full transition-[background-color] duration-300 bg-purple-500/0 blur-xl",
                      isHovered && "bg-purple-500/40"
                  )} />
             </div>
 
             {/* Skill Name */}
             <span className={cn(
-                "text-xs text-neutral-400 text-center transition-all duration-300",
+                "text-xs text-neutral-400 text-center transition-colors duration-300",
                 isHovered && "text-white -translate-y-0.5"
             )}>
                 {skill.name}
@@ -254,13 +252,13 @@ const SkillItem = ({ skill }: { skill: Skill }) => {
 
             {/* Hover Underline */}
             <div className={cn(
-                "absolute bottom-2 left-1/2 -translate-x-1/2 h-0.5 rounded-full transition-all duration-300 bg-gradient-to-r from-purple-500 to-pink-500",
+                "absolute bottom-2 left-1/2 -translate-x-1/2 h-0.5 rounded-full transition-[width,opacity] duration-300 bg-gradient-to-r from-purple-500 to-pink-500",
                 isHovered ? "w-8 opacity-100" : "w-0 opacity-0"
             )} />
 
             {/* Tooltip */}
             <div className={cn(
-                "absolute -top-16 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 px-3 py-2 rounded-lg bg-neutral-800 border border-neutral-700 shadow-xl",
+                "absolute -top-16 left-1/2 -translate-x-1/2 z-50 transition-[opacity,transform] duration-300 px-3 py-2 rounded-lg bg-neutral-800 border border-neutral-700 shadow-xl",
                 showTooltip ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-2 scale-95 pointer-events-none"
             )}>
                 <div className="text-center whitespace-nowrap">
