@@ -57,11 +57,6 @@ export function HyperText({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            style={{
-                willChange: "transform",
-                transform: "translateZ(0)",
-                backfaceVisibility: "hidden",
-            }}
         >
             {displayText.map((letter, i) => (
                 <m.span
@@ -73,10 +68,6 @@ export function HyperText({
                         duration: 0.3,
                         delay: i * 0.02,
                         ease: "easeOut",
-                    }}
-                    style={{
-                        willChange: "transform, opacity",
-                        transform: "translateZ(0)",
                     }}
                 >
                     {letter}

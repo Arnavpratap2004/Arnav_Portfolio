@@ -128,7 +128,7 @@ function HeroContent() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.05 }}
-                style={{ willChange: "transform, opacity", transform: "translateZ(0)" }}
+
                 className="mb-3"
             >
                 <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
@@ -146,7 +146,7 @@ function HeroContent() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.15 }}
-                style={{ willChange: "transform, opacity", transform: "translateZ(0)" }}
+
             >
                 <HyperText
                     text="Arnav Pratap"
@@ -159,7 +159,7 @@ function HeroContent() {
                 initial={{ opacity: 0, y: 5 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.3 }}
-                style={{ willChange: "transform, opacity", transform: "translateZ(0)" }}
+
                 className="text-sm md:text-base text-neutral-400 font-medium tracking-wide mt-1"
             >
                 IIT Patna Research Intern &bull; VIT CSE &bull; 9.16 CGPA
@@ -170,7 +170,7 @@ function HeroContent() {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.4, delay: 0.4 }}
-                style={{ willChange: "transform, opacity", transform: "translateZ(0)" }}
+
                 className="mt-2 h-8 flex items-center"
             >
                 <span className="text-neutral-500 mr-2 font-mono">{">"}</span>
@@ -191,7 +191,7 @@ function HeroContent() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.5 }}
-                style={{ willChange: "transform, opacity", transform: "translateZ(0)" }}
+
                 className="mt-4 text-neutral-300 text-sm md:text-base leading-relaxed max-w-lg"
             >
                 Building end-to-end systems that solve real problems — from
@@ -204,7 +204,7 @@ function HeroContent() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.6 }}
-                style={{ willChange: "transform, opacity", transform: "translateZ(0)" }}
+
                 className="mt-4 flex flex-wrap items-center gap-2"
             >
                 {highlights.map((h, i) => (

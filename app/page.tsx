@@ -22,16 +22,20 @@ export default function Home() {
     <main className="min-h-screen bg-[#0A1428] antialiased bg-grid-white/[0.02] relative overflow-x-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
       <FloatingNav navItems={navItems} />
       <Hero />
-      <div id="about">
+
+      {/* Below-fold sections use content-visibility: auto to skip
+          layout/paint until they near the viewport — can cut initial
+          render work by 50-70% on a long single-page site */}
+      <div id="about" className="lazy-section">
         <About />
       </div>
-      <div id="experience">
+      <div id="experience" className="lazy-section">
         <Experience />
       </div>
-      <div id="projects">
+      <div id="projects" className="lazy-section">
         <Projects />
       </div>
-      <div id="contact">
+      <div id="contact" className="lazy-section">
         <Contact />
       </div>
       <Footer />

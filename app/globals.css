@@ -166,7 +166,7 @@
   /* Content visibility for off-screen optimization */
   .lazy-section {
     content-visibility: auto;
-    contain-intrinsic-size: 0 500px;
+    contain-intrinsic-size: 0 800px; /* estimated height to prevent scroll jump */
   }
 
   /* Reduce animations for users who prefer reduced motion */

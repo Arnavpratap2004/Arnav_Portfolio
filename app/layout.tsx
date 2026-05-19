@@ -9,6 +9,8 @@ import { LazyMotionProvider } from "@/components/ui/LazyMotionProvider";
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
+  variable: "--font-inter",
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -72,7 +74,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={inter.className}>
+      <head>
+        {/* Preconnect to external origins — saves 100-300ms per cold connection */}
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+        <link rel="dns-prefetch" href="https://drive.google.com" />
+      </head>
+      <body className={`${inter.variable} ${inter.className}`}>
         <LazyMotionProvider>
           <SmoothScrollProvider>
             <ScrollProgress />

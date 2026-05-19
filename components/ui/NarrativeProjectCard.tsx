@@ -192,6 +192,7 @@ export const NarrativeProjectCard = ({
                         alt={imageAlt}
                         fill
                         loading="lazy"
+                        quality={60}
                         className={cn(
                             "object-cover transition-all duration-700",
                             isHovered ? "scale-110 brightness-75" : "scale-100 brightness-100"
