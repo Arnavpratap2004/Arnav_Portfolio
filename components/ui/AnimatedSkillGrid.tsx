@@ -6,7 +6,7 @@ import { m } from "framer-motion";
 
 interface Skill {
     name: string;
-    icon: string;
+    icon: string | React.ReactNode;
     className?: string;
     experience?: string;
     projects?: number;
@@ -221,21 +221,31 @@ const SkillItem = ({ skill }: { skill: Skill }) => {
 
             {/* Skill Icon */}
             <div className={cn(
-                "relative w-10 h-10 transition-transform duration-300",
+                "relative w-10 h-10 flex items-center justify-center transition-transform duration-300",
                 isHovered && "-translate-y-1 scale-[1.08]"
             )}>
-                <Image
-                    src={skill.icon}
-                    alt={skill.name}
-                    fill
-                    loading="lazy"
-                    sizes="40px"
-                    className={cn(
-                        "object-contain transition-[filter] duration-300",
+                {typeof skill.icon === "string" ? (
+                    <Image
+                        src={skill.icon}
+                        alt={skill.name}
+                        fill
+                        loading="lazy"
+                        sizes="40px"
+                        className={cn(
+                            "object-contain transition-[filter] duration-300",
+                            skill.className,
+                            isHovered && "drop-shadow-lg"
+                        )}
+                    />
+                ) : (
+                    <div className={cn(
+                        "w-full h-full flex items-center justify-center transition-[filter] duration-300",
                         skill.className,
-                        isHovered && "drop-shadow-lg"
-                    )}
-                />
+                        isHovered && "drop-shadow-lg filter brightness-110"
+                    )}>
+                        {skill.icon}
+                    </div>
+                )}
                 <div className={cn(
                      "absolute inset-0 rounded-full transition-[background-color] duration-300 bg-purple-500/0 blur-xl",
                      isHovered && "bg-purple-500/40"

@@ -3,8 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { MagneticPulse } from "@/components/ui/MagneticPulse";
 import { cn } from "@/lib/utils";
 
-const RESUME_URL =
-    "https://drive.google.com/file/d/1vmWpALCPCccujC0YsqJK0LZgpsu9aFDi/view?usp=sharing";
+const RESUME_URL = "/Arnav_Resume.pdf";
 
 export function Contact() {
     const [isVisible, setIsVisible] = useState(false);
@@ -12,8 +11,13 @@ export function Contact() {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [emailFocused, setEmailFocused] = useState(false);
     const [messageFocused, setMessageFocused] = useState(false);
+    const [nameFocused, setNameFocused] = useState(false);
+    const [subjectFocused, setSubjectFocused] = useState(false);
+    const [nameValue, setNameValue] = useState("");
     const [emailValue, setEmailValue] = useState("");
+    const [subjectValue, setSubjectValue] = useState("");
     const [messageValue, setMessageValue] = useState("");
+    const [emailCopied, setEmailCopied] = useState(false);
     const sectionRef = useRef<HTMLElement>(null);
 
     // Intersection Observer for warm invitation animation
@@ -34,29 +38,48 @@ export function Contact() {
         return () => observer.disconnect();
     }, []);
 
-    // Handle form submission with confirmation animation
-    const handleSubmit = (e: React.FormEvent) => {
+    // Handle form submission with our API route (Resend)
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
 
-        // Simulate form submission
-        setTimeout(() => {
-            setIsSubmitting(false);
-            setIsSubmitted(true);
+        const formData = {
+            name: nameValue,
+            email: emailValue,
+            subject: subjectValue,
+            message: messageValue,
+        };
 
-            // Reset after 3 seconds
-            setTimeout(() => {
-                setIsSubmitted(false);
-                setEmailValue("");
-                setMessageValue("");
-            }, 3000);
-        }, 1000);
+        try {
+            const response = await fetch("/api/contact", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData)
+            });
+            const result = await response.json();
+            
+            if (response.ok) {
+                setIsSubmitting(false);
+                setIsSubmitted(true);
+                // We don't auto-reset the form anymore, we let the user click "Send another message"
+            } else {
+                console.error("Form submission failed", result);
+                setIsSubmitting(false);
+                alert("Something went wrong. Please try emailing directly.");
+            }
+        } catch (error) {
+            console.error(error);
+            setIsSubmitting(false);
+            alert("Something went wrong. Please try emailing directly.");
+        }
     };
 
     return (
         <section
             ref={sectionRef}
-            className="py-16 md:py-32 w-full relative overflow-hidden"
+            className="pt-28 md:pt-36 pb-16 md:pb-32 w-full relative overflow-hidden"
         >
             {/* Animated Background */}
             <div className="absolute inset-0 bg-gradient-to-b from-neutral-950 via-indigo-950/20 to-neutral-950" />
@@ -86,7 +109,7 @@ export function Contact() {
                         "text-neutral-400 max-w-lg mx-auto transition-all duration-700 delay-300",
                         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                     )}>
-                        Let&apos;s create something amazing together
+                        Have a project in mind, or just want to connect?
                     </p>
                 </div>
 
@@ -117,17 +140,31 @@ export function Contact() {
 
                         <div className="space-y-4">
                             {/* Email with Presence Pulse */}
-                            <a
-                                href="mailto:arnavpratap2003@gmail.com"
-                                className="flex items-center space-x-3 text-neutral-300 hover:text-white transition-colors group"
-                            >
-                                <ContactIcon pulseDelay={0}>
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                    </svg>
-                                </ContactIcon>
-                                <span className="group-hover:translate-x-1 transition-transform">arnavpratap2003@gmail.com</span>
-                            </a>
+                            <div className="flex items-center space-x-3">
+                                <a
+                                    href="mailto:arnavpratap2003@gmail.com"
+                                    className="flex items-center space-x-3 text-neutral-300 hover:text-white transition-colors group"
+                                >
+                                    <ContactIcon pulseDelay={0}>
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                        </svg>
+                                    </ContactIcon>
+                                    <span className="group-hover:translate-x-1 transition-transform">arnavpratap2003@gmail.com</span>
+                                </a>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        navigator.clipboard.writeText('arnavpratap2003@gmail.com');
+                                        setEmailCopied(true);
+                                        setTimeout(() => setEmailCopied(false), 2000);
+                                    }}
+                                    className="text-xs px-2.5 py-1 rounded-full border border-white/10 text-neutral-400 hover:text-white hover:border-teal-500/50 transition-colors duration-200"
+                                    aria-label="Copy email address"
+                                >
+                                    {emailCopied ? '✓ Copied' : 'Copy'}
+                                </button>
+                            </div>
 
                             {/* Social Icons with Presence Pulse */}
                             <div className="flex gap-4 pt-4">
@@ -156,10 +193,22 @@ export function Contact() {
 
                             {/* Resume Download Button */}
                             <div className="pt-4">
-                                <a
-                                    href={RESUME_URL}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        fetch(RESUME_URL)
+                                            .then(response => response.blob())
+                                            .then(blob => {
+                                                const url = window.URL.createObjectURL(blob);
+                                                const a = document.createElement('a');
+                                                a.href = url;
+                                                a.download = "Arnav_Pratap_Resume.pdf";
+                                                document.body.appendChild(a);
+                                                a.click();
+                                                window.URL.revokeObjectURL(url);
+                                                document.body.removeChild(a);
+                                            });
+                                    }}
                                     className={cn(
                                         "inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold",
                                         "border border-white/20 text-white bg-white/5 backdrop-blur-sm",
@@ -171,7 +220,7 @@ export function Contact() {
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                     </svg>
                                     Download Resume (PDF)
-                                </a>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -182,7 +231,61 @@ export function Contact() {
                         isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
                     )}>
                         <div className="bg-neutral-900/95 rounded-3xl p-8 h-full backdrop-blur-md">
-                            <form className="space-y-6" onSubmit={handleSubmit}>
+                            {isSubmitted ? (
+                                <div className="flex flex-col items-center gap-3 py-16 text-center">
+                                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-green-500/10 text-green-400 text-2xl">
+                                        ✓
+                                    </div>
+                                    <h3 className="text-xl font-semibold text-white">Message sent!</h3>
+                                    <p className="text-neutral-400 text-sm max-w-xs">
+                                        I'll get back to you within 24–48 hours. Check your inbox — I've sent you a confirmation too.
+                                    </p>
+                                    <button
+                                        onClick={() => {
+                                            setIsSubmitted(false);
+                                            setNameValue("");
+                                            setEmailValue("");
+                                            setSubjectValue("");
+                                            setMessageValue("");
+                                        }}
+                                        className="mt-2 text-sm underline text-neutral-500 hover:text-white transition-colors"
+                                    >
+                                        Send another message
+                                    </button>
+                                </div>
+                            ) : (
+                                <form className="space-y-6" onSubmit={handleSubmit}>
+                                {/* Name Field with Floating Label */}
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        id="contact-name"
+                                        value={nameValue}
+                                        onChange={(e) => setNameValue(e.target.value)}
+                                        onFocus={() => setNameFocused(true)}
+                                        onBlur={() => setNameFocused(false)}
+                                        className={cn(
+                                            "peer w-full rounded-xl bg-black/50 text-white p-4 pt-6 text-[16px] transition-[border-color,box-shadow] duration-300 outline-none",
+                                            "border-2",
+                                            nameFocused
+                                                ? "border-teal-500 shadow-lg shadow-teal-500/20"
+                                                : "border-neutral-700 hover:border-neutral-600"
+                                        )}
+                                        required
+                                    />
+                                    <label
+                                        htmlFor="contact-name"
+                                        className={cn(
+                                            "absolute left-4 transition-all duration-300 pointer-events-none",
+                                            nameValue || nameFocused
+                                                ? "top-2 text-xs text-teal-400"
+                                                : "top-4 text-base text-neutral-500"
+                                        )}
+                                    >
+                                        Your Name
+                                    </label>
+                                </div>
+
                                 {/* Email Field with Floating Label */}
                                 <div className="relative">
                                     <input
@@ -213,6 +316,37 @@ export function Contact() {
                                         )}
                                     >
                                         Email Address
+                                    </label>
+                                </div>
+
+                                {/* Subject Field with Floating Label */}
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        id="contact-subject"
+                                        value={subjectValue}
+                                        onChange={(e) => setSubjectValue(e.target.value)}
+                                        onFocus={() => setSubjectFocused(true)}
+                                        onBlur={() => setSubjectFocused(false)}
+                                        className={cn(
+                                            "peer w-full rounded-xl bg-black/50 text-white p-4 pt-6 text-[16px] transition-[border-color,box-shadow] duration-300 outline-none",
+                                            "border-2",
+                                            subjectFocused
+                                                ? "border-teal-500 shadow-lg shadow-teal-500/20"
+                                                : "border-neutral-700 hover:border-neutral-600"
+                                        )}
+                                        placeholder=" "
+                                    />
+                                    <label
+                                        htmlFor="contact-subject"
+                                        className={cn(
+                                            "absolute left-4 transition-all duration-300 pointer-events-none",
+                                            subjectValue || subjectFocused
+                                                ? "top-2 text-xs text-teal-400"
+                                                : "top-4 text-base text-neutral-500"
+                                        )}
+                                    >
+                                        Subject (optional)
                                     </label>
                                 </div>
 
@@ -293,6 +427,7 @@ export function Contact() {
                                     )} />
                                 </button>
                             </form>
+                            )}
                         </div>
                     </div>
                 </div>

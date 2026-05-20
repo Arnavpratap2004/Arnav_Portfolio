@@ -71,7 +71,7 @@ export function Projects() {
     ];
 
     return (
-        <section className="py-16 md:py-32 w-full relative overflow-hidden">
+        <section className="pt-28 md:pt-36 pb-16 md:pb-32 w-full relative overflow-hidden">
             {/* Animated Background */}
             <div className="absolute inset-0 bg-gradient-to-b from-neutral-950 via-neutral-900 to-neutral-950" />
             <FloatingBubbles className="absolute inset-0 h-full" />

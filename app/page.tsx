@@ -19,7 +19,7 @@ export default function Home() {
   ];
 
   return (
-    <main className="min-h-screen bg-[#0A1428] antialiased bg-grid-white/[0.02] relative overflow-x-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+    <main id="main-content" className="min-h-screen bg-[#0A1428] antialiased bg-grid-white/[0.02] relative overflow-x-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
       <FloatingNav navItems={navItems} />
       <Hero />
 

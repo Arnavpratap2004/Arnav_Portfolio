@@ -8,13 +8,12 @@ import { cn } from "@/lib/utils";
 
 const GITHUB_URL = "https://github.com/Arnavpratap2004";
 const LINKEDIN_URL = "https://www.linkedin.com/in/arnavpratap2004/";
-const RESUME_URL =
-    "https://drive.google.com/file/d/1vmWpALCPCccujC0YsqJK0LZgpsu9aFDi/view?usp=sharing";
+const RESUME_URL = "/Arnav_Resume.pdf";
 
 const highlights = [
-    { label: "IIT Research", icon: "🔬" },
+    { label: "IIT Patna Research", icon: "🔬" },
     { label: "200+ Concurrent Users", icon: "👥" },
-    { label: "AWS AI Pipeline", icon: "☁️" },
+    { label: "AWS-Deployed AI", icon: "☁️" },
     { label: "9.16 CGPA", icon: "🎓" },
 ];
 
@@ -27,9 +26,24 @@ function CTAButtons() {
             style={{ willChange: "transform, opacity", transform: "translateZ(0)" }}
             className="mt-6 flex flex-wrap items-center gap-3"
         >
-            {/* Primary CTA */}
-            <a
-                href="#projects"
+            {/* Primary CTA — Resume (what recruiters want first) */}
+            <button
+                onClick={(e) => {
+                    e.preventDefault();
+                    // Force download using Blob
+                    fetch(RESUME_URL)
+                        .then(response => response.blob())
+                        .then(blob => {
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = "Arnav_Pratap_Resume.pdf";
+                            document.body.appendChild(a);
+                            a.click();
+                            window.URL.revokeObjectURL(url);
+                            document.body.removeChild(a);
+                        });
+                }}
                 className={cn(
                     "relative inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-white text-sm",
                     "bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-400",
@@ -37,30 +51,27 @@ function CTAButtons() {
                     "group overflow-hidden"
                 )}
             >
-                <span className="relative z-10">See My Projects</span>
-                <svg className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                <svg className="w-4 h-4 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                {/* Optimized glow without heavy shadows */}
+                <span className="relative z-10">Download Resume</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-teal-400 via-cyan-400 to-teal-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-            </a>
+            </button>
 
-            {/* Secondary CTA — Resume */}
+            {/* Secondary CTA — Projects */}
             <a
-                href={RESUME_URL}
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#projects"
                 className={cn(
                     "relative inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-sm",
-                    "border border-white/20 text-white bg-white/10", // Removed backdrop-filter
+                    "border border-white/20 text-white bg-white/10",
                     "hover:bg-white/20 hover:border-teal-500/50 transition-[transform,border-color,background-color] duration-300",
                     "hover:scale-105 active:scale-95 group"
                 )}
             >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                <span className="relative z-10">See My Projects</span>
+                <svg className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
-                <span className="relative z-10">Download Resume</span>
             </a>
         </m.div>
     );
@@ -107,10 +118,10 @@ function HeroContent() {
     const [currentSkillIndex, setCurrentSkillIndex] = useState(0);
 
     const skills = [
-        "Full Stack Developer",
+        "Full-Stack Engineer",
         "AI/ML Researcher",
-        "UI/UX Enthusiast",
-        "Backend Specialist",
+        "Systems Builder",
+        "Backend Architect",
         "Problem Solver",
     ];
 
@@ -137,7 +148,7 @@ function HeroContent() {
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
                     </span>
-                    Open to Full-Time Roles — 2027
+                    Graduating July 2027 · Open to Internships Now
                 </span>
             </m.div>
 
@@ -178,20 +189,22 @@ function HeroContent() {
                     <span
                         key={currentSkillIndex}
                         className="text-lg sm:text-xl md:text-2xl font-medium bg-gradient-to-r from-teal-400 via-cyan-300 to-purple-400 bg-clip-text text-transparent animate-in slide-in-from-bottom-2 fade-in duration-300"
+                        aria-live="polite"
+                        aria-atomic="true"
                     >
                         {skills[currentSkillIndex]}
                     </span>
                 </div>
-                {/* Static blinking cursor via CSS */}
-                <span className="ml-1 w-0.5 h-6 bg-teal-400 animate-pulse" />
+                {/* Static blinking cursor via CSS — hidden from screen readers */}
+                <span className="ml-1 w-0.5 h-6 bg-teal-400 animate-pulse" aria-hidden="true" />
             </m.div>
 
             {/* Bio — NO animation: this is the LCP element. Starting at
                 opacity:0 delays LCP by ~2.5s on mobile. Render instantly. */}
             <p className="mt-4 text-neutral-300 text-sm md:text-base leading-relaxed max-w-lg">
-                Building end-to-end systems that solve real problems — from
-                hostel-scale feedback platforms to real-time auction engines
-                and AI-powered research frameworks.
+                I build production systems used by hundreds of real users
+                daily — and conduct AI research at IIT Patna on problems
+                that matter.
             </p>
 
             {/* Credibility Highlight Strip */}

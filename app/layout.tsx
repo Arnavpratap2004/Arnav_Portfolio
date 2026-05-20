@@ -15,7 +15,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://arnavpratap.tech"),
-  title: "Arnav Pratap | Full-Stack & AI Engineer | IIT Research • VIT 2027",
+  title: "Arnav Pratap | Full-Stack & AI Engineer | IIT Patna Research",
   description:
     "Final-year CSE student at VIT with 9.16 CGPA. IIT Patna research on RAG-based hate speech detection. Full-stack projects with real users and production impact.",
   keywords: [
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
         url: "/og-banner.png",
         width: 1200,
         height: 630,
-        alt: "Arnav Pratap — Full-Stack & AI Engineer | IIT Patna Research • VIT 2027",
+        alt: "Arnav Pratap — Full-Stack & AI Engineer | IIT Patna Research",
       },
     ],
   },
@@ -67,6 +67,23 @@ export const metadata: Metadata = {
   },
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Arnav Pratap",
+  url: "https://arnavpratap.tech",
+  jobTitle: "Full-Stack & AI Engineer",
+  alumniOf: [
+    { "@type": "CollegeOrUniversity", name: "Vellore Institute of Technology" },
+    { "@type": "CollegeOrUniversity", name: "Indian Institute of Technology, Patna" },
+  ],
+  sameAs: [
+    "https://github.com/Arnavpratap2004",
+    "https://www.linkedin.com/in/arnavpratap2004/",
+  ],
+  knowsAbout: ["React", "Next.js", "Machine Learning", "RAG", "NLP", "Python"],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -78,9 +95,20 @@ export default function RootLayout({
         {/* Preconnect to external origins — saves 100-300ms per cold connection */}
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
-        <link rel="dns-prefetch" href="https://drive.google.com" />
+        {/* JSON-LD structured data for Google rich results */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </head>
       <body className={`${inter.variable} ${inter.className}`}>
+        {/* Skip-to-content for keyboard/screen reader users */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-white focus:text-black focus:rounded-lg focus:text-sm focus:font-medium"
+        >
+          Skip to main content
+        </a>
         <LazyMotionProvider>
           <SmoothScrollProvider>
             <ScrollProgress />

@@ -5,11 +5,40 @@ import { IconCode, IconDatabase, IconCloud, IconBrain, IconTool, IconTerminal2 }
 import { AuroraBackground } from "@/components/ui/AuroraBackground";
 import { AnimatedSkillGrid, SkillGridStyles } from "@/components/ui/AnimatedSkillGrid";
 
+import {
+    CplusplusOriginal,
+    PythonOriginal,
+    JavaOriginal,
+    Html5Original,
+    Css3Original,
+    JavascriptOriginal,
+    TypescriptOriginal,
+    NodejsOriginal,
+    ReactOriginal,
+    NextjsOriginal,
+    ExpressOriginal,
+    TailwindcssOriginal,
+    MongodbOriginal,
+    MysqlOriginal,
+    PostgresqlOriginal,
+    AmazonwebservicesOriginalWordmark,
+    DockerOriginal,
+    LinuxOriginal,
+    TensorflowOriginal,
+    PytorchOriginal,
+    PandasOriginal,
+    NumpyOriginal,
+    GitOriginal,
+    GithubOriginal,
+    PostmanOriginal,
+    VscodeOriginal
+} from "devicons-react";
+
 const stats = [
     { value: "9.16", label: "CGPA", suffix: "" },
     { value: "6", label: "Projects", suffix: "+" },
     { value: "500", label: "Users", suffix: "+" },
-    { value: "1", label: "Research Paper", suffix: "" },
+    { value: "1", label: "IEEE Paper", suffix: "" },
 ];
 
 export function About() {
@@ -17,69 +46,69 @@ export function About() {
         {
             title: "Languages",
             skills: [
-                { name: "C++", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" },
-                { name: "Python", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
-                { name: "Java", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" },
-                { name: "HTML5", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" },
-                { name: "CSS3", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" },
-                { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
-                { name: "TypeScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
+                { name: "C++", icon: <CplusplusOriginal size={40} /> },
+                { name: "Python", icon: <PythonOriginal size={40} /> },
+                { name: "Java", icon: <JavaOriginal size={40} /> },
+                { name: "HTML5", icon: <Html5Original size={40} /> },
+                { name: "CSS3", icon: <Css3Original size={40} /> },
+                { name: "JavaScript", icon: <JavascriptOriginal size={40} /> },
+                { name: "TypeScript", icon: <TypescriptOriginal size={40} /> },
             ],
             icon: <IconCode className="w-6 h-6 text-blue-400" />
         },
         {
             title: "Frameworks",
             skills: [
-                { name: "Node.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
-                { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
-                { name: "Next.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" },
-                { name: "Express", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg", className: "invert" },
-                { name: "Tailwind", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg" },
+                { name: "Node.js", icon: <NodejsOriginal size={40} /> },
+                { name: "React", icon: <ReactOriginal size={40} /> },
+                { name: "Next.js", icon: <NextjsOriginal size={40} /> },
+                { name: "Express", icon: <ExpressOriginal size={40} className="invert" /> },
+                { name: "Tailwind", icon: <TailwindcssOriginal size={40} /> },
             ],
             icon: <IconTerminal2 className="w-6 h-6 text-green-400" />
         },
         {
             title: "Databases",
             skills: [
-                { name: "MongoDB", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" },
-                { name: "MySQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" },
-                { name: "PostgreSQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" },
+                { name: "MongoDB", icon: <MongodbOriginal size={40} /> },
+                { name: "MySQL", icon: <MysqlOriginal size={40} /> },
+                { name: "PostgreSQL", icon: <PostgresqlOriginal size={40} /> },
             ],
             icon: <IconDatabase className="w-6 h-6 text-yellow-400" />
         },
         {
             title: "Cloud DevOps",
             skills: [
-                { name: "AWS", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" },
-                { name: "Docker", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" },
-                { name: "Linux", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" },
+                { name: "AWS", icon: <AmazonwebservicesOriginalWordmark size={40} /> },
+                { name: "Docker", icon: <DockerOriginal size={40} /> },
+                { name: "Linux", icon: <LinuxOriginal size={40} /> },
             ],
             icon: <IconCloud className="w-6 h-6 text-orange-400" />
         },
         {
             title: "AI/ML",
             skills: [
-                { name: "TensorFlow", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg" },
-                { name: "PyTorch", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg" },
-                { name: "Pandas", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg" },
-                { name: "NumPy", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/numpy/numpy-original.svg" },
+                { name: "TensorFlow", icon: <TensorflowOriginal size={40} /> },
+                { name: "PyTorch", icon: <PytorchOriginal size={40} /> },
+                { name: "Pandas", icon: <PandasOriginal size={40} /> },
+                { name: "NumPy", icon: <NumpyOriginal size={40} /> },
             ],
             icon: <IconBrain className="w-6 h-6 text-purple-400" />
         },
         {
             title: "Tools",
             skills: [
-                { name: "Git", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" },
-                { name: "GitHub", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg", className: "invert" },
-                { name: "Postman", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postman/postman-original.svg" },
-                { name: "VS Code", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" },
+                { name: "Git", icon: <GitOriginal size={40} /> },
+                { name: "GitHub", icon: <GithubOriginal size={40} className="invert" /> },
+                { name: "Postman", icon: <PostmanOriginal size={40} /> },
+                { name: "VS Code", icon: <VscodeOriginal size={40} /> },
             ],
             icon: <IconTool className="w-6 h-6 text-pink-400" />
         }
     ];
 
     return (
-        <AuroraBackground className="h-auto min-h-screen py-12 md:py-20 w-full relative">
+        <AuroraBackground className="h-auto min-h-screen pt-28 md:pt-36 pb-12 md:pb-20 w-full relative">
             <SkillGridStyles />
             <div className="relative z-10 w-full max-w-6xl mx-auto px-4">
 
@@ -107,12 +136,9 @@ export function About() {
                                 concurrent connections.
                             </p>
                             <p className="text-neutral-400 text-sm md:text-base leading-relaxed">
-                                My sweet spot is the intersection of full-stack engineering
-                                and AI/ML — designing systems that are both technically robust
-                                and genuinely useful. Whether it&apos;s building a RAG pipeline for
-                                interpretable hate speech detection or deploying AWS-powered
-                                document intelligence, I care deeply about shipping software
-                                that creates measurable impact.
+                                I&apos;ve gone from a VIT lab to an IIT research floor in
+                                two years. The thread connecting everything I build: real
+                                users, real deployment, real feedback loops.
                             </p>
                         </div>
 
@@ -126,7 +152,7 @@ export function About() {
                                         whileInView={{ opacity: 1, scale: 1 }}
                                         viewport={{ once: true }}
                                         transition={{ delay: 0.1 + i * 0.1, type: "spring", stiffness: 150, damping: 15 }}
-                                        className="relative p-4 md:p-5 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm text-center group hover:border-teal-500/30 hover:bg-white/10 transition-all duration-300"
+                                        className="relative p-4 md:p-5 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm text-center group hover:border-teal-500/30 hover:bg-white/10 transition-[border-color,background-color,transform] duration-300"
                                     >
                                         <div className="text-2xl md:text-4xl font-bold bg-gradient-to-br from-teal-400 to-cyan-300 bg-clip-text text-transparent">
                                             {stat.value}{stat.suffix}

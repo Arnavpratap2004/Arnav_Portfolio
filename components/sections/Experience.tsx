@@ -13,10 +13,10 @@ export function Experience() {
             period: "June 2025 – August 2025",
             year: "2025",
             achievements: [
-                "Proposed a novel framework, Context-Aware Dynamic Rationale Generation (CAD-RAG), for hate speech detection.",
-                "Designed a dynamic knowledge base integrating evolving slur lexicons and incident reports.",
-                "Developed a multi-query retrieval mechanism for detecting emerging \"zero-day\" hate speech.",
-                "Built a RAG pipeline combining socio-temporal context with input text for interpretable outputs."
+                "Published CAD-RAG framework (IEEE paper) for zero-day hate speech detection using dynamic RAG pipelines",
+                "Built a dynamic knowledge base integrating real-time slur lexicons and incident reports for evolving hate speech",
+                "Developed multi-query retrieval mechanism detecting emerging zero-day hate speech patterns",
+                "Engineered interpretable RAG pipeline combining socio-temporal context with input text"
             ],
             gradientFrom: "from-blue-500",
             gradientTo: "to-purple-500",
@@ -37,25 +37,10 @@ export function Experience() {
             gradientFrom: "from-emerald-500",
             gradientTo: "to-cyan-500",
         },
-        {
-            type: "education" as const,
-            title: "12th Standard (CBSE)",
-            organization: "St. Karen's Secondary School",
-            location: "Patna",
-            period: "2020 – 2022",
-            year: "2022",
-            grade: "Percentage: 86%",
-            achievements: [
-                "Optimized study techniques for competitive exam preparation",
-                "Developed strong foundation in Mathematics and Computer Science"
-            ],
-            gradientFrom: "from-orange-500",
-            gradientTo: "to-yellow-500",
-        },
     ];
 
     return (
-        <section className="py-12 md:py-20 w-full relative overflow-hidden">
+        <section className="pt-28 md:pt-36 pb-12 md:pb-20 w-full relative overflow-hidden">
             <TimelineStyles />
 
             {/* Animated Background */}

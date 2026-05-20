@@ -154,7 +154,6 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
-    scroll-padding-top: 80px; /* offset for fixed navbar on anchor links */
   }
 
   /* GPU acceleration for canvas elements */
