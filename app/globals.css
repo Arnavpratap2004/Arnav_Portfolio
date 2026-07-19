@@ -2,79 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --color-1: 0 100% 63%;
-    --color-2: 270 100% 63%;
-    --color-3: 210 100% 63%;
-    --color-4: 195 100% 63%;
-    --color-5: 90 100% 63%;
-  }
-}
 
-@layer utilities {
-  .animate-first {
-    animation: moveVertical 30s ease infinite;
-  }
-
-  .animate-second {
-    animation: moveInCircle 20s reverse infinite;
-  }
-
-  .animate-third {
-    animation: moveInCircle 40s linear infinite;
-  }
-
-  .animate-fourth {
-    animation: moveHorizontal 40s ease infinite;
-  }
-
-  .animate-fifth {
-    animation: moveInCircle 20s ease infinite;
-  }
-}
-
-@keyframes moveHorizontal {
-  0% {
-    transform: translateX(-50%) translateY(-10%);
-  }
-
-  50% {
-    transform: translateX(50%) translateY(10%);
-  }
-
-  100% {
-    transform: translateX(-50%) translateY(-10%);
-  }
-}
-
-@keyframes moveVertical {
-  0% {
-    transform: translateY(-50%);
-  }
-
-  50% {
-    transform: translateY(50%);
-  }
-
-  100% {
-    transform: translateY(-50%);
-  }
-}
-
-@keyframes moveInCircle {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  50% {
-    transform: rotate(180deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}
 
 @layer base {
   :root {
@@ -129,14 +57,15 @@
     --brand-accent: 168 65% 46%;
     --brand-purple: 270 100% 63%;
     --brand-pink: 330 80% 60%;
-
-    /* Vibrant Accents */
-    --color-1: 0 100% 63%;
-    --color-2: 270 100% 63%;
-    --color-3: 210 100% 63%;
-    --color-4: 195 100% 63%;
-    --color-5: 90 100% 63%;
+    /* Active Theory inspired RGB split/glitch text effect */
+  .glitch-text {
+    text-shadow: 
+      0.06em 0 0 rgba(217, 70, 239, 0.8),    /* Fuchsia offset */
+      -0.03em -0.04em 0 rgba(56, 189, 248, 0.8), /* Cyan offset */
+      0.03em 0.04em 0 rgba(16, 185, 129, 0.4);   /* Subtle green offset */
+    letter-spacing: 0.1em;
   }
+}
 }
 
 @layer base {
@@ -146,30 +75,84 @@
 
   body {
     @apply bg-background text-foreground;
-    overflow-x: hidden;
+    overscroll-behavior: none; /* PERF: Prevent browser scroll chaining from fighting Lenis during fast trackpad gestures. */
   }
 
-  /* Prevent horizontal overflow from any rogue element */
+  #main-content {
+    /* PERF: Fast fade-in with no delay — the old 1s ease-in with 0.5s delay added 1.5s of
+       perceived load time after the loader had already finished. */
+    transition: opacity 0.45s ease-out;
+  }
+
+  body.portfolio-loader-active #main-content {
+    opacity: 0;
+    pointer-events: none;
+  }
+
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overflow-x: hidden;
   }
 
-  /* GPU acceleration for canvas elements */
-  canvas {
-    will-change: transform;
-    transform: translateZ(0);
-    backface-visibility: hidden;
+  /* Firefox-only scrollbar colors. Must NOT reach Chromium: setting the standard
+     scrollbar-color/width properties there disables ::-webkit-scrollbar styling,
+     which would replace the gradient thumb with a flat thin bar. */
+  @supports (-moz-appearance: none) {
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: #7C5CFF #06090F;
+    }
+  }
+
+  /* Branded scrollbar (WebKit/Chromium). Track blends with the page background;
+     the thumb carries the site's signature purple gradient and floats inset. */
+  ::-webkit-scrollbar {
+    width: 11px;
+    height: 11px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #06090F;
+    border-left: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #6B48FF 0%, #9B70FF 55%, #D896FF 100%);
+    border-radius: 999px;
+    /* Transparent border + padding-box clip insets the gradient so the thumb
+       appears to float inside the track. */
+    border: 3px solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+    min-height: 48px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #7C5CFF 0%, #B18CFF 55%, #E8B8FF 100%);
+    background-clip: padding-box;
+    border-width: 2px;
+  }
+
+  ::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(180deg, #8B6DFF 0%, #C09EFF 55%, #F0CBFF 100%);
+    background-clip: padding-box;
+    border-width: 2px;
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: #06090F;
   }
 
   /* Content visibility for off-screen optimization */
   .lazy-section {
     content-visibility: auto;
-    contain-intrinsic-size: 0 800px; /* estimated height to prevent scroll jump */
+    contain-intrinsic-size: 0 100vh; /* PERF: Reserve viewport-scale space so skipped sections do not revise scroll geometry late. */
   }
 
-  /* Paint isolation for project cards — repaint on hover won't propagate */
+  .lazy-section-projects {
+    contain-intrinsic-size: 0 400vh; /* PERF: Match the Projects sticky-scroll height while it is skipped off-screen. */
+  }
+
+  /* Paint isolation for project cards â€” repaint on hover won't propagate */
   .project-card-container {
     contain: layout style paint;
   }
@@ -197,10 +180,199 @@
     display: none; /* Chrome/Safari */
   }
 
-  /* Reduce GPU cost on mobile */
-  @media (max-width: 768px) {
-    canvas {
-      will-change: auto;
-    }
+}
+
+/* --- Added from new Hero Design --- */
+
+/* PERF: Geist is loaded once through next/font in app/layout.tsx; avoid a duplicate public font request. */
+
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@layer utilities {
+  .font-geist {
+    font-family: var(--font-inter), 'Inter', system-ui, sans-serif; /* PERF: Reuse next/font's loaded Geist face instead of triggering the duplicate global @font-face. */
   }
+
+  .text-gradient-display {
+    background: linear-gradient(135deg, #6B48FF 0%, #D896FF 50%, #E8F4FF 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .text-gradient-cursor {
+    background: linear-gradient(135deg, #6B48FF 0%, #D896FF 50%, #E8F4FF 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .backdrop-glass {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+}
+
+/* Custom cursor - hide default on desktop */
+@media (hover: hover) and (pointer: fine) {
+  body.custom-cursor-active,
+  body.custom-cursor-active * {
+    cursor: none !important;
+  }
+}
+
+/* Blinking cursor */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.cursor-blink {
+  animation: blink 1s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+/* Holographic orbital ring */
+@keyframes orbit {
+  from {
+    transform: rotateX(72deg) rotateZ(0deg);
+  }
+  to {
+    transform: rotateX(72deg) rotateZ(360deg);
+  }
+}
+
+.holographic-orbit-ring {
+  animation: orbit 6s linear infinite;
+}
+
+/* Shard ambient motion.
+   PERF: The old continuous 3D rotateX/Y/Z spin re-rastered 8 clip-path + inset-shadow layers
+   every frame (~24fps of idle cost on integrated GPUs). A 2D float/sway animates the composited
+   transform only — zero raster work — while keeping the crystals alive. */
+@keyframes shardFloat {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-12px) rotate(3deg); }
+}
+
+.shard-rotate {
+  animation: shardFloat 10s ease-in-out infinite;
+}
+
+/* PERF: Pause ambient compositor work while the page is actively scrolling — 8 slowly rotating
+   3D shard layers measured ~8fps of scroll cost on integrated GPUs. Resumes on scroll end. */
+html.is-scrolling .shard-rotate {
+  animation-play-state: paused;
+}
+
+/* Ripple effect for skill card tap feedback */
+@keyframes ripple {
+  0% { transform: scale(0); opacity: 1; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+.animate-ripple {
+  animation: ripple 0.6s ease-out forwards;
+}
+
+/* --- Hero split-layout ornaments --- */
+
+/* Rotating conic ring revealed on social-button hover.
+   PERF: rotation is transform-only (composited); the gradient rasters once. */
+@keyframes socialRingSpin {
+  to { transform: rotate(360deg); }
+}
+
+.social-ring {
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    #6B48FF 70deg,
+    #D896FF 150deg,
+    #E8F4FF 195deg,
+    transparent 290deg
+  );
+  animation: socialRingSpin 3.5s linear infinite;
+}
+
+/* Floating glass chips around the hero portrait — transform-only float. */
+@keyframes heroChipFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-9px); }
+}
+
+.hero-chip-float {
+  animation: heroChipFloat 6s ease-in-out infinite;
+}
+
+.hero-chip-float-delayed {
+  animation: heroChipFloat 7s ease-in-out 1.4s infinite;
+}
+
+/* Slow orbital ring behind the portrait; child dots ride the rotation. */
+@keyframes heroOrbitSpin {
+  to { transform: rotate(360deg); }
+}
+
+.hero-orbit {
+  animation: heroOrbitSpin 36s linear infinite;
+}
+
+/* PERF: consistent with .shard-rotate — pause ambient hero motion while scrolling. */
+html.is-scrolling .hero-chip-float,
+html.is-scrolling .hero-chip-float-delayed,
+html.is-scrolling .hero-orbit,
+html.is-scrolling .social-ring {
+  animation-play-state: paused;
+}
+
+/* Melt the portrait's lower edge into the section background. */
+.hero-portrait-fade {
+  -webkit-mask-image: linear-gradient(to bottom, black 78%, transparent 99%);
+  mask-image: linear-gradient(to bottom, black 78%, transparent 99%);
+}
+
+/* --- Technical Arsenal accent system ---
+   Each category card sets --accent inline; these rules derive every colored
+   detail from it so hover tints stay consistent per category. */
+.skill-card {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.skill-card:hover {
+  border-color: color-mix(in srgb, var(--accent) 40%, rgba(255, 255, 255, 0.08));
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.32),
+    0 0 44px color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.skill-card .accent-hairline {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--accent) 65%, transparent),
+    transparent
+  );
+}
+
+/* Scroll hint: a dot sliding down a hairline. */
+@keyframes heroScrollDot {
+  0% { transform: translateY(0); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translateY(30px); opacity: 0; }
+}
+
+.hero-scroll-dot {
+  animation: heroScrollDot 2.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }

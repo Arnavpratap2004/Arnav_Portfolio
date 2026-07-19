@@ -1,13 +1,14 @@
 
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { ScrollProgress } from "@/components/ui/ScrollProgress";
 import { SmoothScrollProvider } from "@/components/ui/SmoothScrollProvider";
 import { LazyMotionProvider } from "@/components/ui/LazyMotionProvider";
+import { PortfolioLoader } from "@/components/ui/PortfolioLoader";
 
-const inter = Inter({
-  subsets: ["latin"],
+const geist = localFont({
+  src: "../public/fonts/Geist-Variable.woff2",
   display: "swap",
   variable: "--font-inter",
   preload: true,
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://arnavpratap.tech"),
   title: "Arnav Pratap | Full-Stack & AI Engineer | IIT Patna Research",
   description:
-    "Final-year CSE student at VIT with 9.16 CGPA. IIT Patna research on RAG-based hate speech detection. Full-stack projects with real users and production impact.",
+    "Final-year CSE student at VIT with 9.00 CGPA. IIT Patna research on RAG-based hate speech detection. Full-stack projects with real users and production impact.",
   keywords: [
     "Arnav Pratap",
     "Full Stack Developer",
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     title: "Arnav Pratap | Full-Stack & AI Engineer",
     description:
-      "Final-year CSE student at VIT (9.16 CGPA). IIT Patna research on RAG-based hate speech detection. Full-stack projects with real users and production impact.",
+      "Final-year CSE student at VIT (9.00 CGPA). IIT Patna research on RAG-based hate speech detection. Full-stack projects with real users and production impact.",
     siteName: "Arnav Pratap — Portfolio",
     images: [
       {
@@ -51,7 +52,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Arnav Pratap | Full-Stack & AI Engineer",
     description:
-      "IIT Patna research intern. VIT CSE 9.16 CGPA. Building production systems with React, Node.js, AWS & AI/ML.",
+      "IIT Patna research intern. VIT CSE 9.00 CGPA. Building production systems with React, Node.js, AWS & AI/ML.",
     images: ["/og-banner.png"],
   },
   robots: {
@@ -90,18 +91,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <head>
-        {/* Preconnect to external origins — saves 100-300ms per cold connection */}
-        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
         {/* JSON-LD structured data for Google rich results */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={`${inter.variable} ${inter.className}`}>
+      <body className={`${geist.variable} ${geist.className} overflow-x-hidden`} suppressHydrationWarning>
+        <PortfolioLoader />
         {/* Skip-to-content for keyboard/screen reader users */}
         <a
           href="#main-content"

@@ -1,0 +1,18 @@
+export const C = {
+  bg: '#06090F',
+  surface: 'rgba(255,255,255,0.03)',
+  surfaceHover: 'rgba(255,255,255,0.055)',
+  border: 'rgba(216,0,255,0.12)',
+  borderHover: 'rgba(216,0,255,0.35)',
+  borderFocus: 'rgba(216,0,255,0.65)',
+  fuchsia: '#D800FF',
+  fuchsiaDim: '#9B1FCC',
+  purple: '#7B2FBE',
+  cyan: '#00F5D4',
+  cyanDim: '#00B8A0',
+  white: '#FFFFFF',
+  muted: 'rgba(255,255,255,0.55)',
+  mutedDark: 'rgba(255,255,255,0.28)',
+  success: '#00F5A0',
+  error: '#FF4D6D',
+} as const;

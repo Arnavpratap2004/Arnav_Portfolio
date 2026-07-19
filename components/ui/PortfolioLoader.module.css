@@ -1,0 +1,187 @@
+.wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  color: #ffffff;
+  background: #06090f;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.82s ease-in-out, visibility 0.82s;
+  will-change: opacity;
+  contain: layout paint style;
+}
+
+.wrapper::before {
+  position: absolute;
+  inset: -20%;
+  content: "";
+  background:
+    radial-gradient(circle at 50% 48%, rgba(107, 72, 255, 0.14), transparent 24%),
+    radial-gradient(circle at 50% 50%, rgba(155, 112, 255, 0.1), transparent 36%),
+    radial-gradient(circle at 50% 50%, rgba(232, 244, 255, 0.05), transparent 18%),
+    linear-gradient(135deg, rgba(216, 150, 255, 0.03), transparent 34%, rgba(107, 72, 255, 0.03));
+  opacity: 0.95;
+  pointer-events: none;
+}
+
+.wrapper::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.026) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+  background-size: 46px 46px;
+  mask-image: radial-gradient(circle at center, black 0%, transparent 78%);
+  opacity: 0.36;
+  pointer-events: none;
+}
+
+.fadeOut {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.particleCanvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform: translateZ(0);
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 240px;
+  height: 240px;
+  isolation: isolate;
+  filter: drop-shadow(0 0 28px rgba(107, 72, 255, 0.22));
+  transform: translateZ(0);
+}
+
+.core {
+  position: absolute;
+  width: 116px;
+  height: 116px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle, rgba(245, 240, 255, 0.96) 0%, rgba(155, 112, 255, 0.72) 17%, rgba(107, 72, 255, 0.22) 50%, rgba(107, 72, 255, 0) 72%);
+  box-shadow:
+    0 0 36px rgba(155, 112, 255, 0.26),
+    0 0 72px rgba(107, 72, 255, 0.2);
+  opacity: 0.3;
+  transform: scale(0.82);
+  transition: opacity 0.62s ease, transform 0.62s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.coreBurst {
+  opacity: 0;
+  transform: scale(7);
+}
+
+.svg {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  transform: rotate(-90deg);
+  transition: opacity 0.42s ease, transform 0.42s ease;
+  will-change: transform, opacity;
+}
+
+.hideRing {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.6);
+}
+
+.track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.065);
+  stroke-width: 4;
+}
+
+.ring {
+  fill: none;
+  stroke: url(#apLoaderGrad);
+  stroke-width: 6;
+  stroke-linecap: round;
+  filter:
+    drop-shadow(0 0 10px rgba(155, 112, 255, 0.9))
+    drop-shadow(0 0 24px rgba(107, 72, 255, 0.5))
+    drop-shadow(0 0 36px rgba(216, 150, 255, 0.2));
+  transition: stroke-dashoffset 0.16s ease-out;
+}
+
+.text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 1.22rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #ffffff;
+  letter-spacing: 2px;
+  text-shadow:
+    0 0 12px rgba(255, 255, 255, 0.22),
+    0 0 28px rgba(155, 112, 255, 0.36);
+  transform: translate(-50%, -50%);
+  transition: transform 0.84s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.84s ease-in, filter 0.84s ease;
+  will-change: transform, opacity, filter;
+}
+
+.explode {
+  opacity: 0;
+  filter: blur(2px);
+  transform: translate(-50%, -50%) scale(18);
+}
+
+.subtitle {
+  position: absolute;
+  top: calc(50% + 126px);
+  left: 50%;
+  color: rgba(216, 150, 255, 0.78);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+  white-space: nowrap;
+  text-shadow: 0 0 18px rgba(155, 112, 255, 0.45);
+  transform: translateX(-50%);
+  transition: opacity 0.48s ease, transform 0.48s ease;
+  will-change: transform, opacity;
+}
+
+.subtitleOut {
+  opacity: 0;
+  transform: translate(-50%, 10px);
+}
+
+.reducedMotion,
+.reducedMotion .svg,
+.reducedMotion .text,
+.reducedMotion .ring,
+.reducedMotion .core,
+.reducedMotion .subtitle {
+  transition-duration: 0.16s;
+}
+
+.reducedMotion .explode {
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.reducedMotion .coreBurst {
+  transform: scale(1.08);
+}

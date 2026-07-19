@@ -34,12 +34,11 @@ export const NarrativeProjectCard = ({
     const [showHighlight, setShowHighlight] = useState(false);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
-    const [isTouchDevice, setIsTouchDevice] = useState(false);
+    // PERF: Compute touch capability in the lazy initializer to avoid a mount-time state update.
+    const [isTouchDevice] = useState(() => typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0));
+    const revealTimeoutsRef = useRef<Array<ReturnType<typeof setTimeout>>>([]);
+    const pendingMouseEventRef = useRef<{ clientX: number; clientY: number } | null>(null);
 
-    // Detect touch device
-    useEffect(() => {
-        setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
-    }, []);
 
     // Progressive discovery layers
     const [layer1Visible, setLayer1Visible] = useState(false);
@@ -54,12 +53,13 @@ export const NarrativeProjectCard = ({
                     setIsVisible(true);
                     // Trigger highlight animation
                     setShowHighlight(true);
-                    setTimeout(() => setShowHighlight(false), 2000);
+                    // PERF: Track reveal timers so they cannot update state after the card unmounts mid-scroll.
+                    revealTimeoutsRef.current.push(setTimeout(() => setShowHighlight(false), 2000));
 
                     // Progressive reveal on scroll
-                    setTimeout(() => setLayer1Visible(true), 100);
-                    setTimeout(() => setLayer2Visible(true), 400);
-                    setTimeout(() => setLayer3Visible(true), 700);
+                    revealTimeoutsRef.current.push(setTimeout(() => setLayer1Visible(true), 100));
+                    revealTimeoutsRef.current.push(setTimeout(() => setLayer2Visible(true), 400));
+                    revealTimeoutsRef.current.push(setTimeout(() => setLayer3Visible(true), 700));
                 }
             },
             { threshold: 0.3 }
@@ -69,7 +69,12 @@ export const NarrativeProjectCard = ({
             observer.observe(cardRef.current);
         }
 
-        return () => observer.disconnect();
+        return () => {
+            observer.disconnect();
+            // PERF: Clear all delayed reveal updates if the card leaves the tree before timers fire.
+            revealTimeoutsRef.current.forEach(clearTimeout);
+            revealTimeoutsRef.current = [];
+        };
     }, []);
 
     // RAF reference for throttling
@@ -79,16 +84,19 @@ export const NarrativeProjectCard = ({
     const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
         if (!cardRef.current) return;
 
-        if (rafRef.current) {
-            cancelAnimationFrame(rafRef.current);
-        }
+        pendingMouseEventRef.current = { clientX: e.clientX, clientY: e.clientY };
+        if (rafRef.current !== null) return;
 
+        // PERF: Coalesce high-frequency mousemove events into one DOM read/write batch per frame.
         rafRef.current = requestAnimationFrame(() => {
-            if (!cardRef.current) return;
+            const pendingEvent = pendingMouseEventRef.current;
+            rafRef.current = null;
+            pendingMouseEventRef.current = null;
+            if (!cardRef.current || !pendingEvent) return;
 
             const rect = cardRef.current.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+            const x = pendingEvent.clientX - rect.left;
+            const y = pendingEvent.clientY - rect.top;
 
             setMousePosition({ x, y });
 
@@ -142,8 +150,8 @@ export const NarrativeProjectCard = ({
             <div
                 className={cn(
                     "absolute -top-2 left-1/2 -translate-x-1/2 z-30 px-4 py-2 rounded-full",
-                    "bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-400",
-                    "text-white text-sm font-bold shadow-lg shadow-teal-500/50",
+                    "bg-gradient-to-r from-fuchsia-500 via-purple-500 to-fuchsia-400",
+                    "text-white text-sm font-bold shadow-lg shadow-fuchsia-500/50",
                     "transition-[opacity,transform] duration-500",
                     showHighlight
                         ? "opacity-100 translate-y-0 scale-100"
@@ -156,16 +164,22 @@ export const NarrativeProjectCard = ({
             {/* Card Container */}
             <div className={cn(
                 "relative overflow-hidden rounded-2xl project-card-container",
-                "bg-gradient-to-br from-neutral-900 via-neutral-900 to-neutral-800",
-                "border border-neutral-700/50",
+                "bg-neutral-950",
+                "border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)]",
                 "transition-[border-color,box-shadow] duration-500",
-                isHovered && "border-teal-500/50 shadow-2xl shadow-teal-500/20"
+                isHovered && "border-fuchsia-500/50 shadow-2xl shadow-fuchsia-500/20"
             )}>
-                {/* Magnetic Glow Effect */}
+                {/* Magnetic Glass Glare Effect */}
+                <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none mix-blend-overlay"
+                    style={{
+                        background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(255, 255, 255, 0.2), transparent 40%)`,
+                    }}
+                />
                 <div
                     className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
                     style={{
-                        background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(0, 245, 212, 0.12), transparent 40%)`,
+                        background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(217, 70, 239, 0.15), transparent 40%)`,
                     }}
                 />
 
@@ -191,7 +205,9 @@ export const NarrativeProjectCard = ({
                         src={imageSrc}
                         alt={imageAlt}
                         fill
-                        loading="lazy"
+                        // PERF: eager — this card premounts during post-load idle, so the ~30-90KB
+                        // webp fetch+decode happens then instead of mid-scroll inside the orbit.
+                        loading="eager"
                         quality={60}
                         className={cn(
                             "object-cover transition-transform duration-700",
@@ -209,15 +225,23 @@ export const NarrativeProjectCard = ({
 
                     {/* Layer 3: Preview Highlight on Hover */}
                     <div className={cn(
-                        "absolute inset-0 flex items-center justify-center",
+                        "absolute inset-0 flex items-center justify-center p-6",
                         "transition-opacity duration-500",
                         isHovered && layer3Visible ? "opacity-100" : "opacity-0"
                     )}>
-                        <div className="text-center px-4">
-                            <div className="text-2xl font-bold text-white mb-2 animate-pulse">
-                                {highlight}
-                            </div>
-                            <div className="text-sm text-neutral-300">
+                        <div className="text-center">
+                            {badge && (
+                                <span className="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-fuchsia-300 bg-fuchsia-900/30 rounded-full border border-fuchsia-500/20">
+                                    {badge}
+                                </span>
+                            )}
+                            <h3 className="text-3xl font-black text-white mb-4 glitch-text uppercase tracking-widest" data-text={title}>
+                                {title}
+                            </h3>
+                            <p className="text-neutral-300 text-sm leading-relaxed mb-6 font-mono opacity-80">
+                                {description}
+                            </p>
+                            <div className="inline-block border-b border-fuchsia-500 pb-1 font-mono text-fuchsia-400">
                                 View on GitHub →
                             </div>
                         </div>
@@ -225,7 +249,7 @@ export const NarrativeProjectCard = ({
                 </div>
 
                 {/* Content Area */}
-                <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
+                <div className="p-4 sm:p-5 space-y-2 sm:space-y-3">
                     {/* Layer 1: Title */}
                     <h3 className={cn(
                         "text-lg sm:text-xl font-bold text-white",
@@ -250,7 +274,7 @@ export const NarrativeProjectCard = ({
                             <span
                                 key={tech}
                                 className={cn(
-                                    "px-3 py-1 text-xs font-medium rounded-full",
+                                    "px-3 py-1 text-[10px] sm:text-xs font-medium rounded-full",
                                     "bg-neutral-800 text-neutral-300 border border-neutral-700",
                                     "transition-[transform,background-color,border-color,color] duration-300",
                                     isHovered && "hover:scale-105 hover:-translate-y-0.5 hover:bg-teal-500/20 hover:border-teal-500/50 hover:text-teal-300"
@@ -264,14 +288,14 @@ export const NarrativeProjectCard = ({
                         ))}
                     </div>
 
-                    {/* Layer 3: Full Description */}
+                    {/* Layer 3: Full Description (Line Clamped to reduce height) */}
                     <div className={cn(
                         "transition-[opacity,transform] duration-500 delay-200",
                         layer3Visible
                             ? "opacity-100 translate-y-0"
                             : "opacity-0 translate-y-4"
                     )}>
-                        <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed">
+                        <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed line-clamp-3 sm:line-clamp-4">
                             {description}
                         </p>
                     </div>

@@ -40,3 +40,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# agent and local browser/debug artifacts
+.claude/
+.codex-*/
+.codex-next-dev.*.log
+Kimi_Agent_*/
+# Note: public/moon-walk/ (the contact-section video + poster) is intentionally
+# tracked so it deploys to Vercel. The large 4K source originals were deleted.

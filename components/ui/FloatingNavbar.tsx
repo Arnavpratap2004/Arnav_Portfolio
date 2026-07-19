@@ -1,8 +1,7 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
     m,
-    AnimatePresence,
     useScroll,
     useMotionValueEvent,
 } from "framer-motion";
@@ -23,6 +22,7 @@ export const FloatingNav = ({
     const { scrollYProgress } = useScroll();
 
     const [visible, setVisible] = useState(false);
+    const visibleRef = useRef(false);
     const [activeSection, setActiveSection] = useState<string>("/");
 
     // Track active section based on scroll position
@@ -56,7 +56,7 @@ export const FloatingNav = ({
         });
 
         // Use IntersectionObserver for "Home" state instead of scroll listener
-        // Fires only on hero enter/exit — zero cost during scroll
+        // Fires only on hero enter/exit â€” zero cost during scroll
         const heroElement = document.querySelector('section');
         let heroObserver: IntersectionObserver | null = null;
         if (heroElement) {
@@ -80,23 +80,21 @@ export const FloatingNav = ({
     useMotionValueEvent(scrollYProgress, "change", (current) => {
         // Check if current is not undefined and is a number
         if (typeof current === "number") {
-            let direction = current! - scrollYProgress.getPrevious()!;
+            const direction = current - (scrollYProgress.getPrevious() ?? current);
+            const nextVisible = scrollYProgress.get() >= 0.05 && direction < 0;
 
-            if (scrollYProgress.get() < 0.05) {
-                setVisible(false);
-            } else {
-                if (direction < 0) {
-                    setVisible(true);
-                } else {
-                    setVisible(false);
-                }
+            // PERF: Avoid redundant React state updates on every scroll tick when nav visibility is unchanged.
+            if (visibleRef.current !== nextVisible) {
+                visibleRef.current = nextVisible;
+                setVisible(nextVisible);
             }
         }
     });
 
     return (
-        <AnimatePresence>
+        <>
             <m.div
+                layout={false}
                 initial={{
                     opacity: 1,
                     y: -100,
@@ -106,60 +104,85 @@ export const FloatingNav = ({
                     opacity: visible ? 1 : 0,
                 }}
                 transition={{
-                    duration: 0.2,
+                    duration: 0.3,
+                    ease: [0.16, 1, 0.3, 1],
                 }}
+                style={{ willChange: "transform, opacity" }}
                 className={cn(
-                    "flex max-w-fit fixed top-10 inset-x-0 mx-auto border border-white/[0.2] rounded-full bg-black/85 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] z-[5000] px-2 sm:pl-8 sm:pr-2 py-2 items-center justify-center space-x-1 sm:space-x-4",
+                    // True glass: translucent navy + backdrop blur/saturate (small fixed strip, so the
+                    // per-frame filter cost is bounded — same tradeoff as the footer's backdrop-blur-xl).
+                    "flex max-w-fit fixed top-8 inset-x-0 mx-auto z-[5000] items-center gap-0.5 sm:gap-1",
+                    "rounded-full border border-white/10 bg-[#0A0E17]/60 backdrop-blur-xl backdrop-saturate-150",
+                    "px-2 py-1.5 sm:px-2.5 sm:py-2",
+                    "shadow-[0_12px_40px_rgba(3,6,16,0.55),inset_0_1px_0_rgba(255,255,255,0.06)]",
                     className
                 )}
             >
-                {navItems.map((navItem: any, idx: number) => {
+                {/* Top hairline sheen */}
+                <span aria-hidden="true" className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+
+                {/* Monogram */}
+                <Link
+                    href="/"
+                    aria-label="Back to top"
+                    className="hidden sm:flex items-center pl-0.5 pr-1.5"
+                >
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[#6B48FF] to-[#D896FF] text-[12px] font-extrabold tracking-tight text-white shadow-[0_0_16px_rgba(107,72,255,0.45)] transition-shadow duration-300 hover:shadow-[0_0_24px_rgba(107,72,255,0.7)]">
+                        AP
+                    </span>
+                </Link>
+                <span aria-hidden="true" className="hidden sm:block h-5 w-px bg-white/10" />
+
+                {navItems.map((navItem, idx) => {
                     const isActive = activeSection === navItem.link;
                     return (
                         <Link
                             key={`link=${idx}`}
                             href={navItem.link}
                             className={cn(
-                                "relative items-center flex space-x-1 px-2 sm:px-4 py-2 transition-colors duration-200",
+                                "relative items-center justify-center flex rounded-full min-h-11 min-w-11 px-2 sm:min-h-0 sm:min-w-0 sm:px-4 py-2 transition-colors duration-200",
                                 isActive
                                     ? "text-white"
-                                    : "text-neutral-400 hover:text-neutral-200"
+                                    : "text-neutral-400 hover:text-white hover:bg-white/[0.05]"
                             )}
                         >
                             {isActive && (
                                 <m.span
                                     layoutId="activePill"
-                                    className="absolute inset-0 border border-neutral-200 dark:border-white/[0.2] rounded-full bg-black/20"
+                                    className="absolute inset-0 rounded-full border border-white/10 bg-white/[0.07] shadow-[inset_0_0_16px_rgba(107,72,255,0.18)]"
                                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
                                 >
                                     <span className="absolute left-0 right-0 bottom-0 flex justify-center">
-                                        <span className="w-1/2 h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
+                                        <span className="w-1/2 h-px bg-gradient-to-r from-transparent via-[#9B70FF] to-transparent" />
                                     </span>
                                 </m.span>
                             )}
                             {/* Show icon on mobile if available, otherwise show shortened text */}
                             <span className="relative z-10 block sm:hidden">
-                                {navItem.icon || <span className="text-xs font-medium">{navItem.name.slice(0, 3)}</span>}
+                                {navItem.icon || <span className="text-[10px] font-semibold uppercase tracking-[0.08em]">{navItem.name.slice(0, 3)}</span>}
                             </span>
                             <span className="relative z-10 hidden sm:block text-sm font-medium tracking-tight">{navItem.name}</span>
                         </Link>
                     );
                 })}
+
+                <span aria-hidden="true" className="hidden sm:block h-5 w-px bg-white/10 mx-1" />
+
                 <a
                     href="/Arnav_Resume.pdf"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group relative text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full transition-transform duration-300 ease-out hover:scale-[1.03] active:scale-[0.98]"
+                    className="group relative inline-flex min-h-11 items-center text-xs sm:text-sm font-medium px-3 sm:min-h-0 sm:px-5 py-2 sm:py-2.5 rounded-full transition-transform duration-300 ease-out hover:scale-[1.03] active:scale-[0.98]"
                     title="View my resume"
                 >
-                    {/* Gradient border background */}
-                    <span className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
+                    {/* Gradient border background — the site's signature purple ramp */}
+                    <span className="absolute inset-0 rounded-full bg-gradient-to-r from-[#6B48FF] via-[#9B70FF] to-[#D896FF] opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
 
                     {/* Inner background */}
-                    <span className="absolute inset-[1px] rounded-full bg-black/90 group-hover:bg-black/80 transition-colors duration-300" />
+                    <span className="absolute inset-[1.5px] rounded-full bg-[#0A0E17]/95 group-hover:bg-[#0A0E17]/85 transition-colors duration-300" />
 
                     {/* Glow effect on hover */}
-                    <span className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-pink-500/30" />
+                    <span className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md bg-gradient-to-r from-[#6B48FF]/30 via-[#9B70FF]/30 to-[#D896FF]/30" />
 
                     {/* Content */}
                     <span className="relative z-10 flex items-center gap-1 sm:gap-1.5 text-white whitespace-nowrap">
@@ -176,9 +199,9 @@ export const FloatingNav = ({
                     </span>
 
                     {/* Bottom glow accent */}
-                    <span className="absolute inset-x-0 w-2/3 mx-auto -bottom-px bg-gradient-to-r from-transparent via-purple-500 to-transparent h-px opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
+                    <span className="absolute inset-x-0 w-2/3 mx-auto -bottom-px bg-gradient-to-r from-transparent via-[#9B70FF] to-transparent h-px opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
                 </a>
             </m.div>
-        </AnimatePresence>
+        </>
     );
 };

@@ -1,13 +1,37 @@
 "use client";
 import React from "react";
-import { GridBackground } from "@/components/ui/GridBackground";
+import { m } from "framer-motion";
+import { IconTrophy, IconSchool, IconFileText, IconCode } from "@tabler/icons-react";
+import LineWaves from "@/components/ui/LineWaves";
 import { AnimatedTimeline, TimelineStyles } from "@/components/ui/AnimatedTimeline";
+
+const HIGHLIGHTS = [
+    { icon: IconTrophy, label: "Cisco CSR Hackathon — National Finalist", color: "#FACC15" },
+    { icon: IconSchool, label: "Amazon ML Summer School '26", color: "#FB923C" },
+    { icon: IconFileText, label: "IEEE Paper — CAD-RAG", color: "#60A5FA" },
+    { icon: IconCode, label: "300+ DSA Problems", color: "#4ADE80" },
+];
 
 export function Experience() {
     const timelineItems = [
         {
             type: "experience" as const,
-            title: "Research Intern",
+            title: "Research Intern — Multi-Agent LLM Systems",
+            organization: "Indian Institute of Technology, Patna (IITP)",
+            location: "Hybrid",
+            period: "June 2026 – July 2026",
+            year: "2026",
+            achievements: [
+                "Architected a cost-aware Multi-Agent Debate (MAD) pipeline with Llama 3 (8B) for Hindi–Hinglish hate-speech detection",
+                "Engineered efficiency modules — Debate Necessity Predictor, Contrastive Precedent Injection, and Intra-Debate Entropy Early Exit — cutting token cost by up to 74.28%",
+                "Raised accuracy from a 66.7% zero-shot baseline to 77.22%, approaching the 79.8% full-debate ceiling"
+            ],
+            gradientFrom: "from-purple-500",
+            gradientTo: "to-pink-500",
+        },
+        {
+            type: "experience" as const,
+            title: "Research Intern — NLP & RAG",
             organization: "Indian Institute of Technology, Patna (IITP)",
             location: "Hybrid",
             period: "June 2025 – August 2025",
@@ -28,7 +52,7 @@ export function Experience() {
             location: "Vellore",
             period: "2023 – 2027",
             year: "2023",
-            grade: "CGPA: 9.16 / 10",
+            grade: "CGPA: 9.00 / 10",
             achievements: [
                 "Achieved Dean's List recognition for academic excellence",
                 "Led technical projects in AI/ML and Web Development",
@@ -44,18 +68,61 @@ export function Experience() {
             <TimelineStyles />
 
             {/* Animated Background */}
-            <div className="absolute inset-0 bg-gradient-to-b from-neutral-950 via-neutral-900 to-neutral-950" />
-            <GridBackground className="absolute inset-0 h-full" />
+            <div className="absolute inset-0 bg-[#06090F]" />
+            <div className="absolute inset-0 z-0">
+                <LineWaves
+                    rotation={-38}
+                    speed={0.35}
+                    warpIntensity={0.3}
+                    innerLineCount={40}
+                    outerLineCount={15}
+                    edgeFadeWidth={0}
+                    colorCycleSpeed={0.5}
+                    brightness={0.35}
+                    color1="#A855F7" // Purple
+                    color2="#EC4899" // Pink
+                    color3="#06090F" // Dark background
+                    enableMouseInteraction
+                    mouseInfluence={1.6}
+                />
+            </div>
 
             {/* Content */}
             <div className="relative z-10">
-                <div className="text-center mb-10 md:mb-16 px-4">
-                    <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-3 md:mb-4">
-                        Experience & Education
+                <div className="text-center mb-12 md:mb-20 px-4 relative">
+                    <div className="inline-flex items-center justify-center px-4 py-1.5 mb-6 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-md shadow-[0_0_15px_rgba(168,85,247,0.15)]">
+                        <span className="text-xs md:text-sm font-semibold tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 uppercase">
+                            My Timeline
+                        </span>
+                    </div>
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-5 drop-shadow-[0_0_25px_rgba(168,85,247,0.3)]">
+                        <span className="text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50">Experience & </span>
+                        <span className="text-gradient-display">Education</span>
                     </h2>
-                    <p className="text-neutral-400 max-w-lg mx-auto text-sm md:text-base">
-                        Scroll through my journey
+                    <p className="text-neutral-400 max-w-lg mx-auto text-sm md:text-base font-medium tracking-[0.15em] uppercase">
+                        <span className="text-pink-400/90">Scroll to explore</span>
+                        <span className="mx-3 text-neutral-600">•</span>
+                        My journey
                     </p>
+
+                    {/* Resume highlights */}
+                    <m.div
+                        className="mt-7 flex flex-wrap items-center justify-center gap-3"
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.5 }}
+                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                        {HIGHLIGHTS.map(({ icon: Icon, label, color }) => (
+                            <span
+                                key={label}
+                                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-xs font-medium text-white/85 backdrop-blur-md"
+                            >
+                                <Icon size={15} strokeWidth={1.8} style={{ color }} />
+                                {label}
+                            </span>
+                        ))}
+                    </m.div>
                 </div>
 
                 <div className="max-w-5xl mx-auto px-4">

@@ -1,318 +1,418 @@
 "use client";
-import { m } from "framer-motion";
-import Image from "next/image";
-import { HyperText } from "@/components/ui/HyperText";
-import { BackgroundCanvas } from "@/components/ui/BackgroundCanvas";
-import { useState, useEffect, useRef } from "react";
-import { cn } from "@/lib/utils";
+import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
+import { m, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import { IconBrandGithub, IconBrandLinkedin, IconMail, IconBrain, IconCode } from '@tabler/icons-react';
+import NeuralCanvas from '@/components/ui/NeuralCanvas';
+import CrystalShards from '@/components/ui/CrystalShards';
 
-const GITHUB_URL = "https://github.com/Arnavpratap2004";
-const LINKEDIN_URL = "https://www.linkedin.com/in/arnavpratap2004/";
-const RESUME_URL = "/Arnav_Resume.pdf";
+const EASE = [0.16, 1, 0.3, 1] as const;
+const FULL_NAME = 'ARNAV PRATAP';
 
-const highlights = [
-    { label: "IIT Patna Research", icon: "🔬" },
-    { label: "200+ Concurrent Users", icon: "👥" },
-    { label: "AWS-Deployed AI", icon: "☁️" },
-    { label: "9.16 CGPA", icon: "🎓" },
+const SOCIAL_LINKS = [
+  {
+    label: 'GitHub',
+    href: 'https://github.com/Arnavpratap2004',
+    icon: IconBrandGithub,
+  },
+  {
+    label: 'LinkedIn',
+    href: 'https://www.linkedin.com/in/arnavpratap2004/',
+    icon: IconBrandLinkedin,
+  },
+  {
+    label: 'Email',
+    href: 'mailto:arnavpratap2003@gmail.com',
+    icon: IconMail,
+  },
 ];
 
-function CTAButtons() {
-    return (
+export function Hero() {
+  const containerRef = useRef<HTMLElement>(null);
+  const shouldReduceMotion = useReducedMotion();
+  // Use global scrollY because Hero is sticky and doesn't move relative to the viewport
+  const { scrollY } = useScroll();
+
+  // Cinematic 3D Depth-of-field effects
+  // Adjusted parallax for elements inside the Hero (now subtle since they are fixed)
+  const backgroundY = useTransform(scrollY, [0, 1000], shouldReduceMotion ? [0, 0] : [0, 100]);
+  const crystalY = useTransform(scrollY, [0, 1000], shouldReduceMotion ? [0, 0] : [0, 50]);
+  const typographyY = useTransform(scrollY, [0, 1000], shouldReduceMotion ? [0, 0] : [0, -50]);
+  // Portrait drifts slower than the type for depth separation
+  const portraitY = useTransform(scrollY, [0, 1000], shouldReduceMotion ? [0, 0] : [0, -28]);
+
+  const [typedText, setTypedText] = useState('');
+  const typingIntervalRef = useRef<number | null>(null);
+  const typingTimeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    typingTimeoutRef.current = window.setTimeout(() => {
+      if (shouldReduceMotion) {
+        setTypedText(FULL_NAME);
+        return;
+      }
+
+      let index = 1;
+      setTypedText(FULL_NAME.slice(0, index));
+
+      typingIntervalRef.current = window.setInterval(() => {
+        index += 1;
+        setTypedText(FULL_NAME.slice(0, index));
+
+        if (index >= FULL_NAME.length && typingIntervalRef.current !== null) {
+          window.clearInterval(typingIntervalRef.current);
+          typingIntervalRef.current = null;
+        }
+      }, 35);
+    }, 500);
+
+    return () => {
+      if (typingTimeoutRef.current !== null) {
+        window.clearTimeout(typingTimeoutRef.current);
+        typingTimeoutRef.current = null;
+      }
+      if (typingIntervalRef.current !== null) {
+        window.clearInterval(typingIntervalRef.current);
+        typingIntervalRef.current = null;
+      }
+    };
+  }, [shouldReduceMotion]);
+
+  const subtitleContainer = {
+    hidden: {},
+    visible: {
+      transition: {
+        delayChildren: 0.9,
+        staggerChildren: 0.12,
+      },
+    },
+  };
+
+  const subtitleLine = {
+    hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 16 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.35, ease: EASE },
+    },
+  };
+
+  return (
+    <m.section
+      ref={containerRef}
+      className="relative w-full min-h-[100dvh] overflow-hidden"
+      style={{
+        background: '#06090F'
+      }}
+    >
+      {/* Smartly integrated background image */}
+      <m.div
+        className="absolute top-0 left-0 right-0 h-[calc(100%+100px)] pointer-events-none"
+        style={{
+          backgroundImage: 'image-set(url("/bg-image.avif") type("image/avif"), url("/bg-image.webp") type("image/webp"), url("/bg-image.png") type("image/png"))', // PERF: Serve the same hero art through modern formats while keeping the PNG fallback.
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          opacity: 0.85,
+          // PERF: mix-blend-mode:screen removed — over the near-black #06090F backdrop, screen
+          // blending is visually a no-op, but it forced backdrop compositing every scroll frame
+          // (measured ~7fps of scroll cost on integrated GPUs).
+          y: backgroundY,
+          zIndex: 0,
+        }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.85 }}
+        transition={{ duration: 1.5, ease: 'easeOut' }}
+      />
+
+      <m.div
+        className="absolute top-0 left-0 right-0 h-[calc(100%+100px)]"
+        style={{ y: backgroundY, zIndex: 1, willChange: 'transform' }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4, ease: 'linear' }}
+      >
+        <NeuralCanvas />
+      </m.div>
+
+      <CrystalShards y={crystalY} />
+
+      <div className="relative z-10 mx-auto grid min-h-[100dvh] w-full max-w-7xl grid-cols-1 items-center gap-x-10 px-6 pt-28 pb-10 md:px-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:px-16 lg:pt-0 lg:pb-0">
+        {/* ---- Left column: identity + actions ---- */}
         <m.div
-            initial={{ opacity: 0, scale: 0.95, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.8 }}
-            style={{ willChange: "transform, opacity", transform: "translateZ(0)" }}
-            className="mt-6 flex flex-wrap items-center gap-3"
+          className="flex flex-col items-center text-center lg:items-start lg:text-left"
+          style={{ y: typographyY, willChange: 'transform' }}
         >
-            {/* Primary CTA — Resume (what recruiters want first) */}
-            <button
-                onClick={(e) => {
-                    e.preventDefault();
-                    // Force download using Blob
-                    fetch(RESUME_URL)
-                        .then(response => response.blob())
-                        .then(blob => {
-                            const url = window.URL.createObjectURL(blob);
-                            const a = document.createElement('a');
-                            a.href = url;
-                            a.download = "Arnav_Pratap_Resume.pdf";
-                            document.body.appendChild(a);
-                            a.click();
-                            window.URL.revokeObjectURL(url);
-                            document.body.removeChild(a);
-                        });
-                }}
-                className={cn(
-                    "relative inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-white text-sm",
-                    "bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-400",
-                    "transition-transform duration-300 hover:scale-105 active:scale-95",
-                    "group overflow-hidden"
-                )}
+          <m.h1
+            className="font-geist font-extrabold leading-[0.95] tracking-normal grid w-full"
+            style={{
+              fontSize: 'clamp(48px, 8.5vw, 104px)',
+              letterSpacing: 0,
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.08, ease: 'linear' }}
+          >
+            {/* PERF: Reserve the final typed-title footprint so the portrait and hero layout do not shift while letters appear.
+                The name renders as a fixed two-line lockup (first/last name) so the cursor never wraps alone. */}
+            <span
+              aria-hidden="true"
+              className="col-start-1 row-start-1 invisible whitespace-nowrap"
             >
-                <svg className="w-4 h-4 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                <span className="relative z-10">Download Resume</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-teal-400 via-cyan-400 to-teal-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-            </button>
+              <span className="text-gradient-display">{FULL_NAME.split(' ')[0]}</span>
+              <br />
+              <span className="text-gradient-display">{FULL_NAME.split(' ')[1]}</span>
+              <span
+                className="text-gradient-cursor inline-block"
+                style={{ marginLeft: '4px', fontWeight: 300 }}
+              >
+                |
+              </span>
+            </span>
+            <span className="col-start-1 row-start-1 whitespace-nowrap">
+              <span className="text-gradient-display">{typedText.split(' ')[0]}</span>
+              {typedText.length > FULL_NAME.indexOf(' ') && <br />}
+              {typedText.split(' ')[1] !== undefined && (
+                <span className="text-gradient-display">{typedText.split(' ')[1]}</span>
+              )}
+              <span
+                className="text-gradient-cursor cursor-blink inline-block"
+                style={{ marginLeft: '4px', fontWeight: 300 }}
+              >
+                |
+              </span>
+            </span>
+          </m.h1>
 
-            {/* Secondary CTA — Projects */}
-            <a
-                href="#projects"
-                className={cn(
-                    "relative inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-sm",
-                    "border border-white/20 text-white bg-white/10",
-                    "hover:bg-white/20 hover:border-teal-500/50 transition-[transform,border-color,background-color] duration-300",
-                    "hover:scale-105 active:scale-95 group"
-                )}
-            >
-                <span className="relative z-10">See My Projects</span>
-                <svg className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-            </a>
-        </m.div>
-    );
-}
-
-function ProfileFrame() {
-    return (
-        <m.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-            style={{ willChange: "transform, opacity", transform: "translateZ(0)" }}
-            className="relative flex-shrink-0 w-full md:w-1/2 flex justify-center md:justify-end mt-10 md:mt-0 pointer-events-none"
-        >
-            <m.div
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-                style={{ willChange: "transform", transform: "translateZ(0)" }}
-                className="relative w-full max-w-[300px] md:max-w-[380px] lg:max-w-[480px] h-[400px] sm:h-[450px] lg:h-[600px]"
-            >
-                {/* Background color bridge to flawlessly merge the image with the page */}
-                <div className="absolute -inset-24 bg-[radial-gradient(ellipse_at_center,#050a14_40%,transparent_70%)] -z-10 rounded-full opacity-90" />
-
-                {/* Horizontal Fade (Cuts deep to eliminate the JPEG box entirely) */}
-                <div className="absolute inset-0 [mask-image:linear-gradient(to_right,transparent_0%,black_25%,black_75%,transparent_100%)]">
-                    {/* Vertical Fade (blends the bottom seamlessly) */}
-                    <div className="absolute inset-0 [mask-image:linear-gradient(to_bottom,black_50%,transparent_100%)]">
-                        <Image
-                            src="/new-profile-photo-2.jpg"
-                            alt="Arnav Pratap – Full-Stack & AI Engineer"
-                            fill
-                            className="object-cover object-top opacity-95 mix-blend-lighten"
-                            priority
-                            sizes="(max-width: 640px) 300px, 480px"
-                        />
-                    </div>
-                </div>
-            </m.div>
-        </m.div>
-    );
-}
-
-function HeroContent() {
-    const [currentSkillIndex, setCurrentSkillIndex] = useState(0);
-
-    const skills = [
-        "Full-Stack Engineer",
-        "AI/ML Researcher",
-        "Systems Builder",
-        "Backend Architect",
-        "Problem Solver",
-    ];
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCurrentSkillIndex((prev) => (prev + 1) % skills.length);
-        }, 2500);
-        return () => clearInterval(interval);
-    }, [skills.length]);
-
-    return (
-        <div className="flex flex-col items-center md:items-start text-center md:text-left max-w-2xl">
-            {/* Availability Badge */}
-            <m.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.05 }}
-
-                className="mb-3"
-            >
-                <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
-                    <span className="relative flex h-2 w-2">
-                        {/* CSS ping is GPU accelerated inherently */}
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-                    </span>
-                    Graduating July 2027 · Open to Internships Now
-                </span>
-            </m.div>
-
-            {/* Name */}
-            <m.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.15 }}
-
-            >
-                <HyperText
-                    text="Arnav Pratap"
-                    className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight"
-                />
-            </m.div>
-
-            {/* Credential Subtitle */}
+          <m.div
+            className="flex flex-col items-center lg:items-start"
+            initial="hidden"
+            animate="visible"
+            variants={subtitleContainer}
+          >
             <m.p
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.3 }}
-
-                className="text-sm md:text-base text-neutral-400 font-medium tracking-wide mt-1"
+              className="mt-4 md:mt-6 text-[#FAFAFA] font-inter font-medium"
+              style={{
+                fontSize: 'clamp(16px, 2.2vw, 24px)',
+                letterSpacing: '0.03em',
+                lineHeight: 1.4,
+                willChange: 'transform, opacity',
+              }}
+              variants={subtitleLine}
             >
-                IIT Patna Research Intern &bull; VIT CSE &bull; 9.16 CGPA
+              Full-Stack & AI Engineer building
+              <br className="hidden sm:block" />
+              {' '}research-grade ML systems
             </m.p>
 
-            {/* Skill Loop (Simplified React animation to CSS keyframes/transitions) */}
+            {/* Status Pill */}
             <m.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.4 }}
-
-                className="mt-2 h-8 flex items-center"
+              className="mt-5 md:mt-6 inline-flex items-center gap-2.5 rounded-full border border-emerald-300/15 bg-emerald-400/8 px-4 py-1.5"
+              style={{ willChange: 'transform, opacity' }}
+              variants={subtitleLine}
             >
-                <span className="text-neutral-500 mr-2 font-mono">{">"}</span>
-                <div className="relative overflow-hidden h-full flex items-center">
-                    <span
-                        key={currentSkillIndex}
-                        className="text-lg sm:text-xl md:text-2xl font-medium bg-gradient-to-r from-teal-400 via-cyan-300 to-purple-400 bg-clip-text text-transparent animate-in slide-in-from-bottom-2 fade-in duration-300"
-                        aria-live="polite"
-                        aria-atomic="true"
-                    >
-                        {skills[currentSkillIndex]}
-                    </span>
-                </div>
-                {/* Static blinking cursor via CSS — hidden from screen readers */}
-                <span className="ml-1 w-0.5 h-6 bg-teal-400 animate-pulse" aria-hidden="true" />
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-300 opacity-60" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-300" />
+              </span>
+              <span className="text-xs sm:text-sm font-semibold text-emerald-300 tracking-wide">
+                Open to Full-Time Roles · 2027
+              </span>
             </m.div>
 
-            {/* Bio — NO animation: this is the LCP element. Starting at
-                opacity:0 delays LCP by ~2.5s on mobile. Render instantly. */}
-            <p className="mt-4 text-neutral-300 text-sm md:text-base leading-relaxed max-w-lg">
-                I build production systems used by hundreds of real users
-                daily — and conduct AI research at IIT Patna on problems
-                that matter.
-            </p>
-
-            {/* Credibility Highlight Strip */}
-            <m.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.6 }}
-
-                className="mt-4 flex flex-wrap items-center gap-2"
+            {/* Credential line */}
+            <m.p
+              className="mt-4 text-white/50 font-inter"
+              style={{
+                fontSize: '13px',
+                letterSpacing: '0.10em',
+                lineHeight: 1.5,
+                willChange: 'transform, opacity',
+              }}
+              variants={subtitleLine}
             >
-                {highlights.map((h, i) => (
-                    <span
-                        key={h.label}
-                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border border-white/10 bg-white/5 text-neutral-300 hover:bg-white/10 hover:border-teal-500/30 transition-colors duration-300"
-                        style={{ animationDelay: `${i * 100}ms` }}
-                    >
-                        <span>{h.icon}</span>
-                        {h.label}
-                    </span>
-                ))}
-            </m.div>
+              2× IIT Patna Research Intern · VIT CSE · 9.00 CGPA
+            </m.p>
+          </m.div>
 
-            <CTAButtons />
-        </div>
-    );
-}
-
-export function Hero() {
-    return (
-        <section className="relative min-h-screen w-full overflow-hidden bg-gradient-to-b from-[#020617] via-[#050914] to-[#020617]">
-            {/* Highly Performant Canvas Particle Background */}
-            <BackgroundCanvas />
-
-            {/* Floating Social Icons — Top Right */}
-            <m.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.8 }}
-                style={{ willChange: "transform, opacity", transform: "translateZ(0)" }}
-                className="absolute top-6 right-6 z-50 flex items-center gap-2 pointer-events-auto"
+          <m.div
+            className="mt-8 md:mt-9 flex flex-col sm:flex-row items-center gap-4 sm:gap-6"
+            initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.1, duration: 0.4, ease: EASE }}
+            style={{ willChange: 'transform, opacity' }}
+          >
+            <a
+              href="#projects"
+              data-cursor="hover"
+              className="group relative inline-flex items-center justify-center px-8 py-3.5 rounded-full text-[#FAFAFA] text-sm font-inter font-medium tracking-[0.06em] backdrop-glass transition-all duration-300 hover:-translate-y-[3px]"
+              style={{
+                background: 'rgba(255, 255, 255, 0.06)',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+              }}
+              onMouseEnter={(event) => {
+                event.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.4)';
+                event.currentTarget.style.boxShadow = 'inset 0 0 20px rgba(255, 255, 255, 0.05)';
+              }}
+              onMouseLeave={(event) => {
+                event.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.15)';
+                event.currentTarget.style.boxShadow = 'none';
+              }}
             >
-                <a
-                    href={GITHUB_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full flex items-center justify-center border border-white/10 bg-white/5 text-neutral-400 hover:text-white hover:border-teal-500/50 hover:bg-white/10 transition-[transform,color,border-color,background-color] duration-300 hover:scale-110"
-                    aria-label="GitHub"
-                >
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                    </svg>
-                </a>
-                <a
-                    href={LINKEDIN_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full flex items-center justify-center border border-white/10 bg-white/5 text-neutral-400 hover:text-white hover:border-blue-500/50 hover:bg-white/10 transition-[transform,color,border-color,background-color] duration-300 hover:scale-110"
-                    aria-label="LinkedIn"
-                >
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                    </svg>
-                </a>
-                <a
-                    href="mailto:arnavpratap2003@gmail.com"
-                    className="w-10 h-10 rounded-full flex items-center justify-center border border-white/10 bg-white/5 text-neutral-400 hover:text-white hover:border-purple-500/50 hover:bg-white/10 transition-[transform,color,border-color,background-color] duration-300 hover:scale-110"
-                    aria-label="Email"
-                >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                </a>
-            </m.div>
+              Explore My Work
+            </a>
 
-            {/* Main Content */}
-            <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
-                <div className="relative z-20 max-w-7xl w-full mx-auto px-4 sm:px-6 md:px-10 flex flex-col-reverse md:flex-row items-center justify-between gap-6 md:gap-8 pointer-events-auto">
+            <a
+              href="#contact"
+              data-cursor="hover"
+              className="inline-flex items-center justify-center px-8 py-3.5 rounded-full text-[#FAFAFA] text-sm font-inter font-medium tracking-[0.06em] transition-all duration-300 hover:-translate-y-[3px]"
+              style={{
+                background: 'linear-gradient(135deg, #6B48FF 0%, #9B70FF 100%)',
+                transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+              }}
+              onMouseEnter={(event) => {
+                event.currentTarget.style.filter = 'saturate(1.3)';
+              }}
+              onMouseLeave={(event) => {
+                event.currentTarget.style.filter = 'saturate(1)';
+              }}
+            >
+              Get In Touch
+            </a>
+          </m.div>
 
-                    {/* Left Side Vertical Accent Line */}
-                    <m.div
-                        className="absolute left-4 top-0 w-1 bg-gradient-to-b from-teal-400 via-cyan-400 to-purple-500 rounded-full hidden lg:block"
-                        initial={{ scaleY: 0, opacity: 0 }}
-                        animate={{ scaleY: 1, opacity: 1 }}
-                        transition={{ duration: 0.6, delay: 0.2 }}
-                        style={{ originY: 0, willChange: "transform, opacity", transform: "translateZ(0)" }}
-                    />
+          {/* Social links — glass orbs with a rotating gradient ring on hover */}
+          <m.div
+            className="mt-9 flex items-center gap-4"
+            initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.3, duration: 0.4, ease: EASE }}
+            style={{ willChange: 'transform, opacity' }}
+          >
+            <span
+              aria-hidden="true"
+              className="hidden sm:block h-px w-12 bg-gradient-to-r from-transparent to-white/25"
+            />
+            {SOCIAL_LINKS.map(({ label, href, icon: Icon }) => (
+              <a
+                key={label}
+                href={href}
+                aria-label={label}
+                data-cursor="hover"
+                {...(href.startsWith('mailto:')
+                  ? {}
+                  : { target: '_blank', rel: 'noopener noreferrer' })}
+                className="group relative flex h-12 w-12 items-center justify-center rounded-full transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(107,72,255,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+              >
+                <span
+                  aria-hidden="true"
+                  className="social-ring absolute inset-0 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                />
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-[2px] rounded-full border border-white/15 bg-white/[0.05] backdrop-glass transition-colors duration-300 group-hover:border-transparent group-hover:bg-[#0A0E17]/90"
+                />
+                <Icon
+                  size={20}
+                  strokeWidth={1.6}
+                  className="relative z-10 text-white/70 transition-colors duration-300 group-hover:text-white"
+                />
+                <span className="pointer-events-none absolute top-full left-1/2 mt-2 -translate-x-1/2 whitespace-nowrap rounded-md border border-white/10 bg-[#0A0E17]/90 px-2 py-0.5 text-[10px] tracking-[0.12em] text-white/70 opacity-0 transition-all duration-300 group-hover:mt-3 group-hover:opacity-100">
+                  {label}
+                </span>
+              </a>
+            ))}
+          </m.div>
+        </m.div>
 
-                    {/* Left Content */}
-                    <HeroContent />
+        {/* ---- Right column: portrait composition ---- */}
+        <m.div
+          className="relative mt-14 flex justify-center lg:mt-0 lg:justify-end"
+          style={{ y: portraitY, willChange: 'transform' }}
+          initial={{ opacity: 0, x: shouldReduceMotion ? 0 : 48 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.9, duration: 0.9, ease: EASE }}
+        >
+          <div className="relative w-[270px] sm:w-[330px] lg:w-[400px] xl:w-[440px]">
+            {/* Ambient glow bed behind the portrait */}
+            <div
+              aria-hidden="true"
+              className="absolute -inset-x-20 -top-6 -bottom-12 pointer-events-none"
+              style={{
+                background:
+                  'radial-gradient(ellipse 52% 44% at 50% 52%, rgba(107,72,255,0.30) 0%, rgba(56,89,248,0.14) 46%, transparent 72%)',
+              }}
+            />
 
-                    {/* Right — Profile Photo */}
-                    <ProfileFrame />
-                </div>
+            {/* Slow orbital ring with two riding sparks.
+                Outer div owns the centering translate; inner div owns the rotation
+                so the animation's transform doesn't clobber the positioning. */}
+            <div
+              aria-hidden="true"
+              className="absolute left-1/2 top-[40%] -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+              style={{ width: '118%', aspectRatio: '1 / 1' }}
+            >
+              <div className="hero-orbit absolute inset-0 rounded-full border border-dashed border-white/10">
+                <span className="absolute left-1/2 top-0 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#9B70FF] shadow-[0_0_12px_rgba(155,112,255,0.9)]" />
+                <span className="absolute right-0 top-1/2 h-1.5 w-1.5 translate-x-1/2 -translate-y-1/2 rounded-full bg-[#E8F4FF] shadow-[0_0_10px_rgba(232,244,255,0.8)]" />
+              </div>
             </div>
 
-            {/* Scroll Hint */}
+            {/* Portrait, melting into the background at the bottom */}
+            <div className="hero-portrait-fade relative z-[1]">
+              <Image
+                src="/hero-portrait-arnav.png"
+                alt="Portrait of Arnav Pratap"
+                width={1016}
+                height={1292}
+                priority
+                sizes="(max-width: 640px) 270px, (max-width: 1024px) 330px, 440px"
+                className="h-auto w-full select-none"
+                draggable={false}
+              />
+            </div>
+
+            {/* Floating glass credential chips */}
             <m.div
-                className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 z-20 hidden sm:flex flex-col items-center gap-2 pointer-events-auto"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 1.2 }}
-                style={{ willChange: "transform, opacity", transform: "translateZ(0)" }}
+              className="absolute -left-6 top-[24%] z-[2] hidden lg:block sm:-left-12"
+              initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.5, duration: 0.5, ease: EASE }}
             >
-                <span className="text-neutral-500 text-xs tracking-widest uppercase">Scroll to explore</span>
-                <div className="w-6 h-10 rounded-full border-2 border-neutral-600 flex justify-center pt-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-bounce" />
-                </div>
+              <div className="hero-chip-float flex items-center gap-2 rounded-full border border-white/12 bg-[#0A0E17]/70 backdrop-glass px-3.5 py-2 shadow-[0_8px_24px_rgba(5,8,18,0.5)]">
+                <IconBrain size={16} strokeWidth={1.8} className="text-[#B78FFF]" />
+                <span className="text-xs font-medium text-white/85 whitespace-nowrap">AI/ML Research</span>
+              </div>
             </m.div>
-        </section>
-    );
+
+            <m.div
+              className="absolute -right-3 top-[55%] z-[2] hidden lg:block sm:-right-8"
+              initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.7, duration: 0.5, ease: EASE }}
+            >
+              <div className="hero-chip-float-delayed flex items-center gap-2 rounded-full border border-white/12 bg-[#0A0E17]/70 backdrop-glass px-3.5 py-2 shadow-[0_8px_24px_rgba(5,8,18,0.5)]">
+                <IconCode size={16} strokeWidth={1.8} className="text-[#7DD3FC]" />
+                <span className="text-xs font-medium text-white/85 whitespace-nowrap">Full-Stack Systems</span>
+              </div>
+            </m.div>
+          </div>
+        </m.div>
+      </div>
+
+      {/* Scroll hint */}
+      <m.div
+        className="absolute bottom-7 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 lg:flex"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2, duration: 0.8, ease: EASE }}
+      >
+        <span className="text-[10px] uppercase tracking-[0.3em] text-white/35">Scroll</span>
+        <span className="relative block h-10 w-px overflow-hidden">
+          <span className="absolute inset-0 bg-gradient-to-b from-white/25 to-transparent" />
+          <span className="hero-scroll-dot absolute left-0 top-0 h-2 w-px bg-white/80" />
+        </span>
+      </m.div>
+    </m.section>
+  );
 }
