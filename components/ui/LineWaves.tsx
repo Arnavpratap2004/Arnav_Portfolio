@@ -192,7 +192,14 @@ function LineWavesComponent({
     gl.clearColor(0, 0, 0, 0)
     // PERF: 30fps cap for the slow-moving waves — halves full-section fragment work so page scroll keeps the GPU.
     const frameIntervalMs = 1000 / 30
+    // PERF: While scrolling, keep the waves alive but at a reduced ~20fps instead of freezing them —
+    // uTime is derived from absolute time, so motion stays continuous with no resume-jump.
+    const scrollFrameIntervalMs = 1000 / 20
     let lastRenderTime = 0
+    // PERF: During scroll, drop the internal render resolution to half (quarter the fragment fill)
+    // so the full-screen wave shader fits the tight scroll frame budget on integrated GPUs. The
+    // soft gradient waves hide the upscaling. Toggled only on scroll-start / scroll-end.
+    let lowResActive = false
 
     const currentMouse = [0.5, 0.5]
     let targetMouse = [0.5, 0.5]
@@ -324,10 +331,15 @@ function LineWavesComponent({
         return
       }
       rafIdRef.current = requestAnimationFrame(update)
-      if (time - lastRenderTime < frameIntervalMs - 1) return
-      // PERF: Freeze the slow wave field while the page is scrolling — full-section fragment
-      // work goes to zero exactly when the frame budget is tightest.
-      if (document.documentElement.classList.contains("is-scrolling")) return
+      const scrolling = document.documentElement.classList.contains("is-scrolling")
+      // While scrolling: keep drifting but at half resolution + ~20fps so scroll stays smooth.
+      if (scrolling !== lowResActive) {
+        lowResActive = scrolling
+        renderer.dpr = scrolling ? 0.5 : 1
+        resize()
+      }
+      const interval = scrolling ? scrollFrameIntervalMs : frameIntervalMs
+      if (time - lastRenderTime < interval - 1) return
       lastRenderTime = time
       program.uniforms.uTime.value = time * 0.001
 

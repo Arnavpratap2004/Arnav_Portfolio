@@ -50,7 +50,8 @@ void main() {
   float mouseGlow = smoothstep(0.3, 0.0, distToMouse);
 
   // PERF: Slightly stronger in-shader glow replaces the removed UnrealBloomPass (5 blur passes/frame).
-  vec3 glowColor = vec3(0.5, 0.8, 1.0) * crackIntensity * (sweep * 0.45 + 0.38 + mouseGlow * 1.0);
+  // Brightness boosted per request — stronger ambient term + wider sweep swing for a livelier background light.
+  vec3 glowColor = vec3(0.55, 0.85, 1.0) * crackIntensity * (sweep * 0.6 + 0.66 + mouseGlow * 1.15);
 
   vec3 finalColor = baseColor + glowColor;
 
@@ -97,7 +98,7 @@ void main() {
   caustic = smoothstep(0.1, 0.4, caustic);
   float fade = smoothstep(0.0, 0.5, 1.0 - vUv.y);
   
-  vec3 color = vec3(0.1, 0.4, 0.8) * caustic * fade * 0.5;
+  vec3 color = vec3(0.12, 0.45, 0.9) * caustic * fade * 0.75;
   gl_FragColor = vec4(color, 1.0);
 }
 `;
