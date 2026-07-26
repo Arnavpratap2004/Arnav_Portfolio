@@ -29,7 +29,24 @@ float rand(vec2 co) {
 }
 
 void main() {
-  vec4 fractData = texture2D(tFracture, vUv);
+  // The fracture map is stretched across the whole canvas. On desktop that canvas is wider than
+  // tall, so the cells read as organic shattered glass. On a phone the About section runs ~5x
+  // taller than it is wide (the skill cards stack into one column), and one copy of the map
+  // smeared over that height turns every cell into a vertical streak.
+  //
+  // Portrait canvases therefore sample the map "cover" style: full height, cropped to a centred
+  // column one "aspect" wide. Equal texture-units-per-pixel on both axes, so cells keep
+  // the shape they have on desktop. Cropping rather than repeating is deliberate — the map has a
+  // radial density falloff (dense centre, sparse edges), so tiling it stacks bright blobs and
+  // dark waists into an obvious string-of-beads. Landscape takes the identity path and renders
+  // exactly as before.
+  float aspect = uResolution.x / uResolution.y;
+  vec2 fractureUv = vUv;
+  if (aspect < 1.0) {
+    fractureUv.x = (vUv.x - 0.5) * aspect + 0.5;
+  }
+
+  vec4 fractData = texture2D(tFracture, fractureUv);
   vec2 normal = fractData.rg * 2.0 - 1.0;
   float crackIntensity = fractData.b;
 
