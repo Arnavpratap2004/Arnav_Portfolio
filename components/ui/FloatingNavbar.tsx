@@ -139,8 +139,10 @@ export const FloatingNav = ({
                         <Link
                             key={`link=${idx}`}
                             href={navItem.link}
+                            aria-label={navItem.name}
+                            title={navItem.name}
                             className={cn(
-                                "relative items-center justify-center flex rounded-full min-h-11 min-w-11 px-2 sm:min-h-0 sm:min-w-0 sm:px-4 py-2 transition-colors duration-200",
+                                "relative items-center justify-center flex rounded-full min-h-11 min-w-11 px-1.5 sm:min-h-0 sm:min-w-0 sm:px-4 py-2 transition-colors duration-200",
                                 isActive
                                     ? "text-white"
                                     : "text-neutral-400 hover:text-white hover:bg-white/[0.05]"

@@ -44,6 +44,13 @@ export const NarrativeProjectCard = ({
     const [layer1Visible, setLayer1Visible] = useState(false);
     const [layer2Visible, setLayer2Visible] = useState(false);
     const [layer3Visible, setLayer3Visible] = useState(false);
+    // The staggered reveal is a desktop flourish. On a phone the cards are stacked full-width and
+    // scrolled past far faster, so the full chain (700ms timer + 300ms CSS delay + 500ms fade)
+    // leaves visibly empty card bodies behind a quick scroll. Matches Tailwind's `sm` breakpoint,
+    // so these timings and the `sm:` delay classes below always switch together.
+    const [isCompactReveal] = useState(
+        () => typeof window !== "undefined" && window.matchMedia("(max-width: 639px)").matches
+    );
 
     // Intersection Observer for scroll-based visibility
     useEffect(() => {
@@ -57,9 +64,10 @@ export const NarrativeProjectCard = ({
                     revealTimeoutsRef.current.push(setTimeout(() => setShowHighlight(false), 2000));
 
                     // Progressive reveal on scroll
-                    revealTimeoutsRef.current.push(setTimeout(() => setLayer1Visible(true), 100));
-                    revealTimeoutsRef.current.push(setTimeout(() => setLayer2Visible(true), 400));
-                    revealTimeoutsRef.current.push(setTimeout(() => setLayer3Visible(true), 700));
+                    const [d1, d2, d3] = isCompactReveal ? [0, 80, 160] : [100, 400, 700];
+                    revealTimeoutsRef.current.push(setTimeout(() => setLayer1Visible(true), d1));
+                    revealTimeoutsRef.current.push(setTimeout(() => setLayer2Visible(true), d2));
+                    revealTimeoutsRef.current.push(setTimeout(() => setLayer3Visible(true), d3));
                 }
             },
             { threshold: 0.3 }
@@ -75,7 +83,7 @@ export const NarrativeProjectCard = ({
             revealTimeoutsRef.current.forEach(clearTimeout);
             revealTimeoutsRef.current = [];
         };
-    }, []);
+    }, [isCompactReveal]);
 
     // RAF reference for throttling
     const rafRef = useRef<number | null>(null);
@@ -146,16 +154,19 @@ export const NarrativeProjectCard = ({
                 transition: "transform 0.3s ease-out",
             }}
         >
-            {/* Highlight Flash Animation */}
+            {/* Highlight Flash Animation.
+                Mobile anchors it to the top-left and keeps it on one line: centered at full size it
+                wrapped to two lines, blanketed the cover image, and collided head-on with the
+                top-right badge on a 390px card. */}
             <div
                 className={cn(
-                    "absolute -top-2 left-1/2 -translate-x-1/2 z-30 px-4 py-2 rounded-full",
+                    "absolute -top-2 left-3 sm:left-1/2 z-30 max-w-[60%] sm:max-w-none px-3 py-1.5 sm:px-4 sm:py-2 rounded-full",
                     "bg-gradient-to-r from-fuchsia-500 via-purple-500 to-fuchsia-400",
-                    "text-white text-sm font-bold shadow-lg shadow-fuchsia-500/50",
+                    "text-white text-[11px] sm:text-sm font-bold truncate shadow-lg shadow-fuchsia-500/50",
                     "transition-[opacity,transform] duration-500",
                     showHighlight
-                        ? "opacity-100 translate-y-0 scale-100"
-                        : "opacity-0 -translate-y-4 scale-90"
+                        ? "opacity-100 translate-y-0 scale-100 sm:-translate-x-1/2"
+                        : "opacity-0 -translate-y-4 scale-90 sm:-translate-x-1/2"
                 )}
             >
                 <span className="animate-pulse">{highlight}</span>
@@ -185,9 +196,9 @@ export const NarrativeProjectCard = ({
 
                 {/* Badge */}
                 {badge && (
-                    <div className="absolute top-3 right-3 z-20">
-                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-amber-500/90 to-orange-500/90 text-white shadow-lg backdrop-blur-sm">
-                            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <div className="absolute top-3 right-3 z-20 max-w-[45%]">
+                        <span className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold bg-gradient-to-r from-amber-500/90 to-orange-500/90 text-white shadow-lg backdrop-blur-sm">
+                            <svg className="w-3 h-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                             </svg>
                             {badge}
@@ -265,7 +276,7 @@ export const NarrativeProjectCard = ({
                     {/* Layer 2: Tech Stack Tags */}
                     <div className={cn(
                         "flex flex-wrap gap-2",
-                        "transition-[opacity,transform] duration-500 delay-100",
+                        "transition-[opacity,transform] duration-300 delay-0 sm:duration-500 sm:delay-100",
                         layer2Visible
                             ? "opacity-100 translate-y-0"
                             : "opacity-0 translate-y-4"
@@ -290,7 +301,7 @@ export const NarrativeProjectCard = ({
 
                     {/* Layer 3: Full Description (Line Clamped to reduce height) */}
                     <div className={cn(
-                        "transition-[opacity,transform] duration-500 delay-200",
+                        "transition-[opacity,transform] duration-300 delay-0 sm:duration-500 sm:delay-200",
                         layer3Visible
                             ? "opacity-100 translate-y-0"
                             : "opacity-0 translate-y-4"
@@ -302,7 +313,7 @@ export const NarrativeProjectCard = ({
 
                     {/* Dual CTA Buttons */}
                     <div className={cn(
-                        "pt-2 flex flex-wrap items-center gap-3 transition-[opacity,transform] duration-500 delay-300",
+                        "pt-2 flex flex-wrap items-center gap-3 transition-[opacity,transform] duration-300 delay-75 sm:duration-500 sm:delay-300",
                         layer3Visible
                             ? "opacity-100 translate-y-0"
                             : "opacity-0 translate-y-4"
@@ -314,7 +325,7 @@ export const NarrativeProjectCard = ({
                             rel="noopener noreferrer"
                             aria-label={`View ${title} on GitHub`}
                             className={cn(
-                                "inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold",
+                                "inline-flex items-center justify-center gap-1.5 sm:gap-2 px-4 sm:px-5 py-2 min-h-11 sm:min-h-0 rounded-full text-xs sm:text-sm font-semibold",
                                 "bg-gradient-to-r from-teal-600 to-cyan-600 text-white",
                                 "overflow-hidden group/btn",
                                 "transition-[transform,box-shadow] duration-300",
@@ -335,7 +346,7 @@ export const NarrativeProjectCard = ({
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className={cn(
-                                    "inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-semibold",
+                                    "inline-flex items-center justify-center gap-2 px-5 py-2 min-h-11 sm:min-h-0 rounded-full text-sm font-semibold",
                                     "border border-white/20 text-white bg-white/5",
                                     "transition-[transform,border-color,background-color] duration-300",
                                     "hover:border-teal-500/50 hover:bg-white/10 hover:scale-105",

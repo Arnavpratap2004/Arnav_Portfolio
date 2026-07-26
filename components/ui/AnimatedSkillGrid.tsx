@@ -147,7 +147,7 @@ const CategoryCard = memo(function CategoryCard({ category }: { category: SkillC
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        "skill-card group relative h-full p-6 rounded-[28px] border will-change-transform",
+        "skill-card group relative h-full p-4 sm:p-6 rounded-3xl sm:rounded-[28px] border will-change-transform",
         // PERF: backdrop-blur removed — six blurred cards over the animating WebGL canvas re-filtered
         // the backdrop every frame. A slightly more opaque tint keeps the glass look for free.
         // Border/shadow hover tints come from .skill-card rules keyed off --accent; transform is
@@ -164,7 +164,7 @@ const CategoryCard = memo(function CategoryCard({ category }: { category: SkillC
       } as React.CSSProperties}
     >
       {/* Clip layer for glows so tooltips can still overflow the card. */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden rounded-[28px]">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden rounded-3xl sm:rounded-[28px]">
         {/* Cursor-tracking glow */}
         <m.div
           className="absolute left-0 top-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
@@ -186,7 +186,7 @@ const CategoryCard = memo(function CategoryCard({ category }: { category: SkillC
 
       <div className="accent-hairline absolute inset-x-0 top-0 h-px" />
 
-      <div className="relative z-10 flex items-center gap-3 mb-6">
+      <div className="relative z-10 flex items-center gap-3 mb-4 sm:mb-6">
         <div
           className={cn(
             "p-2.5 rounded-xl transition-all duration-300 border",
@@ -267,7 +267,7 @@ const SkillItem = memo(function SkillItem({ skill }: { skill: Skill }) {
     <div
       ref={itemRef}
       className={cn(
-        "group/skill relative flex flex-col items-center gap-2 p-3 rounded-xl cursor-pointer transition-all duration-300 will-change-transform",
+        "group/skill relative flex flex-col items-center gap-2 p-2 sm:p-3 rounded-xl cursor-pointer transition-all duration-300 will-change-transform",
         "hover:bg-neutral-800/80",
         showTooltip && "bg-white/[0.05] shadow-[inset_0_0_20px_rgba(168,85,247,0.15)] ring-1 ring-purple-500/30 scale-105"
       )}
@@ -342,7 +342,9 @@ const SkillItem = memo(function SkillItem({ skill }: { skill: Skill }) {
       <div
         className={cn(
           "absolute -top-32 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ease-out",
-          "px-5 py-3 rounded-2xl border border-white/20 backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.6),0_0_20px_rgba(168,85,247,0.3)]",
+          // Narrower on mobile: at the full 200px the tooltip on an edge column overhangs the
+          // 390px viewport and gets clipped by the page's overflow-x-hidden.
+          "px-3.5 py-3 sm:px-5 rounded-2xl border border-white/20 backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.6),0_0_20px_rgba(168,85,247,0.3)]",
           "bg-[#0A1428]/90",
           showTooltip ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-90 pointer-events-none"
         )}
@@ -370,7 +372,7 @@ const SkillItem = memo(function SkillItem({ skill }: { skill: Skill }) {
           </div>
 
           {/* Proficiency meter — fills when the tooltip opens */}
-          <div className="mt-2.5 h-1.5 w-40 overflow-hidden rounded-full bg-white/10">
+          <div className="mt-2.5 h-1.5 w-32 sm:w-40 overflow-hidden rounded-full bg-white/10">
             <div
               className="h-full rounded-full transition-[width] duration-700 ease-out"
               style={{
@@ -380,7 +382,7 @@ const SkillItem = memo(function SkillItem({ skill }: { skill: Skill }) {
               }}
             />
           </div>
-          <div className="mt-1 flex w-40 items-center justify-between text-[10px]">
+          <div className="mt-1 flex w-32 sm:w-40 items-center justify-between text-[10px]">
             <span className="uppercase tracking-[0.14em] text-neutral-400">Proficiency</span>
             <span className="font-semibold text-white/85">{data.level}%</span>
           </div>

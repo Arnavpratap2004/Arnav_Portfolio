@@ -28,9 +28,13 @@ const SOCIAL_LINKS = [
 
 export function Footer() {
   return (
-    <footer className="h-14 w-full border-t border-cyan-200/[0.12] bg-[#040c1a]/95 backdrop-blur-xl">
-      <div className="mx-auto flex h-full max-w-7xl flex-wrap items-center justify-between gap-3 px-4 sm:px-6 md:px-8">
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
+    // Auto height on mobile: the fixed h-14 could not contain the wrapped rows, so the
+    // social icons were clipped by the footer's own bottom edge.
+    // pb keeps the last row clear of the home-indicator bar on notched phones; env() resolves
+    // to 0 everywhere else, so this costs nothing on ordinary devices.
+    <footer className="w-full border-t border-cyan-200/[0.12] bg-[#040c1a]/95 backdrop-blur-xl pb-[env(safe-area-inset-bottom)] sm:h-14 sm:pb-0">
+      <div className="mx-auto flex h-full max-w-7xl flex-col items-center justify-between gap-3 px-4 py-4 sm:flex-row sm:flex-wrap sm:py-0 sm:px-6 md:px-8">
+        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 sm:justify-start">
           <span className="text-[14px] font-medium tracking-tight text-white">
             Arnav Pratap
           </span>
@@ -51,9 +55,9 @@ export function Footer() {
               href={href}
               aria-label={label}
               {...(download ? { download } : { target: "_blank", rel: "noopener noreferrer" })}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-cyan-100/[0.14] text-white/50 transition-all duration-200 hover:border-cyan-300/40 hover:text-white/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+              className="flex h-10 w-10 sm:h-8 sm:w-8 items-center justify-center rounded-full border border-cyan-100/[0.14] text-white/50 transition-all duration-200 hover:border-cyan-300/40 hover:text-white/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
             >
-              <Icon size={14} strokeWidth={1.6} />
+              <Icon size={16} strokeWidth={1.6} className="sm:size-3.5" />
             </a>
           ))}
         </div>

@@ -55,7 +55,9 @@ export function FloatingLabelInput({ name, label, register, rules, error, type =
         onFocus={() => setIsFocused(true)}
         aria-invalid={Boolean(error)}
         aria-describedby={error ? name + "-error" : undefined}
-        className="h-[44px] w-full rounded-xl px-4 pb-1.5 pt-[18px] text-[0.85rem] outline-none transition-[border-color,box-shadow,background] duration-200"
+        // 16px on mobile is deliberate: iOS Safari auto-zooms the page when a focused input's
+        // font-size is under 16px, and the user is left pinch-zoomed out of the layout.
+        className="h-[44px] w-full rounded-xl px-4 pb-1.5 pt-[18px] text-[16px] sm:text-[0.85rem] outline-none transition-[border-color,box-shadow,background] duration-200"
         style={{
           background: "rgba(255,255,255,0.04)",
           border: "1px solid " + (error ? "rgba(255,77,109,0.62)" : isFocused ? "rgba(72,184,216,0.60)" : "rgba(96,165,230,0.18)"),

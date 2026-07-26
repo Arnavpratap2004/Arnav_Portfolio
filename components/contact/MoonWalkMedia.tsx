@@ -8,6 +8,18 @@ interface MoonWalkMediaProps {
   isInView: boolean;
 }
 
+/** Network Information API — still non-standard, so it is typed locally rather than globally. */
+type NetworkInformation = { saveData?: boolean; effectiveType?: string };
+
+function shouldSkipVideo(): boolean {
+  if (typeof window === "undefined") return true;
+  if (window.matchMedia("(max-width: 767px)").matches) return true;
+
+  const connection = (navigator as Navigator & { connection?: NetworkInformation }).connection;
+  if (connection?.saveData) return true;
+  return connection?.effectiveType === "slow-2g" || connection?.effectiveType === "2g";
+}
+
 export function MoonWalkMedia({ isInView }: MoonWalkMediaProps) {
   const shouldReduceMotion = useReducedMotion();
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -16,6 +28,11 @@ export function MoonWalkMedia({ isInView }: MoonWalkMediaProps) {
 
   useEffect(() => {
     if (!isInView || shouldReduceMotion || videoEnabled) return;
+    // PERF/DATA: The video is purely a decorative backdrop, but at 3.6MB it is by far the
+    // largest transfer on the page. Phones keep the poster (which the layered gradients above
+    // already sit on, so the section looks identical) and skip the fetch — along with the
+    // continuous decode that drains battery. Also honours Save-Data and 2G connections.
+    if (shouldSkipVideo()) return;
 
     const timeout = window.setTimeout(() => {
       setVideoEnabled(true);

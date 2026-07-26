@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Hero } from "@/components/sections/Hero";
 import { FloatingNav } from "@/components/ui/FloatingNavbar";
+import { IconBriefcase, IconHome, IconLayoutGrid, IconMail, IconUser } from "@tabler/icons-react";
 import dynamic from "next/dynamic";
 
 
@@ -110,12 +111,14 @@ function DeferredSection({ children, className, id, minHeight, preloadMargin = "
 }
 
 // PERF: Module-level constant — not re-allocated on every render.
+// Icons are the mobile presentation of each item; the truncated 3-letter fallback
+// ("Hom", "Abo", "Exp") read as broken text at 10px.
 const navItems = [
-  { name: "Home", link: "/" },
-  { name: "About", link: "#about" },
-  { name: "Experience", link: "#experience" },
-  { name: "Projects", link: "#projects" },
-  { name: "Contact", link: "#contact" },
+  { name: "Home", link: "/", icon: <IconHome size={19} stroke={1.7} /> },
+  { name: "About", link: "#about", icon: <IconUser size={19} stroke={1.7} /> },
+  { name: "Experience", link: "#experience", icon: <IconBriefcase size={19} stroke={1.7} /> },
+  { name: "Projects", link: "#projects", icon: <IconLayoutGrid size={19} stroke={1.7} /> },
+  { name: "Contact", link: "#contact", icon: <IconMail size={19} stroke={1.7} /> },
 ];
 
 export default function Home() {

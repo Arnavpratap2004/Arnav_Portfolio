@@ -92,6 +92,22 @@
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Suppress the grey/blue flash iOS and Android paint over every tapped link. The site
+       styles its own press states, and the default box ignores border-radius — it flashes a
+       hard rectangle behind pill buttons and circular icon links. */
+    -webkit-tap-highlight-color: transparent;
+    /* Stop iOS inflating body text when a phone is rotated to landscape. */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  /* Touch devices get no :hover, so press feedback is the only confirmation a tap landed. */
+  @media (hover: none) {
+    a:active,
+    button:active {
+      opacity: 0.72;
+      transition: opacity 0.1s ease-out;
+    }
   }
 
   /* Firefox-only scrollbar colors. Must NOT reach Chromium: setting the standard

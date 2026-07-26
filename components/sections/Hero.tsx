@@ -136,7 +136,19 @@ export function Hero() {
 
       <CrystalShards y={crystalY} />
 
-      <div className="relative z-10 mx-auto grid min-h-[100dvh] w-full max-w-7xl grid-cols-1 items-center gap-x-10 px-6 pt-28 pb-10 md:px-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:px-16 lg:pt-0 lg:pb-0">
+      {/* Melt the hero backdrop into the next section. The neural canvas and bg image end at the
+          section edge, which otherwise reads as a hard horizontal seam. Phone/tablet only: at lg+
+          the hero is exactly 100dvh, so the boundary sits at the viewport edge and never shows. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-32 md:h-40 lg:hidden"
+        style={{
+          zIndex: 3,
+          background: 'linear-gradient(to top, #06090F 0%, rgba(6,9,15,0.85) 35%, transparent 100%)',
+        }}
+      />
+
+      <div className="relative z-10 mx-auto grid min-h-[100dvh] w-full max-w-7xl grid-cols-1 items-center gap-x-10 px-6 pt-24 pb-12 md:px-12 md:pt-28 md:pb-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:px-16 lg:pt-0 lg:pb-0">
         {/* ---- Left column: identity + actions ---- */}
         <m.div
           className="flex flex-col items-center text-center lg:items-start lg:text-left"
@@ -145,7 +157,9 @@ export function Hero() {
           <m.h1
             className="font-geist font-extrabold leading-[0.95] tracking-normal grid w-full"
             style={{
-              fontSize: 'clamp(48px, 8.5vw, 104px)',
+              // The 44px floor keeps "PRATAP" + cursor inside a 360px content box; above ~520px
+              // wide the vw term takes over, so desktop sizing is unchanged.
+              fontSize: 'clamp(44px, 8.5vw, 104px)',
               letterSpacing: 0,
             }}
             initial={{ opacity: 0 }}
@@ -190,7 +204,7 @@ export function Hero() {
             variants={subtitleContainer}
           >
             <m.p
-              className="mt-4 md:mt-6 text-[#FAFAFA] font-inter font-medium"
+              className="mt-4 md:mt-6 text-balance text-[#FAFAFA] font-inter font-medium"
               style={{
                 fontSize: 'clamp(16px, 2.2vw, 24px)',
                 letterSpacing: '0.03em',
@@ -230,12 +244,17 @@ export function Hero() {
               }}
               variants={subtitleLine}
             >
-              2× IIT Patna Research Intern · VIT CSE · 9.00 CGPA
+              {/* Explicit break point: left to wrap on its own this splits mid-credential
+                  ("…Research" / "Intern · VIT CSE…") on a phone. */}
+              2× IIT Patna Research Intern
+              <span className="hidden sm:inline"> · </span>
+              <br className="sm:hidden" />
+              VIT CSE · 9.00 CGPA
             </m.p>
           </m.div>
 
           <m.div
-            className="mt-8 md:mt-9 flex flex-col sm:flex-row items-center gap-4 sm:gap-6"
+            className="mt-8 md:mt-9 flex w-full max-w-[300px] flex-col sm:max-w-none sm:flex-row items-center gap-3.5 sm:gap-6"
             initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.1, duration: 0.4, ease: EASE }}
@@ -244,7 +263,7 @@ export function Hero() {
             <a
               href="#projects"
               data-cursor="hover"
-              className="group relative inline-flex items-center justify-center px-8 py-3.5 rounded-full text-[#FAFAFA] text-sm font-inter font-medium tracking-[0.06em] backdrop-glass transition-all duration-300 hover:-translate-y-[3px]"
+              className="group relative inline-flex w-full sm:w-auto items-center justify-center px-8 py-3.5 rounded-full text-[#FAFAFA] text-sm font-inter font-medium tracking-[0.06em] backdrop-glass transition-all duration-300 hover:-translate-y-[3px]"
               style={{
                 background: 'rgba(255, 255, 255, 0.06)',
                 border: '1px solid rgba(255, 255, 255, 0.15)',
@@ -265,7 +284,7 @@ export function Hero() {
             <a
               href="#contact"
               data-cursor="hover"
-              className="inline-flex items-center justify-center px-8 py-3.5 rounded-full text-[#FAFAFA] text-sm font-inter font-medium tracking-[0.06em] transition-all duration-300 hover:-translate-y-[3px]"
+              className="inline-flex w-full sm:w-auto items-center justify-center px-8 py-3.5 rounded-full text-[#FAFAFA] text-sm font-inter font-medium tracking-[0.06em] transition-all duration-300 hover:-translate-y-[3px]"
               style={{
                 background: 'linear-gradient(135deg, #6B48FF 0%, #9B70FF 100%)',
                 transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
@@ -283,7 +302,7 @@ export function Hero() {
 
           {/* Social links — glass orbs with a rotating gradient ring on hover */}
           <m.div
-            className="mt-9 flex items-center gap-4"
+            className="mt-7 md:mt-9 flex items-center gap-4"
             initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.3, duration: 0.4, ease: EASE }}
@@ -327,13 +346,13 @@ export function Hero() {
 
         {/* ---- Right column: portrait composition ---- */}
         <m.div
-          className="relative mt-14 flex justify-center lg:mt-0 lg:justify-end"
+          className="relative mt-10 flex justify-center md:mt-14 lg:mt-0 lg:justify-end"
           style={{ y: portraitY, willChange: 'transform' }}
           initial={{ opacity: 0, x: shouldReduceMotion ? 0 : 48 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.9, duration: 0.9, ease: EASE }}
         >
-          <div className="relative w-[270px] sm:w-[330px] lg:w-[400px] xl:w-[440px]">
+          <div className="relative w-[230px] sm:w-[330px] lg:w-[400px] xl:w-[440px]">
             {/* Ambient glow bed behind the portrait */}
             <div
               aria-hidden="true"
@@ -366,7 +385,7 @@ export function Hero() {
                 width={1016}
                 height={1292}
                 priority
-                sizes="(max-width: 640px) 270px, (max-width: 1024px) 330px, 440px"
+                sizes="(max-width: 640px) 230px, (max-width: 1024px) 330px, 440px"
                 className="h-auto w-full select-none"
                 draggable={false}
               />

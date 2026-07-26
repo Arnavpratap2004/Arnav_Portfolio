@@ -214,7 +214,7 @@ export function Projects() {
 
     if (isMobileLayout) {
         return (
-            <section ref={containerRef} className="w-full relative bg-[#06090F] min-h-screen py-28 overflow-hidden">
+            <section ref={containerRef} className="w-full relative bg-[#06090F] min-h-screen py-20 sm:py-28 overflow-hidden">
                 <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
                     <ParticleNebula />
                 </div>

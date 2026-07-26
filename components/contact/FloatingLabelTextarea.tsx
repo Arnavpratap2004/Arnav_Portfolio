@@ -66,7 +66,9 @@ export function FloatingLabelTextarea({ name, label, register, rules, error, val
         onFocus={() => setIsFocused(true)}
         aria-invalid={Boolean(error)}
         aria-describedby={error ? name + "-error" : undefined}
-        className="min-h-[104px] max-h-[152px] w-full resize-none overflow-y-auto rounded-xl px-4 pb-7 pt-6 text-[0.85rem] leading-5 outline-none transition-[border-color,box-shadow,background] duration-200"
+        // 16px on mobile prevents iOS Safari's focus auto-zoom. The mirror below must keep
+        // identical font metrics or the auto-grow height calculation drifts.
+        className="min-h-[104px] max-h-[152px] w-full resize-none overflow-y-auto rounded-xl px-4 pb-7 pt-6 text-[16px] sm:text-[0.85rem] leading-5 outline-none transition-[border-color,box-shadow,background] duration-200"
         style={{
           background: "rgba(255,255,255,0.04)",
           border: "1px solid " + (error ? "rgba(255,77,109,0.62)" : isFocused ? "rgba(72,184,216,0.60)" : "rgba(96,165,230,0.18)"),
@@ -74,7 +76,7 @@ export function FloatingLabelTextarea({ name, label, register, rules, error, val
           color: "#dce8f2",
         }}
       />
-      <div ref={mirrorRef} className="invisible absolute left-0 top-0 -z-10 min-h-[104px] max-h-[152px] w-full whitespace-pre-wrap break-words rounded-xl px-4 pb-7 pt-6 text-[0.85rem] leading-5" aria-hidden="true" />
+      <div ref={mirrorRef} className="invisible absolute left-0 top-0 -z-10 min-h-[104px] max-h-[152px] w-full whitespace-pre-wrap break-words rounded-xl px-4 pb-7 pt-6 text-[16px] sm:text-[0.85rem] leading-5" aria-hidden="true" />
       <label
         htmlFor={name}
         className="pointer-events-none absolute left-4 transition-all duration-200 ease-out"

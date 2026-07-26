@@ -127,20 +127,22 @@ function StatCounter({ value, suffix = "", label }: { value: number; suffix?: st
     <m.div
       onViewportEnter={start}
       viewport={{ once: true }}
-      className="flex items-baseline gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2"
+      // Mobile stacks number over label so all three chips fit one aligned row; the three
+      // side-by-side pills overflowed 390px and wrapped 2-then-1.
+      className="flex flex-col items-center gap-0.5 rounded-2xl border border-white/10 bg-white/[0.03] px-2 py-2.5 text-center sm:flex-row sm:items-baseline sm:gap-2 sm:rounded-full sm:px-4 sm:py-2 sm:text-left"
     >
       <span className="text-xl font-extrabold tabular-nums text-white md:text-2xl">
         {display}
         {suffix}
       </span>
-      <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-neutral-400 md:text-[11px]">{label}</span>
+      <span className="text-[10px] font-medium uppercase leading-tight tracking-[0.14em] text-neutral-400 sm:tracking-[0.18em] md:text-[11px]">{label}</span>
     </m.div>
   );
 }
 
 export function About() {
   return (
-    <section className="relative h-auto min-h-screen w-full overflow-hidden bg-[#06090F] pb-12 pt-28 md:pb-20 md:pt-36">
+    <section className="relative h-auto min-h-screen w-full overflow-hidden bg-[#06090F] pb-12 pt-20 md:pb-20 md:pt-36">
       <GlassBackground className="absolute inset-0 w-full h-full pointer-events-none" />
       <div className="absolute inset-x-0 top-0 h-40 pointer-events-none bg-gradient-to-b from-[#06090F] to-transparent" />
       <div className="absolute inset-x-0 bottom-0 h-48 pointer-events-none bg-gradient-to-t from-[#06090F] to-transparent" />
@@ -151,13 +153,13 @@ export function About() {
             <span className="bg-gradient-to-b from-white to-white/60 bg-clip-text text-transparent">Technical </span>
             <span className="text-gradient-display drop-shadow-[0_0_20px_rgba(168,85,247,0.4)]">Arsenal</span>
           </h2>
-          <p className="mx-auto max-w-lg text-sm font-medium uppercase tracking-[0.15em] text-neutral-400 md:text-base">
+          <p className="mx-auto max-w-lg text-balance text-xs font-medium uppercase tracking-[0.12em] text-neutral-400 sm:text-sm sm:tracking-[0.15em] md:text-base">
             <span className="text-purple-400/90">Tap to explore</span>
-            <span className="mx-3 text-neutral-600">&bull;</span>
+            <span className="mx-2 text-neutral-600 sm:mx-3">&bull;</span>
             My tools of the trade
           </p>
 
-          <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+          <div className="mt-7 grid grid-cols-3 items-stretch gap-2 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-3">
             <StatCounter value={TOTAL_TECHNOLOGIES} label="Technologies" />
             <StatCounter value={skillCategories.length} label="Domains" />
             <StatCounter value={4} suffix="+" label="Years Building" />

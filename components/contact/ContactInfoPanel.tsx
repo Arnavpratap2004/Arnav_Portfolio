@@ -102,12 +102,12 @@ export function ContactInfoPanel({ isInView }: ContactInfoPanelProps) {
           </div>
           <div className="flex min-w-0 flex-1 flex-col gap-0.5">
             <span className="text-[10px] font-semibold uppercase tracking-[0.10em]" style={{ color: textMuted }}>EMAIL</span>
-            <a href={"mailto:" + EMAIL} className="truncate text-[0.8rem] font-medium" style={{ color: "#c0d0e0" }}>{EMAIL}</a>
+            <a href={"mailto:" + EMAIL} className="truncate text-[0.74rem] sm:text-[0.8rem] font-medium" style={{ color: "#c0d0e0" }}>{EMAIL}</a>
           </div>
           <button
             type="button"
             onClick={copyEmail}
-            className="whitespace-nowrap rounded-lg px-[14px] py-[6px] text-[0.78rem] font-semibold transition-all duration-200"
+            className="min-h-11 sm:min-h-0 whitespace-nowrap rounded-lg px-3 sm:px-[14px] py-[6px] text-[0.78rem] font-semibold transition-all duration-200"
             style={{
               color: copied ? green : cyan,
               background: copied ? "rgba(34,211,160,0.10)" : "rgba(72,184,216,0.10)",
@@ -128,7 +128,7 @@ export function ContactInfoPanel({ isInView }: ContactInfoPanelProps) {
           <a
             href="/Arnav_Resume.pdf"
             download
-            className="ml-auto flex items-center gap-[7px] rounded-[10px] px-3.5 py-2 text-[0.8rem] font-semibold no-underline transition-all duration-200 hover:-translate-y-0.5"
+            className="ml-auto flex min-h-11 sm:min-h-0 items-center gap-[7px] rounded-[10px] px-3.5 py-2 text-[0.8rem] font-semibold no-underline transition-all duration-200 hover:-translate-y-0.5"
             style={{ color: textPrimary, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(96,165,230,0.22)" }}
           >
             <Download size={15} />
@@ -153,7 +153,7 @@ function SocialButton({ href, label, children }: SocialButtonProps) {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="flex h-9 w-9 items-center justify-center rounded-[10px] no-underline transition-all duration-200 hover:-translate-y-0.5"
+      className="flex h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-[10px] no-underline transition-all duration-200 hover:-translate-y-0.5"
       style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(96,165,230,0.18)", color: textMuted }}
       onMouseEnter={(event) => {
         event.currentTarget.style.background = "rgba(72,184,216,0.12)";
