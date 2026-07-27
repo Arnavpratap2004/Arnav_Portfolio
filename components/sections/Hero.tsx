@@ -148,7 +148,7 @@ export function Hero() {
         }}
       />
 
-      <div className="relative z-10 mx-auto grid min-h-[100dvh] w-full max-w-7xl grid-cols-1 items-center gap-x-10 px-6 pt-24 pb-12 md:px-12 md:pt-28 md:pb-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:px-16 lg:pt-0 lg:pb-0">
+      <div className="relative z-10 mx-auto grid min-h-[100dvh] w-full max-w-7xl grid-cols-1 items-center gap-x-10 px-6 pt-20 pb-8 md:px-12 md:pt-28 md:pb-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:px-16 lg:pt-0 lg:pb-0">
         {/* ---- Left column: identity + actions ---- */}
         <m.div
           className="flex flex-col items-center text-center lg:items-start lg:text-left"
@@ -220,7 +220,7 @@ export function Hero() {
 
             {/* Status Pill */}
             <m.div
-              className="mt-5 md:mt-6 inline-flex items-center gap-2.5 rounded-full border border-emerald-300/15 bg-emerald-400/8 px-4 py-1.5"
+              className="mt-4 md:mt-6 inline-flex items-center gap-2.5 rounded-full border border-emerald-300/15 bg-emerald-400/8 px-4 py-1.5"
               style={{ willChange: 'transform, opacity' }}
               variants={subtitleLine}
             >
@@ -235,26 +235,23 @@ export function Hero() {
 
             {/* Credential line */}
             <m.p
-              className="mt-4 text-white/50 font-inter"
+              // Tighter type + tracking on mobile keeps the whole credential on one line; wrapped
+              // it split mid-phrase and cost the portrait ~20px of height.
+              className="mt-3 md:mt-4 text-balance font-inter text-[11.5px] tracking-[0.04em] text-white/55 sm:text-[13px] sm:tracking-[0.10em] sm:text-white/50"
               style={{
-                fontSize: '13px',
-                letterSpacing: '0.10em',
                 lineHeight: 1.5,
                 willChange: 'transform, opacity',
               }}
               variants={subtitleLine}
             >
-              {/* Explicit break point: left to wrap on its own this splits mid-credential
-                  ("…Research" / "Intern · VIT CSE…") on a phone. */}
-              2× IIT Patna Research Intern
-              <span className="hidden sm:inline"> · </span>
-              <br className="sm:hidden" />
-              VIT CSE · 9.00 CGPA
+              2× IIT Patna Research Intern · VIT CSE · 9.00 CGPA
             </m.p>
           </m.div>
 
           <m.div
-            className="mt-8 md:mt-9 flex w-full max-w-[300px] flex-col sm:max-w-none sm:flex-row items-center gap-3.5 sm:gap-6"
+            // Paired side by side on mobile (flex-1 keeps them exactly equal) rather than stacked:
+            // reads as one deliberate control pair and returns ~60px of height to the portrait.
+            className="mt-7 md:mt-9 flex w-full max-w-[340px] flex-row items-center gap-3 sm:max-w-none sm:gap-6"
             initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.1, duration: 0.4, ease: EASE }}
@@ -263,7 +260,7 @@ export function Hero() {
             <a
               href="#projects"
               data-cursor="hover"
-              className="group relative inline-flex w-full sm:w-auto items-center justify-center px-8 py-3.5 rounded-full text-[#FAFAFA] text-sm font-inter font-medium tracking-[0.06em] backdrop-glass transition-all duration-300 hover:-translate-y-[3px]"
+              className="group relative inline-flex flex-1 sm:flex-none items-center justify-center whitespace-nowrap px-4 sm:px-8 py-3.5 rounded-full text-[#FAFAFA] text-[13px] sm:text-sm font-inter font-medium tracking-[0.04em] sm:tracking-[0.06em] backdrop-glass transition-all duration-300 hover:-translate-y-[3px]"
               style={{
                 background: 'rgba(255, 255, 255, 0.06)',
                 border: '1px solid rgba(255, 255, 255, 0.15)',
@@ -284,7 +281,7 @@ export function Hero() {
             <a
               href="#contact"
               data-cursor="hover"
-              className="inline-flex w-full sm:w-auto items-center justify-center px-8 py-3.5 rounded-full text-[#FAFAFA] text-sm font-inter font-medium tracking-[0.06em] transition-all duration-300 hover:-translate-y-[3px]"
+              className="inline-flex flex-1 sm:flex-none items-center justify-center whitespace-nowrap px-4 sm:px-8 py-3.5 rounded-full text-[#FAFAFA] text-[13px] sm:text-sm font-inter font-medium tracking-[0.04em] sm:tracking-[0.06em] transition-all duration-300 hover:-translate-y-[3px]"
               style={{
                 background: 'linear-gradient(135deg, #6B48FF 0%, #9B70FF 100%)',
                 transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
@@ -302,7 +299,7 @@ export function Hero() {
 
           {/* Social links — glass orbs with a rotating gradient ring on hover */}
           <m.div
-            className="mt-7 md:mt-9 flex items-center gap-4"
+            className="mt-6 md:mt-9 flex items-center gap-4"
             initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.3, duration: 0.4, ease: EASE }}
@@ -346,13 +343,13 @@ export function Hero() {
 
         {/* ---- Right column: portrait composition ---- */}
         <m.div
-          className="relative mt-10 flex justify-center md:mt-14 lg:mt-0 lg:justify-end"
+          className="relative mt-8 flex justify-center md:mt-14 lg:mt-0 lg:justify-end"
           style={{ y: portraitY, willChange: 'transform' }}
           initial={{ opacity: 0, x: shouldReduceMotion ? 0 : 48 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.9, duration: 0.9, ease: EASE }}
         >
-          <div className="relative w-[230px] sm:w-[330px] lg:w-[400px] xl:w-[440px]">
+          <div className="hero-portrait-frame relative w-[280px] sm:w-[330px] lg:w-[400px] xl:w-[440px]">
             {/* Ambient glow bed behind the portrait */}
             <div
               aria-hidden="true"
@@ -385,7 +382,7 @@ export function Hero() {
                 width={1016}
                 height={1292}
                 priority
-                sizes="(max-width: 640px) 230px, (max-width: 1024px) 330px, 440px"
+                sizes="(max-width: 640px) 280px, (max-width: 1024px) 330px, 440px"
                 className="h-auto w-full select-none"
                 draggable={false}
               />
@@ -393,26 +390,29 @@ export function Hero() {
 
             {/* Floating glass credential chips */}
             <m.div
-              className="absolute -left-6 top-[24%] z-[2] hidden lg:block sm:-left-12"
+              // Stacked layouts sit the chips low, beside the shoulders — the face spans roughly
+              // 15–52% of this wrapper, and at the desktop 24% offset the chip lands on his glasses
+              // once the portrait narrows. The lg offsets restore the original side-by-side framing.
+              className="absolute -left-3 top-[57%] z-[2] sm:-left-12 lg:top-[24%]"
               initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.5, duration: 0.5, ease: EASE }}
             >
-              <div className="hero-chip-float flex items-center gap-2 rounded-full border border-white/12 bg-[#0A0E17]/70 backdrop-glass px-3.5 py-2 shadow-[0_8px_24px_rgba(5,8,18,0.5)]">
+              <div className="hero-chip-float flex items-center gap-1.5 sm:gap-2 rounded-full border border-white/12 bg-[#0A0E17]/70 backdrop-glass px-2.5 py-1.5 sm:px-3.5 sm:py-2 shadow-[0_8px_24px_rgba(5,8,18,0.5)]">
                 <IconBrain size={16} strokeWidth={1.8} className="text-[#B78FFF]" />
-                <span className="text-xs font-medium text-white/85 whitespace-nowrap">AI/ML Research</span>
+                <span className="text-[10.5px] sm:text-xs font-medium text-white/85 whitespace-nowrap">AI/ML Research</span>
               </div>
             </m.div>
 
             <m.div
-              className="absolute -right-3 top-[55%] z-[2] hidden lg:block sm:-right-8"
+              className="absolute -right-2 top-[75%] z-[2] sm:-right-8 lg:top-[55%]"
               initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.7, duration: 0.5, ease: EASE }}
             >
-              <div className="hero-chip-float-delayed flex items-center gap-2 rounded-full border border-white/12 bg-[#0A0E17]/70 backdrop-glass px-3.5 py-2 shadow-[0_8px_24px_rgba(5,8,18,0.5)]">
+              <div className="hero-chip-float-delayed flex items-center gap-1.5 sm:gap-2 rounded-full border border-white/12 bg-[#0A0E17]/70 backdrop-glass px-2.5 py-1.5 sm:px-3.5 sm:py-2 shadow-[0_8px_24px_rgba(5,8,18,0.5)]">
                 <IconCode size={16} strokeWidth={1.8} className="text-[#7DD3FC]" />
-                <span className="text-xs font-medium text-white/85 whitespace-nowrap">Full-Stack Systems</span>
+                <span className="text-[10.5px] sm:text-xs font-medium text-white/85 whitespace-nowrap">Full-Stack Systems</span>
               </div>
             </m.div>
           </div>

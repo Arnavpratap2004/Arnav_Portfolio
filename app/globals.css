@@ -292,6 +292,14 @@ html.is-scrolling .shard-rotate {
   animation-play-state: paused;
 }
 
+/* On a phone the shards land right on top of the name instead of out in the margins as they do
+   on a wide screen. Dial them back so they read as ambient depth rather than clutter. */
+@media (max-width: 640px) {
+  .shard-rotate {
+    opacity: 0.45;
+  }
+}
+
 /* Ripple effect for skill card tap feedback */
 @keyframes ripple {
   0% { transform: scale(0); opacity: 1; }
@@ -351,6 +359,17 @@ html.is-scrolling .hero-chip-float-delayed,
 html.is-scrolling .hero-orbit,
 html.is-scrolling .social-ring {
   animation-play-state: paused;
+}
+
+/* Phone portrait scales with viewport height, not just width. The type stack above it is a fixed
+   ~480px, so on a short (SE-class, 667px) screen a fixed-width portrait pushes the face down to
+   the fold and crops it at the chin. Tying the frame to dvh keeps the face clear on every phone
+   while tall devices still get the full 280px. vh first as a fallback for pre-dvh browsers. */
+@media (max-width: 639px) {
+  .hero-portrait-frame {
+    width: min(280px, 34vh);
+    width: min(280px, 34dvh);
+  }
 }
 
 /* Melt the portrait's lower edge into the section background. */
