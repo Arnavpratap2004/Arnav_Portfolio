@@ -73,7 +73,8 @@ export function FloatingLabelInput({ name, label, register, rules, error, type =
           transform: active ? "none" : "translateY(-50%)",
           fontSize: active ? 10.5 : 13.5,
           letterSpacing: active ? "0.08em" : 0,
-          color: active ? "#48b8d8" : "rgba(122,144,168,0.70)",
+          // 0.85 rather than 0.70: at 70% the resting label measured ~3.2:1 over the card fill.
+          color: active ? "#48b8d8" : "rgba(122,144,168,0.85)",
           fontWeight: active ? 700 : 600,
         }}
       >

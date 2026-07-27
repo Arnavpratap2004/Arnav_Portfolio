@@ -154,19 +154,19 @@ export const NarrativeProjectCard = ({
                 transition: "transform 0.3s ease-out",
             }}
         >
-            {/* Highlight Flash Animation.
-                Mobile anchors it to the top-left and keeps it on one line: centered at full size it
-                wrapped to two lines, blanketed the cover image, and collided head-on with the
-                top-right badge on a 390px card. */}
+            {/* Highlight flash — orbital (md+) layout only. Below 768px the section renders as a
+                plain stacked list, where this pill blanketed the cover art, collided with the
+                top-right badge, and then vanished after 2s before it could be read. The same metric
+                is rendered as a persistent chip in the card body instead. */}
             <div
                 className={cn(
-                    "absolute -top-2 left-3 sm:left-1/2 z-30 max-w-[60%] sm:max-w-none px-3 py-1.5 sm:px-4 sm:py-2 rounded-full",
+                    "hidden md:block absolute -top-2 left-1/2 -translate-x-1/2 z-30 px-4 py-2 rounded-full",
                     "bg-gradient-to-r from-fuchsia-500 via-purple-500 to-fuchsia-400",
-                    "text-white text-[11px] sm:text-sm font-bold truncate shadow-lg shadow-fuchsia-500/50",
+                    "text-white text-sm font-bold shadow-lg shadow-fuchsia-500/50",
                     "transition-[opacity,transform] duration-500",
                     showHighlight
-                        ? "opacity-100 translate-y-0 scale-100 sm:-translate-x-1/2"
-                        : "opacity-0 -translate-y-4 scale-90 sm:-translate-x-1/2"
+                        ? "opacity-100 translate-y-0 scale-100"
+                        : "opacity-0 -translate-y-4 scale-90"
                 )}
             >
                 <span className="animate-pulse">{highlight}</span>
@@ -273,6 +273,20 @@ export const NarrativeProjectCard = ({
                         {title}
                     </h3>
 
+                    {/* Headline metric, stacked-layout only. Gives the number a permanent home in
+                        the reading order (title → result → stack) instead of a pill that flashes
+                        over the artwork and disappears. */}
+                    <div className={cn(
+                        "md:hidden",
+                        "transition-[opacity,transform] duration-300",
+                        layer1Visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                    )}>
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-fuchsia-500/90 via-purple-500/90 to-fuchsia-400/90 px-2.5 py-1 text-[11px] font-bold text-white shadow-[0_2px_10px_rgba(217,70,239,0.35)]">
+                            <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-white/90" />
+                            {highlight}
+                        </span>
+                    </div>
+
                     {/* Layer 2: Tech Stack Tags */}
                     <div className={cn(
                         "flex flex-wrap gap-2",
@@ -325,7 +339,7 @@ export const NarrativeProjectCard = ({
                             rel="noopener noreferrer"
                             aria-label={`View ${title} on GitHub`}
                             className={cn(
-                                "inline-flex items-center justify-center gap-1.5 sm:gap-2 px-4 sm:px-5 py-2 min-h-11 sm:min-h-0 rounded-full text-xs sm:text-sm font-semibold",
+                                "inline-flex items-center justify-center gap-1.5 sm:gap-2 px-4 sm:px-5 py-2 min-h-11 md:min-h-0 rounded-full text-xs sm:text-sm font-semibold",
                                 "bg-gradient-to-r from-teal-600 to-cyan-600 text-white",
                                 "overflow-hidden group/btn",
                                 "transition-[transform,box-shadow] duration-300",
@@ -346,7 +360,7 @@ export const NarrativeProjectCard = ({
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className={cn(
-                                    "inline-flex items-center justify-center gap-2 px-5 py-2 min-h-11 sm:min-h-0 rounded-full text-sm font-semibold",
+                                    "inline-flex items-center justify-center gap-2 px-5 py-2 min-h-11 md:min-h-0 rounded-full text-sm font-semibold",
                                     "border border-white/20 text-white bg-white/5",
                                     "transition-[transform,border-color,background-color] duration-300",
                                     "hover:border-teal-500/50 hover:bg-white/10 hover:scale-105",

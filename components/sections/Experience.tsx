@@ -64,12 +64,16 @@ export function Experience() {
     ];
 
     return (
-        <section className="pt-28 md:pt-36 pb-12 md:pb-20 w-full relative overflow-hidden">
+        // `overflow-x-clip`, deliberately not `overflow-hidden`. Hidden makes this section the scroll
+        // container for the timeline's `sticky` year pill, and since the section never scrolls
+        // internally the pill never stuck — it rode 1166px off-screen. `clip` still contains the
+        // cards' horizontal entrance slide but does not establish a scroll container, so sticky works.
+        <section className="pt-20 md:pt-36 pb-12 md:pb-20 w-full relative overflow-x-clip">
             <TimelineStyles />
 
             {/* Animated Background */}
             <div className="absolute inset-0 bg-[#06090F]" />
-            <div className="absolute inset-0 z-0">
+            <div className="absolute inset-0 z-0 overflow-hidden">
                 <LineWaves
                     rotation={-38}
                     speed={0.35}
@@ -87,6 +91,12 @@ export function Experience() {
                 />
             </div>
 
+            {/* Melt the wave field into the neighbouring sections. Without these the diagonal lines
+                stop dead at both section edges — the same hard seam the hero had. About already
+                carries its own fades; this section had none. */}
+            <div className="absolute inset-x-0 top-0 z-[1] h-28 md:h-40 pointer-events-none bg-gradient-to-b from-[#06090F] to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 z-[1] h-28 md:h-40 pointer-events-none bg-gradient-to-t from-[#06090F] to-transparent" />
+
             {/* Content */}
             <div className="relative z-10">
                 <div className="text-center mb-12 md:mb-20 px-4 relative">
@@ -99,15 +109,18 @@ export function Experience() {
                         <span className="text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50">Experience & </span>
                         <span className="text-gradient-display">Education</span>
                     </h2>
-                    <p className="text-neutral-400 max-w-lg mx-auto text-sm md:text-base font-medium tracking-[0.15em] uppercase">
+                    <p className="text-neutral-400 max-w-lg mx-auto text-balance text-xs sm:text-sm md:text-base font-medium tracking-[0.12em] sm:tracking-[0.15em] uppercase">
                         <span className="text-pink-400/90">Scroll to explore</span>
-                        <span className="mx-3 text-neutral-600">•</span>
+                        <span className="mx-2 sm:mx-3 text-neutral-600">•</span>
                         My journey
                     </p>
 
                     {/* Resume highlights */}
                     <m.div
-                        className="mt-7 flex flex-wrap items-center justify-center gap-3"
+                        // 2-up grid on mobile. Centre-wrapped, these four wrapped to one row each at
+                        // widths 287/235/189/171 — a ragged staircase costing 184px. Equal cells
+                        // halve that and actually line up.
+                        className="mt-6 grid grid-cols-2 items-stretch gap-2 sm:mt-7 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-3"
                         initial={{ opacity: 0, y: 16 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, amount: 0.5 }}
@@ -116,9 +129,13 @@ export function Experience() {
                         {HIGHLIGHTS.map(({ icon: Icon, label, color }) => (
                             <span
                                 key={label}
-                                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-xs font-medium text-white/85 backdrop-blur-md"
+                                // PERF: backdrop-blur dropped — these sit directly over the animating
+                                // LineWaves canvas and re-filtered it every frame, the same tradeoff
+                                // already made for the skill/timeline cards. A more opaque tint reads
+                                // identically over this dark background.
+                                className="inline-flex items-center gap-2 rounded-2xl sm:rounded-full border border-white/10 bg-[#0d1322]/75 px-3 py-2 sm:px-4 text-left text-[11px] sm:text-xs font-medium text-white/85"
                             >
-                                <Icon size={15} strokeWidth={1.8} style={{ color }} />
+                                <Icon size={15} strokeWidth={1.8} style={{ color }} className="flex-shrink-0" />
                                 {label}
                             </span>
                         ))}

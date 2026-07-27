@@ -85,7 +85,8 @@ export function FloatingLabelTextarea({ name, label, register, rules, error, val
           transform: active ? "none" : "translateY(-50%)",
           fontSize: active ? 10.5 : 13.5,
           letterSpacing: active ? "0.08em" : 0,
-          color: active ? "#48b8d8" : "rgba(122,144,168,0.70)",
+          // Matches FloatingLabelInput — 0.70 measured ~3.2:1 over the card fill.
+          color: active ? "#48b8d8" : "rgba(122,144,168,0.85)",
           fontWeight: active ? 700 : 600,
         }}
       >

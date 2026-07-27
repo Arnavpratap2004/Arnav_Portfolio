@@ -29,22 +29,33 @@ export const AnimatedTimeline = ({ items, className }: AnimatedTimelineProps) =>
     });
 
     const [currentYear, setCurrentYear] = useState(items[0]?.year || "");
+    // Single-column mobile timeline reveals cards on much taller boxes than the desktop
+    // two-column layout, so the desktop trigger leaves long empty stretches mid-scroll.
+    const [isCompact] = useState(
+        () => typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches
+    );
 
     return (
         <div ref={containerRef} className={cn("relative", className)}>
             {/* Floating Year Indicator */}
-            <m.div 
-                className="sticky top-24 z-20 flex justify-center mb-12 pointer-events-none"
+            {/* Floats only from md up. There the cards are half-width and alternate sides, so the
+                centred pill hovers in an empty gutter. On mobile the cards are full-width, so a
+                floating centre pill would sit permanently on top of the text it is labelling — and
+                each card already carries its own period badge, making it redundant there. */}
+            <m.div
+                className="relative md:sticky md:top-24 z-20 flex justify-center mb-8 md:mb-12 pointer-events-none"
             >
                 {/* PERF: backdrop-blur removed — a sticky blurred pill re-filters its backdrop on
                     every scroll frame. The near-opaque navy underlay keeps the same look. */}
                 <div className={cn(
-                    "relative px-8 py-3 rounded-full border border-white/10",
+                    "relative px-6 py-2 md:px-8 md:py-3 rounded-full border border-white/10",
                     "bg-gradient-to-b from-white/[0.08] to-transparent",
                     "shadow-[0_0_30px_rgba(168,85,247,0.2)] transition-all duration-500 overflow-hidden"
                 )}>
-                    <div className="absolute inset-0 bg-[#06090F]/85 rounded-full z-0" />
-                    <span className="relative z-10 text-2xl font-extrabold bg-gradient-to-r from-purple-300 via-fuchsia-300 to-pink-300 bg-clip-text text-transparent tracking-[0.15em] transition-all drop-shadow-[0_0_15px_rgba(216,180,254,0.4)]">
+                    {/* Now that the pill genuinely floats over the cards, the underlay has to be
+                        near-opaque or the card text reads straight through it while scrolling. */}
+                    <div className="absolute inset-0 bg-[#06090F]/92 rounded-full z-0" />
+                    <span className="relative z-10 text-xl md:text-2xl font-extrabold bg-gradient-to-r from-purple-300 via-fuchsia-300 to-pink-300 bg-clip-text text-transparent tracking-[0.15em] transition-all drop-shadow-[0_0_15px_rgba(216,180,254,0.4)]">
                         {currentYear}
                     </span>
                 </div>
@@ -65,6 +76,7 @@ export const AnimatedTimeline = ({ items, className }: AnimatedTimelineProps) =>
                         key={index}
                         item={item}
                         index={index}
+                        isCompact={isCompact}
                         onInView={() => setCurrentYear(item.year)}
                     />
                 ))}
@@ -77,10 +89,11 @@ export const AnimatedTimeline = ({ items, className }: AnimatedTimelineProps) =>
 interface TimelineCardProps {
     item: TimelineItem;
     index: number;
+    isCompact: boolean;
     onInView: () => void;
 }
 
-const TimelineCard = ({ item, index, onInView }: TimelineCardProps) => {
+const TimelineCard = ({ item, index, isCompact, onInView }: TimelineCardProps) => {
     const [hoveredAchievement, setHoveredAchievement] = useState<number | null>(null);
     const isLeft = index % 2 === 0;
 
@@ -99,8 +112,14 @@ const TimelineCard = ({ item, index, onInView }: TimelineCardProps) => {
         <m.div
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.3, margin: "-100px 0px" }}
-            onViewportEnter={onInView}
+            // Mobile cards are near-viewport-height, so requiring 30% inside a viewport shrunk by
+            // 100px meant a card sat invisible until it was almost centred — a screen of empty
+            // background ahead of it. Trigger as soon as its top edge approaches instead.
+            viewport={
+                isCompact
+                    ? { once: true, amount: 0.05, margin: "0px 0px 100px 0px" }
+                    : { once: true, amount: 0.3, margin: "-100px 0px" }
+            }
             className={cn(
                 "relative",
                 /* Mobile: single column with left line */
@@ -110,6 +129,18 @@ const TimelineCard = ({ item, index, onInView }: TimelineCardProps) => {
                 isLeft ? "md:flex-row" : "md:flex-row-reverse"
             )}
         >
+            {/* Year tracker — deliberately separate from the reveal above. Driving the year off the
+                reveal meant it advanced the moment a card began entering (and, being `once`, never
+                went back when scrolling up), so the pill read 2023 while the 2025 card filled the
+                screen. This fires only while the card overlaps the viewport's middle band, and
+                re-fires in both directions. */}
+            <m.div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0"
+                onViewportEnter={onInView}
+                viewport={{ amount: 0, margin: "-45% 0px -45% 0px" }}
+            />
+
             {/* Connecting Line Dot */}
             <m.div 
                 className={cn(
@@ -129,15 +160,20 @@ const TimelineCard = ({ item, index, onInView }: TimelineCardProps) => {
 
             {/* Card */}
             <m.div 
+                // Mobile rises instead of sliding in from the side: in a single column the desktop
+                // alternating left/right slide reads as cards drifting in from random directions,
+                // and the outward one pushed 40px past the viewport edge mid-animation.
                 variants={{
-                    hidden: { 
-                        opacity: 0, 
-                        x: isLeft ? -40 : 40,
-                        scale: 0.95 
+                    hidden: {
+                        opacity: 0,
+                        x: isCompact ? 0 : isLeft ? -40 : 40,
+                        y: isCompact ? 24 : 0,
+                        scale: 0.95
                     },
-                    visible: { 
-                        opacity: 1, 
-                        x: 0, 
+                    visible: {
+                        opacity: 1,
+                        x: 0,
+                        y: 0,
                         scale: 1,
                         transition: { type: "spring", stiffness: 100, damping: 20, mass: 1 }
                     }

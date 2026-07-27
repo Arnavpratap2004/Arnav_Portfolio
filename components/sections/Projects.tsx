@@ -220,11 +220,13 @@ export function Projects() {
                 </div>
 
                 <div className="relative z-10 text-center w-full px-4 mb-10 pointer-events-none">
-                    <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-4 drop-shadow-[0_0_30px_rgba(217,70,239,0.5)]">
+                    <h2 className="text-4xl font-bold text-white tracking-tight mb-3 drop-shadow-[0_0_30px_rgba(217,70,239,0.5)]">
                         Selected <span className="text-gradient-display">Projects</span>
                     </h2>
-                    <p className="text-neutral-400 max-w-lg mx-auto text-sm md:text-base">
-                        Scroll to orbit the archive
+                    {/* "Scroll to orbit the archive" describes the md+ orbital carousel. This branch
+                        is a plain stacked list — nothing orbits — so it says what is actually here. */}
+                    <p className="text-neutral-400 max-w-lg mx-auto text-sm">
+                        Things I&apos;ve designed, built and shipped
                     </p>
                 </div>
 
