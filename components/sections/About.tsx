@@ -22,7 +22,11 @@ import MysqlOriginal from "devicons-react/icons/MysqlOriginal";
 import PostgresqlOriginal from "devicons-react/icons/PostgresqlOriginal";
 import AmazonwebservicesOriginalWordmark from "devicons-react/icons/AmazonwebservicesOriginalWordmark";
 import DockerOriginal from "devicons-react/icons/DockerOriginal";
-import LinuxOriginal from "devicons-react/icons/LinuxOriginal";
+// PERF: Linux is deliberately NOT imported from devicons-react. That one component is a 221KB
+// JS module that expands to ~800 SVG nodes for a 40px icon — half of this section's entire DOM
+// (1603 elements) and the reason its style recalc was so expensive. Rendered from
+// public/icons/linux-original.png instead: 8.7KB, one element. Every other devicon here is ≤21
+// nodes, so they stay as components. Regenerate with scratchpad/render-linux.cjs if it changes.
 import TensorflowOriginal from "devicons-react/icons/TensorflowOriginal";
 import PytorchOriginal from "devicons-react/icons/PytorchOriginal";
 import PandasOriginal from "devicons-react/icons/PandasOriginal";
@@ -74,7 +78,7 @@ const skillCategories = [
     skills: [
       { name: "AWS", icon: <AmazonwebservicesOriginalWordmark size={40} /> },
       { name: "Docker", icon: <DockerOriginal size={40} /> },
-      { name: "Linux", icon: <LinuxOriginal size={40} /> },
+      { name: "Linux", icon: "/icons/linux-original.png" },
     ],
     icon: <IconCloud className="h-6 w-6 text-orange-400" />,
     accent: "#FB923C",

@@ -79,9 +79,10 @@
   }
 
   #main-content {
-    /* PERF: Fast fade-in with no delay — the old 1s ease-in with 0.5s delay added 1.5s of
-       perceived load time after the loader had already finished. */
-    transition: opacity 0.45s ease-out;
+    /* Unmasks on the same tick the loader's shockwave fires, while the overlay is still
+       opaque — so this is a handoff, not a cross-fade. Kept short for exactly that reason:
+       the hero's own entrance beats are the visible animation, not this. */
+    transition: opacity 0.25s ease-out;
   }
 
   body.portfolio-loader-active #main-content {
@@ -353,11 +354,19 @@ html.is-scrolling .shard-rotate {
   animation: heroOrbitSpin 36s linear infinite;
 }
 
-/* PERF: consistent with .shard-rotate — pause ambient hero motion while scrolling. */
+/* PERF: consistent with .shard-rotate — pause ambient hero motion while scrolling.
+   Also paused while the loader owns the screen: these run behind a fully opaque overlay,
+   so every frame they cost is stolen from the loader's own canvas animation. */
 html.is-scrolling .hero-chip-float,
 html.is-scrolling .hero-chip-float-delayed,
 html.is-scrolling .hero-orbit,
-html.is-scrolling .social-ring {
+html.is-scrolling .social-ring,
+body.portfolio-loader-active .hero-chip-float,
+body.portfolio-loader-active .hero-chip-float-delayed,
+body.portfolio-loader-active .hero-orbit,
+body.portfolio-loader-active .social-ring,
+body.portfolio-loader-active .shard-rotate,
+body.portfolio-loader-active .cursor-blink {
   animation-play-state: paused;
 }
 

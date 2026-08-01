@@ -4,6 +4,7 @@ import { Hero } from "@/components/sections/Hero";
 import { FloatingNav } from "@/components/ui/FloatingNavbar";
 import { IconBriefcase, IconHome, IconLayoutGrid, IconMail, IconUser } from "@tabler/icons-react";
 import dynamic from "next/dynamic";
+import { useIntroGate } from "@/lib/intro";
 
 
 
@@ -28,6 +29,10 @@ type DeferredSectionProps = {
 function DeferredSection({ children, className, id, minHeight, preloadMargin = "0px", premountDelay }: DeferredSectionProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [shouldRender, setShouldRender] = useState(false);
+  // PERF: Premount delays are measured from the end of the intro, not from mount. Timed from
+  // mount, About's chunk execution + three.js init landed at ~1800ms — directly on top of the
+  // hero's entrance animation — and cost a 216ms frame right in the middle of the reveal.
+  const introDone = useIntroGate(2500);
 
   useEffect(() => {
     if (shouldRender) return;
@@ -52,7 +57,7 @@ function DeferredSection({ children, className, id, minHeight, preloadMargin = "
     // by IntersectionObserver and content-visibility skips their layout/paint.
     let timerId: number | undefined;
     let idleId: number | undefined;
-    if (premountDelay !== undefined) {
+    if (premountDelay !== undefined && introDone) {
       timerId = window.setTimeout(() => {
         if (typeof window.requestIdleCallback === "function") {
           idleId = window.requestIdleCallback(reveal, { timeout: 2000 });
@@ -69,7 +74,7 @@ function DeferredSection({ children, className, id, minHeight, preloadMargin = "
         window.cancelIdleCallback(idleId);
       }
     };
-  }, [preloadMargin, premountDelay, shouldRender]);
+  }, [preloadMargin, premountDelay, shouldRender, introDone]);
 
   useEffect(() => {
     if (!shouldRender) return;
@@ -121,6 +126,13 @@ const navItems = [
   { name: "Contact", link: "#contact", icon: <IconMail size={19} stroke={1.7} /> },
 ];
 
+// NOTE: the floating nav is deliberately mounted inline, not deferred behind the intro gate.
+// Deferring it was tried and measurably lost: mounted on the handoff frame it cost the shatter
+// ~6fps (55 -> 49), and pushed past the shatter onto idle it still left the load phase worse
+// than leaving it alone (43-47fps vs 49-51). Its hydration is cheap enough to ride along with
+// everything else in the initial batch; pulling it out just relocates the cost somewhere the
+// eye is more likely to catch it.
+
 export default function Home() {
   return (
     <main id="main-content" className="min-h-screen bg-[#06090F] antialiased relative [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
@@ -129,18 +141,22 @@ export default function Home() {
         <Hero />
       </div>
 
-      <DeferredSection id="about" className="lazy-section relative z-10 bg-[#06090F]" minHeight="100vh" preloadMargin="1400px 0px" premountDelay={1800}>
+      {/* premountDelay is measured from the intro handoff, ~600ms apart. Widening the gaps to
+          1s was tried and lost: it pushed the last premount out past 6s, close enough to a
+          realistic first scroll that the Projects section had not settled, and scroll went
+          from 1 bad frame to 8. These values are the measured optimum — don't spread them. */}
+      <DeferredSection id="about" className="lazy-section relative z-10 bg-[#06090F]" minHeight="100vh" preloadMargin="1400px 0px" premountDelay={900}>
         <About />
       </DeferredSection>
 
-      <DeferredSection id="experience" className="lazy-section relative z-10 bg-[#06090F]" minHeight="100vh" preloadMargin="1200px 0px" premountDelay={2600}>
+      <DeferredSection id="experience" className="lazy-section relative z-10 bg-[#06090F]" minHeight="100vh" preloadMargin="1200px 0px" premountDelay={1500}>
         <Experience />
       </DeferredSection>
 
-      <DeferredSection id="projects" className="lazy-section lazy-section-projects relative z-10 bg-[#06090F]" minHeight="400vh" preloadMargin="1200px 0px" premountDelay={3400}>
+      <DeferredSection id="projects" className="lazy-section lazy-section-projects relative z-10 bg-[#06090F]" minHeight="400vh" preloadMargin="1200px 0px" premountDelay={2100}>
         <Projects />
       </DeferredSection>
-      <DeferredSection id="contact" className="relative z-10 bg-[#06090F]" minHeight="100svh" preloadMargin="1200px 0px" premountDelay={4200}>
+      <DeferredSection id="contact" className="relative z-10 bg-[#06090F]" minHeight="100svh" preloadMargin="1200px 0px" premountDelay={2700}>
         <div className="min-h-[100svh] bg-[#040c1a]">
           <Contact />
           <Footer />

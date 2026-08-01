@@ -9,11 +9,14 @@
   height: 100vh;
   overflow: hidden;
   color: #ffffff;
+  /* This fill IS the pane of glass while it is intact. At `shatter` it drops to transparent
+     and the canvas facets become the only thing covering the hero — see .shattered. The
+     colour must stay in step with TINT_RGB in the TSX or the swap frame flashes. */
   background: #06090f;
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.82s ease-in-out, visibility 0.82s;
-  will-change: opacity;
+  transition: opacity 0.42s ease-out, visibility 0.42s, background-color 0.12s linear;
+  will-change: opacity, transform;
   contain: layout paint style;
 }
 
@@ -43,6 +46,42 @@
   pointer-events: none;
 }
 
+/* The blow lands. A short, decaying shake of the whole pane — compositor-only transform, and
+   it does more for the sense of impact than anything drawn on the canvas. It runs out well
+   before the facets start moving, so it never fights the shatter. */
+@keyframes paneShock {
+  0% { transform: translate3d(0, 0, 0); }
+  12% { transform: translate3d(-7px, 5px, 0); }
+  26% { transform: translate3d(6px, -4px, 0); }
+  42% { transform: translate3d(-4px, -3px, 0); }
+  58% { transform: translate3d(3px, 3px, 0); }
+  74% { transform: translate3d(-2px, 1px, 0); }
+  88% { transform: translate3d(1px, -1px, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+.impacted {
+  animation: paneShock 260ms cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+.reducedMotion.impacted {
+  animation: none;
+}
+
+/* The pane lets go. Everything that was painting a solid backdrop gets out of the way in one
+   frame-ish, leaving only the falling facets on the canvas above the now-visible hero. */
+.shattered {
+  background-color: transparent;
+  pointer-events: none;
+}
+
+.shattered::before,
+.shattered::after {
+  opacity: 0;
+  transition: opacity 0.16s linear;
+}
+
+/* Reduced motion (and the failsafe path): no shatter, just clear the pane. */
 .fadeOut {
   opacity: 0;
   visibility: hidden;
@@ -56,7 +95,15 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
+  /* Held back until the main thread has headroom (see canvasReady in the TSX) and faded in
+     from wherever the build has reached, so the web never pops in half-grown. */
+  opacity: 0;
+  transition: opacity 0.45s ease-out;
   transform: translateZ(0);
+}
+
+.canvasReady {
+  opacity: 1;
 }
 
 .container {
@@ -72,6 +119,19 @@
   transform: translateZ(0);
 }
 
+/* The one thing that must never stop moving.
+   React hydration blocks the main thread for ~450ms early in the load, which freezes the
+   canvas RAF, the progress timer — everything driven by JS. A composited CSS animation keeps
+   running through that block, so the loader breathes instead of appearing hung. */
+@keyframes coreBreathe {
+  0%, 100% { transform: scale(0.82); opacity: 0.30; }
+  50% { transform: scale(0.97); opacity: 0.46; }
+}
+
+@keyframes haloSpin {
+  to { transform: rotate(360deg); }
+}
+
 .core {
   position: absolute;
   width: 116px;
@@ -84,13 +144,41 @@
     0 0 72px rgba(107, 72, 255, 0.2);
   opacity: 0.3;
   transform: scale(0.82);
+  animation: coreBreathe 2.6s ease-in-out infinite;
   transition: opacity 0.62s ease, transform 0.62s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
 }
 
+/* Impact: the light behind the pane blows outward and disperses as the glass falls away.
+   This replaces what used to be a per-frame full-screen radial gradient on the canvas — same
+   read, but it is a composited transform, so it is effectively free. */
 .coreBurst {
+  animation: none;
   opacity: 0;
-  transform: scale(7);
+  transform: scale(9);
+  transition: opacity 0.85s cubic-bezier(0.3, 0, 0.6, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Second always-moving element: a slow dashed halo outside the progress ring. */
+.halo {
+  position: absolute;
+  width: 232px;
+  height: 232px;
+  border: 1px dashed rgba(155, 112, 255, 0.16);
+  border-radius: 999px;
+  animation: haloSpin 14s linear infinite;
+  transition: opacity 0.2s ease-out, transform 0.24s ease-out;
+  will-change: transform;
+}
+
+.haloOut {
+  opacity: 0;
+  transform: scale(1.18);
+}
+
+.reducedMotion .core,
+.reducedMotion .halo {
+  animation: none;
 }
 
 .svg {
@@ -98,13 +186,14 @@
   width: 200px;
   height: 200px;
   transform: rotate(-90deg);
-  transition: opacity 0.42s ease, transform 0.42s ease;
+  transition: opacity 0.22s ease-out, transform 0.26s ease-out;
   will-change: transform, opacity;
 }
 
+/* The ring was etched on the pane — it goes with it, snapping outward rather than shrinking. */
 .hideRing {
   opacity: 0;
-  transform: rotate(-90deg) scale(0.6);
+  transform: rotate(-90deg) scale(1.16);
 }
 
 .track {
@@ -138,14 +227,15 @@
     0 0 12px rgba(255, 255, 255, 0.22),
     0 0 28px rgba(155, 112, 255, 0.36);
   transform: translate(-50%, -50%);
-  transition: transform 0.84s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.84s ease-in, filter 0.84s ease;
-  will-change: transform, opacity, filter;
+  transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.24s ease-out;
+  will-change: transform, opacity;
 }
 
+/* The readout was printed on the glass: it snaps toward the viewer and is gone before the
+   facets start moving. No blur filter — animating one full-screen-ish is a known frame cost. */
 .explode {
   opacity: 0;
-  filter: blur(2px);
-  transform: translate(-50%, -50%) scale(18);
+  transform: translate(-50%, -50%) scale(1.5);
 }
 
 .subtitle {
@@ -160,13 +250,13 @@
   white-space: nowrap;
   text-shadow: 0 0 18px rgba(155, 112, 255, 0.45);
   transform: translateX(-50%);
-  transition: opacity 0.48s ease, transform 0.48s ease;
+  transition: opacity 0.24s ease-out, transform 0.28s ease-out;
   will-change: transform, opacity;
 }
 
 .subtitleOut {
   opacity: 0;
-  transform: translate(-50%, 10px);
+  transform: translate(-50%, 14px);
 }
 
 .reducedMotion,

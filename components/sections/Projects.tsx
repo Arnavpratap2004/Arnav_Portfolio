@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
-import { m, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { m, useMotionValue, useMotionValueEvent, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { ParticleNebula } from "@/components/ui/ParticleNebula";
 import { NarrativeProjectCard } from "@/components/ui/NarrativeProjectCard";
 
@@ -212,6 +212,35 @@ export function Projects() {
         offset: ["start start", "end end"]
     });
 
+    // PERF: scrollYProgress updates on every scroll frame anywhere on the page, not just while
+    // this section is on screen. Bound straight to the cards it meant that scrolling through
+    // About re-wrote all six orbital cards' transform, opacity AND z-index every frame — ~600
+    // style writes for content nobody could see, and the z-index churn forced the compositor to
+    // re-sort paint order (traced as 338ms of Layerize). This mirror only tracks while the
+    // section is near the viewport, so off-screen the cards' motion values go quiet.
+    const gatedProgress = useMotionValue(0);
+    const isNearRef = useRef(false);
+
+    useMotionValueEvent(scrollYProgress, "change", (value) => {
+        if (isNearRef.current) gatedProgress.set(value);
+    });
+
+    useEffect(() => {
+        const element = containerRef.current;
+        if (!element || isMobileLayout) return;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                isNearRef.current = entry.isIntersecting;
+                // Resync on entry so the orbit never animates in from a stale position.
+                if (entry.isIntersecting) gatedProgress.set(scrollYProgress.get());
+            },
+            { rootMargin: "600px 0px" }
+        );
+        observer.observe(element);
+        return () => observer.disconnect();
+    }, [gatedProgress, scrollYProgress, isMobileLayout]);
+
     if (isMobileLayout) {
         return (
             <section ref={containerRef} className="w-full relative bg-[#06090F] min-h-screen py-20 sm:py-28 overflow-hidden">
@@ -267,7 +296,7 @@ export function Projects() {
                             project={project} 
                             index={index} 
                             total={projects.length} 
-                            progress={scrollYProgress} 
+                            progress={gatedProgress}
                         />
                     ))}
                 </div>

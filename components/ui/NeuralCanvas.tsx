@@ -146,6 +146,9 @@ function NeuralCanvasComponent() {
       // PERF: Freeze the ambient drift while the page is scrolling — its motion is invisible
       // mid-scroll and every skipped raster+composite goes straight to scroll smoothness.
       if (document.documentElement.classList.contains('is-scrolling')) return;
+      // Same reasoning during the intro: this canvas sits behind a fully opaque loader, so
+      // drawing it only steals frames from the loader animation the visitor is actually watching.
+      if (document.body.classList.contains('portfolio-loader-active')) return;
       lastFrameTime = frameTime;
 
       const time = performance.now() - startTimeRef.current;

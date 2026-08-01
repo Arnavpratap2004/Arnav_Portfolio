@@ -58,7 +58,7 @@ export function MoonWalkMedia({ isInView }: MoonWalkMediaProps) {
   return (
     <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
       <Image
-        src="/moon-walk/moon-walk.jpg"
+        src="/moon-walk/moon-walk-poster.webp"
         alt=""
         fill
         sizes="100vw"
@@ -77,7 +77,11 @@ export function MoonWalkMedia({ isInView }: MoonWalkMediaProps) {
           playsInline
           autoPlay
           preload="metadata"
-          poster="/moon-walk/moon-walk.jpg"
+          // PERF: 130KB, not the 1.27MB original. A `poster` attribute is fetched raw — it cannot
+          // go through next/image — so this was pulling the full 2400x1792 source over the wire
+          // mid-scroll, on top of the 3.5MB video. It is visible for a fraction of a second
+          // behind two gradient scrims before the video takes over.
+          poster="/moon-walk/moon-walk-poster.jpg"
           // PERF: 1080p re-encode (3.6MB vs the 29MB 4K original) — same look as a cover
           // background, 8x less bandwidth and far less per-frame GPU scaling.
           src="/moon-walk/moon-walk-1080.mp4"

@@ -163,18 +163,18 @@ const TimelineCard = ({ item, index, isCompact, onInView }: TimelineCardProps) =
                 // Mobile rises instead of sliding in from the side: in a single column the desktop
                 // alternating left/right slide reads as cards drifting in from random directions,
                 // and the outward one pushed 40px past the viewport edge mid-animation.
+                // PERF: no scale — same reasoning as the skill cards. These are text-dense cards;
+                // a scaling layer is re-rasterised every frame, a translating one is just moved.
                 variants={{
                     hidden: {
                         opacity: 0,
                         x: isCompact ? 0 : isLeft ? -40 : 40,
                         y: isCompact ? 24 : 0,
-                        scale: 0.95
                     },
                     visible: {
                         opacity: 1,
                         x: 0,
                         y: 0,
-                        scale: 1,
                         transition: { type: "spring", stiffness: 100, damping: 20, mass: 1 }
                     }
                 }}
@@ -187,18 +187,21 @@ const TimelineCard = ({ item, index, isCompact, onInView }: TimelineCardProps) =
                 )}
             >
                 <div className={cn(
-                    "relative p-[1px] rounded-3xl transition-all duration-500 group/card",
+                    // PERF: explicit list rather than `transition-all` — these cards are framer-
+                    // animated on reveal, and `all` made every inline transform/opacity write
+                    // during that animation also drive CSS transitions.
+                    "relative p-[1px] rounded-3xl transition-[box-shadow,background-image] duration-500 group/card",
                     "bg-gradient-to-br from-white/10 via-white/5 to-transparent overflow-hidden",
                     "hover:shadow-[0_0_30px_rgba(168,85,247,0.2)] hover:bg-gradient-to-br hover:from-purple-500/30 hover:via-pink-500/10 hover:to-transparent"
                 )}>
                     {/* Inner Card Background — PERF: backdrop-blur removed; the card scrolls over the
                         wave canvas, so the blur re-filtered every frame while being ~invisible behind
                         an 80%-opaque fill. Slightly higher opacity preserves the glass look. */}
-                    <div className="absolute inset-[1px] bg-[#06090F]/90 rounded-[23px] transition-all duration-500 z-0" />
+                    <div className="absolute inset-[1px] bg-[#06090F]/90 rounded-[23px] z-0" />
                     
                     {/* Glowing Orb behind card content */}
                     <div className={cn(
-                        "absolute -top-20 -right-20 w-40 h-40 rounded-full blur-[60px] opacity-20 transition-all duration-500 group-hover/card:opacity-40 z-0",
+                        "absolute -top-20 -right-20 w-40 h-40 rounded-full blur-[60px] opacity-20 transition-opacity duration-500 group-hover/card:opacity-40 z-0",
                         `bg-gradient-to-r ${item.gradientFrom} ${item.gradientTo}`
                     )} />
 
@@ -208,10 +211,10 @@ const TimelineCard = ({ item, index, isCompact, onInView }: TimelineCardProps) =
                             <div className={cn(
                                 "inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] md:text-xs font-bold tracking-[0.15em] uppercase",
                                 "bg-white/[0.03] border border-white/[0.08] shadow-[inset_0_1px_4px_rgba(255,255,255,0.05)]",
-                                "transition-all duration-500 group-hover/card:border-white/10 group-hover/card:bg-white/[0.05]"
+                                "transition-colors duration-500 group-hover/card:border-white/10 group-hover/card:bg-white/[0.05]"
                             )}>
                                 <span className={cn(
-                                    "w-1.5 h-1.5 rounded-full shadow-[0_0_8px_currentColor] transition-all duration-500",
+                                    "w-1.5 h-1.5 rounded-full shadow-[0_0_8px_currentColor] transition-colors duration-500",
                                     item.type === "experience" ? "bg-purple-400 text-purple-400" : "bg-emerald-400 text-emerald-400"
                                 )} />
                                 <span className="text-white/80">{item.period}</span>
@@ -258,14 +261,17 @@ const TimelineCard = ({ item, index, isCompact, onInView }: TimelineCardProps) =
                                                 visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 150, damping: 15, delay: achIndex * 0.1 + 0.2 } }
                                             }}
                                             className={cn(
-                                                "relative pl-5 text-xs md:text-sm text-neutral-400 leading-relaxed transition-all duration-300",
+                                                // PERF: `transition-colors`, not `all`. Framer drives opacity+x on this
+                                                // element via variants; `all` had CSS transitioning those same inline
+                                                // writes on top of framer's own interpolation, every frame of the reveal.
+                                                "relative pl-5 text-xs md:text-sm text-neutral-400 leading-relaxed transition-colors duration-300",
                                                 hoveredAchievement === achIndex ? "text-white" : ""
                                             )}
                                             onMouseEnter={() => setHoveredAchievement(achIndex)}
                                             onMouseLeave={() => setHoveredAchievement(null)}
                                         >
                                             <span className={cn(
-                                                "absolute left-0 top-[0.6em] w-1.5 h-1.5 rounded-full border border-white/20 transition-all duration-300",
+                                                "absolute left-0 top-[0.6em] w-1.5 h-1.5 rounded-full border border-white/20 transition-[transform,border-color,box-shadow] duration-300",
                                                 hoveredAchievement === achIndex ? `bg-gradient-to-r ${item.gradientFrom} ${item.gradientTo} border-transparent scale-125 shadow-[0_0_10px_rgba(168,85,247,0.5)]` : "bg-transparent"
                                             )} />
                                             <span dangerouslySetInnerHTML={{ __html: highlightKeywords(achievement, hoveredAchievement === achIndex) }} />
