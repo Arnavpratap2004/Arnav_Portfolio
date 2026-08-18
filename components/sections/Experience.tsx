@@ -6,7 +6,7 @@ import LineWaves from "@/components/ui/LineWaves";
 import { AnimatedTimeline, TimelineStyles } from "@/components/ui/AnimatedTimeline";
 
 const HIGHLIGHTS = [
-    { icon: IconTrophy, label: "Cisco CSR Hackathon — National Finalist", color: "#FACC15" },
+    { icon: IconTrophy, label: "Cisco CSR Hackathon — Top 75 Nationally", color: "#FACC15" },
     { icon: IconSchool, label: "Amazon ML Summer School '26", color: "#FB923C" },
     { icon: IconFileText, label: "IEEE Paper — CAD-RAG", color: "#60A5FA" },
     { icon: IconCode, label: "300+ DSA Problems", color: "#4ADE80" },

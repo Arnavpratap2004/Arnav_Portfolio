@@ -1,6 +1,5 @@
 "use client";
 
-import emailjs from "@emailjs/browser";
 import { m } from "framer-motion";
 import { useCallback, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
@@ -36,20 +35,25 @@ export function ContactForm({ isInView }: ContactFormProps) {
   const onSubmit = async (data: ContactFormValues) => {
     setButtonState("loading");
     try {
-      await emailjs.send(
-        "YOUR_SERVICE_ID",
-        "YOUR_TEMPLATE_ID",
-        {
-          from_name: data.name,
-          from_email: data.email,
-          subject: data.subject || "Portfolio Contact",
-          message: data.message,
-        },
-        "YOUR_PUBLIC_KEY"
-      );
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.name.trim(),
+          email: data.email.trim(),
+          subject: data.subject.trim(),
+          message: data.message.trim(),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Contact API responded with " + response.status);
+      }
+
       setButtonState("success");
       reset();
-    } catch {
+    } catch (error) {
+      console.error("Contact form submission failed:", error);
       setButtonState("error");
     }
   };

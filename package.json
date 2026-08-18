@@ -10,7 +10,8 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@emailjs/browser": "^4.4.1",
+    "@react-email/components": "^1.0.12",
+    "@react-email/render": "^2.1.0",
     "@studio-freight/lenis": "^1.0.42",
     "@tabler/icons-react": "^3.35.0",
     "clsx": "^2.1.1",
