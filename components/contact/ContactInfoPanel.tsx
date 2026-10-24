@@ -22,6 +22,7 @@ const itemVariants = {
 
 export function ContactInfoPanel({ isInView }: ContactInfoPanelProps) {
   const [copied, setCopied] = useState(false);
+  const [copyFailed, setCopyFailed] = useState(false);
   const copyResetRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -31,11 +32,42 @@ export function ContactInfoPanel({ isInView }: ContactInfoPanelProps) {
   }, []);
 
   const copyEmail = async () => {
-    await navigator.clipboard.writeText(EMAIL);
-    setCopied(true);
+    let didCopy = false;
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(EMAIL);
+        didCopy = true;
+      }
+    } catch {
+      // Clipboard permissions are unavailable on some browsers and embedded previews.
+      // Fall through to the legacy selection-based copy path below.
+    }
+
+    if (!didCopy) {
+      const helper = document.createElement("textarea");
+      helper.value = EMAIL;
+      helper.setAttribute("readonly", "true");
+      helper.style.position = "fixed";
+      helper.style.opacity = "0";
+      document.body.appendChild(helper);
+      helper.select();
+      try {
+        didCopy = document.execCommand("copy");
+      } catch {
+        didCopy = false;
+      }
+      helper.remove();
+    }
+
+    setCopied(didCopy);
+    setCopyFailed(!didCopy);
 
     if (copyResetRef.current) clearTimeout(copyResetRef.current);
-    copyResetRef.current = setTimeout(() => setCopied(false), 2000);
+    copyResetRef.current = setTimeout(() => {
+      setCopied(false);
+      setCopyFailed(false);
+    }, 2000);
   };
 
   return (
@@ -109,12 +141,13 @@ export function ContactInfoPanel({ isInView }: ContactInfoPanelProps) {
             onClick={copyEmail}
             className="min-h-11 sm:min-h-0 whitespace-nowrap rounded-lg px-3 sm:px-[14px] py-[6px] text-[0.78rem] font-semibold transition-all duration-200"
             style={{
-              color: copied ? green : cyan,
-              background: copied ? "rgba(34,211,160,0.10)" : "rgba(72,184,216,0.10)",
-              border: "1px solid " + (copied ? "rgba(34,211,160,0.45)" : "rgba(72,184,216,0.25)"),
+              color: copied ? green : copyFailed ? "#ff8da1" : cyan,
+              background: copied ? "rgba(34,211,160,0.10)" : copyFailed ? "rgba(255,77,109,0.10)" : "rgba(72,184,216,0.10)",
+              border: "1px solid " + (copied ? "rgba(34,211,160,0.45)" : copyFailed ? "rgba(255,77,109,0.45)" : "rgba(72,184,216,0.25)"),
             }}
+            aria-live="polite"
           >
-            {copied ? "Copied!" : "Copy"}
+            {copied ? "Copied!" : copyFailed ? "Try again" : "Copy"}
           </button>
         </m.div>
 

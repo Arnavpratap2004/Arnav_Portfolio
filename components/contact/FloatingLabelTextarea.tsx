@@ -64,6 +64,7 @@ export function FloatingLabelTextarea({ name, label, register, rules, error, val
           field.onBlur(event);
         }}
         onFocus={() => setIsFocused(true)}
+        maxLength={500}
         aria-invalid={Boolean(error)}
         aria-describedby={error ? name + "-error" : undefined}
         // 16px on mobile prevents iOS Safari's focus auto-zoom. The mirror below must keep

@@ -177,7 +177,9 @@ function StrandsComponent({
   const visibleRef = useRef(false);
   const propsRef = useRef<RuntimeProps>({ colors, count, speed, amplitude, waviness, thickness, glow, taper, spread, hueShift, intensity, saturation, opacity, scale });
 
-  propsRef.current = { colors, count, speed, amplitude, waviness, thickness, glow, taper, spread, hueShift, intensity, saturation, opacity, scale };
+  useEffect(() => {
+    propsRef.current = { colors, count, speed, amplitude, waviness, thickness, glow, taper, spread, hueShift, intensity, saturation, opacity, scale };
+  }, [colors, count, speed, amplitude, waviness, thickness, glow, taper, spread, hueShift, intensity, saturation, opacity, scale]);
 
   useEffect(() => {
     const container = containerRef.current;

@@ -38,6 +38,7 @@ export const NarrativeProjectCard = ({
     const [isTouchDevice] = useState(() => typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0));
     const revealTimeoutsRef = useRef<Array<ReturnType<typeof setTimeout>>>([]);
     const pendingMouseEventRef = useRef<{ clientX: number; clientY: number } | null>(null);
+    const hasRevealedRef = useRef(false);
 
 
     // Progressive discovery layers
@@ -56,7 +57,8 @@ export const NarrativeProjectCard = ({
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
-                if (entry.isIntersecting) {
+                if (entry.isIntersecting && !hasRevealedRef.current) {
+                    hasRevealedRef.current = true;
                     setIsVisible(true);
                     // Trigger highlight animation
                     setShowHighlight(true);
@@ -122,6 +124,7 @@ export const NarrativeProjectCard = ({
         return () => {
             if (rafRef.current) {
                 cancelAnimationFrame(rafRef.current);
+                rafRef.current = null;
             }
         };
     }, []);
@@ -216,9 +219,10 @@ export const NarrativeProjectCard = ({
                         src={imageSrc}
                         alt={imageAlt}
                         fill
-                        // PERF: eager — this card premounts during post-load idle, so the ~30-90KB
-                        // webp fetch+decode happens then instead of mid-scroll inside the orbit.
-                        loading="eager"
+                        // The desktop orbit pre-mounts cards during idle, while the mobile archive
+                        // should keep below-the-fold images lazy so six project covers do not
+                        // compete with the first touch scroll for bandwidth and decode time.
+                        loading={isTouchDevice ? "lazy" : "eager"}
                         quality={60}
                         className={cn(
                             "object-cover transition-transform duration-700",

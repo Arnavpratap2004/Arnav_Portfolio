@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from "react";
 export const ScrollProgress = () => {
     const progressRef = useRef<HTMLDivElement>(null);
     const rafRef = useRef<number | null>(null);
+    const dimensionsRafRef = useRef<number | null>(null);
     const resizeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const maxScrollRef = useRef(1);
 
@@ -15,7 +16,7 @@ export const ScrollProgress = () => {
 
         const writeProgress = () => {
             rafRef.current = null;
-            const scrollPercent = window.scrollY / maxScrollRef.current;
+            const scrollPercent = Math.min(1, Math.max(0, window.scrollY / maxScrollRef.current));
             if (progressRef.current) {
                 // PERF: Write the transform directly so scroll progress does not trigger a React render every frame.
                 progressRef.current.style.transform = `scaleX(${scrollPercent})`;
@@ -27,13 +28,31 @@ export const ScrollProgress = () => {
             rafRef.current = window.requestAnimationFrame(writeProgress);
         };
 
+        const scheduleDimensionRefresh = () => {
+            if (dimensionsRafRef.current !== null) return;
+            dimensionsRafRef.current = window.requestAnimationFrame(() => {
+                dimensionsRafRef.current = null;
+                updateMaxScroll();
+                scheduleProgress();
+            });
+        };
+
         const handleResize = () => {
             if (resizeTimeoutRef.current !== null) clearTimeout(resizeTimeoutRef.current);
             resizeTimeoutRef.current = setTimeout(() => {
-                updateMaxScroll();
-                scheduleProgress();
+                scheduleDimensionRefresh();
             }, 150);
         };
+
+        // Below-the-fold sections are mounted lazily, so the document height can grow well after
+        // the first measurement. Keep the progress bar tied to the real page height without
+        // reading scrollHeight on every scroll frame.
+        const resizeObserver = typeof ResizeObserver === "function" ? new ResizeObserver(scheduleDimensionRefresh) : null;
+        resizeObserver?.observe(document.documentElement);
+        resizeObserver?.observe(document.body);
+
+        const mutationObserver = typeof MutationObserver === "function" ? new MutationObserver(scheduleDimensionRefresh) : null;
+        mutationObserver?.observe(document.body, { childList: true, subtree: true });
 
         updateMaxScroll();
         scheduleProgress();
@@ -43,7 +62,10 @@ export const ScrollProgress = () => {
         return () => {
             window.removeEventListener("scroll", scheduleProgress);
             window.removeEventListener("resize", handleResize);
+            resizeObserver?.disconnect();
+            mutationObserver?.disconnect();
             if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+            if (dimensionsRafRef.current !== null) cancelAnimationFrame(dimensionsRafRef.current);
             if (resizeTimeoutRef.current !== null) clearTimeout(resizeTimeoutRef.current);
         };
     }, []);

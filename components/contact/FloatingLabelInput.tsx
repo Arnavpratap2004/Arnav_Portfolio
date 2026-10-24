@@ -26,6 +26,7 @@ export function FloatingLabelInput({ name, label, register, rules, error, type =
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const active = isFocused || value.length > 0;
   const field = register(name, rules);
+  const maxLength = name === "name" ? 120 : name === "email" ? 200 : 200;
 
   useEffect(() => {
     if (!error || shakeKey === 0) return;
@@ -47,6 +48,7 @@ export function FloatingLabelInput({ name, label, register, rules, error, type =
         type={type}
         name={field.name}
         ref={field.ref}
+        maxLength={maxLength}
         onChange={field.onChange}
         onBlur={(event) => {
           setIsFocused(false);

@@ -37,7 +37,7 @@ export default function ContactSection() {
   const animState = isInView ? "visible" : "hidden";
 
   return (
-    <section ref={sectionRef} className="relative isolate min-h-[calc(100svh-56px)] overflow-hidden bg-[#040c1a] lg:h-[calc(100svh-56px)]">
+    <section ref={sectionRef} className="relative isolate min-h-[100svh] overflow-hidden bg-[#040c1a] lg:h-[calc(100svh-56px)] lg:min-h-[calc(100svh-56px)]">
       <MoonWalkMedia isInView={isInView} />
 
       {/* Projects ends on #06090F and this section starts on #040c1a, so the boundary reads as a
@@ -48,7 +48,7 @@ export default function ContactSection() {
         className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-24 md:h-32 bg-gradient-to-b from-[#06090F] to-transparent"
       />
 
-      <div className="relative z-10 mx-auto flex min-h-[calc(100svh-56px)] max-w-7xl flex-col justify-center px-4 py-10 sm:px-6 md:px-8 lg:h-[calc(100svh-56px)] lg:min-h-0 lg:py-9 xl:py-10">
+      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-start px-4 pb-[calc(2.5rem+env(safe-area-inset-bottom))] pt-20 sm:px-6 md:px-8 lg:h-[calc(100svh-56px)] lg:min-h-0 lg:justify-center lg:py-9 xl:py-10">
         <div className="mb-6 max-w-3xl md:mb-7 xl:mb-8">
           <m.div
             variants={badgeVariants}

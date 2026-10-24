@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Hero } from "@/components/sections/Hero";
 import { FloatingNav } from "@/components/ui/FloatingNavbar";
 import { IconBriefcase, IconHome, IconLayoutGrid, IconMail, IconUser } from "@tabler/icons-react";
@@ -22,11 +22,12 @@ type DeferredSectionProps = {
   className?: string;
   id?: string;
   minHeight: string;
+  mobileMinHeight?: string;
   preloadMargin?: string;
   premountDelay?: number;
 };
 
-function DeferredSection({ children, className, id, minHeight, preloadMargin = "0px", premountDelay }: DeferredSectionProps) {
+function DeferredSection({ children, className, id, minHeight, mobileMinHeight, preloadMargin = "0px", premountDelay }: DeferredSectionProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [shouldRender, setShouldRender] = useState(false);
   // PERF: Premount delays are measured from the end of the intro, not from mount. Timed from
@@ -108,7 +109,10 @@ function DeferredSection({ children, className, id, minHeight, preloadMargin = "
       id={id}
       ref={ref}
       className={className}
-      style={shouldRender ? undefined : { minHeight }}
+      style={shouldRender ? undefined : {
+        minHeight,
+        ...(mobileMinHeight ? { "--mobile-min-height": mobileMinHeight } : {}),
+      } as CSSProperties}
     >
       {shouldRender ? children : null}
     </div>
@@ -153,7 +157,7 @@ export default function Home() {
         <Experience />
       </DeferredSection>
 
-      <DeferredSection id="projects" className="lazy-section lazy-section-projects relative z-10 bg-[#06090F]" minHeight="400vh" preloadMargin="1200px 0px" premountDelay={2100}>
+      <DeferredSection id="projects" className="lazy-section lazy-section-projects relative z-10 bg-[#06090F]" minHeight="400vh" mobileMinHeight="100vh" preloadMargin="1200px 0px" premountDelay={2100}>
         <Projects />
       </DeferredSection>
       <DeferredSection id="contact" className="relative z-10 bg-[#06090F]" minHeight="100svh" preloadMargin="1200px 0px" premountDelay={2700}>
@@ -165,4 +169,3 @@ export default function Home() {
     </main>
   );
 }
-

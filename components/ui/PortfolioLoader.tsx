@@ -110,7 +110,9 @@ export function PortfolioLoader() {
     let currentProgress = 0;
     let cancelled = false;
 
-    setPrefersReducedMotion(reducedMotion);
+    queueMicrotask(() => {
+      if (!cancelled) setPrefersReducedMotion(reducedMotion);
+    });
     body.classList.add("portfolio-loader-active");
     body.style.overflow = "hidden";
 

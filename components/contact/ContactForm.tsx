@@ -1,7 +1,7 @@
 "use client";
 
 import { m } from "framer-motion";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { FloatingLabelInput } from "./FloatingLabelInput";
 import { FloatingLabelTextarea } from "./FloatingLabelTextarea";
@@ -15,6 +15,7 @@ interface ContactFormProps {
 export function ContactForm({ isInView }: ContactFormProps) {
   const [buttonState, setButtonState] = useState<SubmitButtonState>("idle");
   const [shakeKey, setShakeKey] = useState(0);
+  const submittingRef = useRef(false);
   const {
     register,
     control,
@@ -33,6 +34,8 @@ export function ContactForm({ isInView }: ContactFormProps) {
   const values = useWatch({ control });
 
   const onSubmit = async (data: ContactFormValues) => {
+    if (submittingRef.current) return;
+    submittingRef.current = true;
     setButtonState("loading");
     try {
       const response = await fetch("/api/contact", {
@@ -55,6 +58,8 @@ export function ContactForm({ isInView }: ContactFormProps) {
     } catch (error) {
       console.error("Contact form submission failed:", error);
       setButtonState("error");
+    } finally {
+      submittingRef.current = false;
     }
   };
 
@@ -108,6 +113,7 @@ export function ContactForm({ isInView }: ContactFormProps) {
             rules={{
               required: "Name is required",
               minLength: { value: 2, message: "Name must be at least 2 characters" },
+              validate: (value) => value.trim().length >= 2 || "Name must be at least 2 characters",
             }}
           />
           <FloatingLabelInput
@@ -145,6 +151,7 @@ export function ContactForm({ isInView }: ContactFormProps) {
             required: "Message is required",
             minLength: { value: 10, message: "Message must be at least 10 characters" },
             maxLength: { value: 500, message: "Message must be 500 characters or fewer" },
+            validate: (value) => value.trim().length >= 10 || "Message must be at least 10 characters",
           }}
         />
 

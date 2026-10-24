@@ -22,7 +22,7 @@ const TO_ADDRESS = process.env.CONTACT_TO_EMAIL ?? 'arnavpratap2003@gmail.com';
 
 // The form already caps these client-side; enforce it again here so a direct
 // POST cannot push a novel through the templates.
-const MAX = { name: 120, email: 200, subject: 200, message: 5000 };
+const MAX = { name: 120, email: 200, subject: 200, message: 500 };
 
 function clamp(value: unknown, limit: number): string {
   return typeof value === 'string' ? value.trim().slice(0, limit) : '';
@@ -42,16 +42,34 @@ export async function POST(request: Request) {
   const resend = new Resend(apiKey);
 
   try {
-    const payload = await request.json();
+    let payload: unknown;
+    try {
+      payload = await request.json();
+    } catch {
+      return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+    }
 
-    const name = clamp(payload.name, MAX.name);
-    const email = clamp(payload.email, MAX.email);
-    const subject = clamp(payload.subject, MAX.subject);
-    const message = clamp(payload.message, MAX.message);
+    if (!payload || typeof payload !== "object") {
+      return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+    }
+
+    const body = payload as Record<string, unknown>;
+
+    const name = clamp(body.name, MAX.name);
+    const email = clamp(body.email, MAX.email);
+    const subject = clamp(body.subject, MAX.subject);
+    const message = clamp(body.message, MAX.message);
 
     if (!name || !email || !message) {
       return NextResponse.json(
         { error: 'Name, email and message are required.' },
+        { status: 400 }
+      );
+    }
+
+    if (name.length < 2 || message.length < 10) {
+      return NextResponse.json(
+        { error: 'Name must be at least 2 characters and message must be at least 10 characters.' },
         { status: 400 }
       );
     }

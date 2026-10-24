@@ -3,7 +3,6 @@
 import { AlertCircle, CheckCircle, Send } from "lucide-react";
 import { m } from "framer-motion";
 import { useEffect, useMemo } from "react";
-import { C } from "./tokens";
 
 export type SubmitButtonState = "idle" | "loading" | "success" | "error";
 

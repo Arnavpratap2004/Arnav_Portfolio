@@ -169,6 +169,16 @@
     contain-intrinsic-size: 0 400vh; /* PERF: Match the Projects sticky-scroll height while it is skipped off-screen. */
   }
 
+  /* Phones use a normal stacked project archive instead of the desktop 400vh sticky sequence.
+     Override the lazy placeholder too, otherwise the unmounted section creates several screens
+     of blank space before its chunk is ready. */
+  @media (max-width: 767px) {
+    .lazy-section-projects {
+      min-height: var(--mobile-min-height, 100vh) !important;
+      contain-intrinsic-size: 0 100vh;
+    }
+  }
+
   /* Paint isolation for project cards â€” repaint on hover won't propagate */
   .project-card-container {
     contain: layout style paint;
@@ -195,6 +205,14 @@
   .overflow-x-auto::-webkit-scrollbar,
   .overflow-x-scroll::-webkit-scrollbar {
     display: none; /* Chrome/Safari */
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    a,
+    button,
+    [role="button"] {
+      touch-action: manipulation;
+    }
   }
 
 }
@@ -376,8 +394,8 @@ body.portfolio-loader-active .cursor-blink {
    while tall devices still get the full 280px. vh first as a fallback for pre-dvh browsers. */
 @media (max-width: 639px) {
   .hero-portrait-frame {
-    width: min(280px, 34vh);
-    width: min(280px, 34dvh);
+    width: min(280px, 34vh, calc(100vw - 3rem));
+    width: min(280px, 34dvh, calc(100vw - 3rem));
   }
 }
 

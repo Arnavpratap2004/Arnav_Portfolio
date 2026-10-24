@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // This is a vendored static Active Theory reference dump, not application source.
+    // Linting its minified third-party bundles produced thousands of false positives.
+    "activetheory-dump/**",
   ]),
 ]);
 

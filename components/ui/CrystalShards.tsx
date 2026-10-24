@@ -54,7 +54,7 @@ function ShardElement({ shard }: { shard: Shard }) {
 
   return (
     <m.div
-      className={`absolute pointer-events-auto ${shard.mobileHidden ? "hidden md:block" : ""}`}
+      className={`absolute pointer-events-none md:pointer-events-auto ${shard.mobileHidden ? "hidden md:block" : ""}`}
       data-cursor="hover"
       style={{
         left: shard.x,

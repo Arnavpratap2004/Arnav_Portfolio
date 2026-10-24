@@ -111,9 +111,9 @@ export const FloatingNav = ({
                 className={cn(
                     // True glass: translucent navy + backdrop blur/saturate (small fixed strip, so the
                     // per-frame filter cost is bounded — same tradeoff as the footer's backdrop-blur-xl).
-                    "flex max-w-fit fixed top-8 inset-x-0 mx-auto z-[5000] items-center gap-0.5 sm:gap-1",
+                    "flex max-w-[calc(100vw-0.5rem)] fixed top-[calc(0.75rem+env(safe-area-inset-top))] sm:top-8 inset-x-0 mx-auto z-[5000] items-center justify-center gap-0.5 overflow-x-auto overscroll-contain sm:max-w-fit sm:overflow-visible sm:gap-1",
                     "rounded-full border border-white/10 bg-[#0A0E17]/60 backdrop-blur-xl backdrop-saturate-150",
-                    "px-2 py-1.5 sm:px-2.5 sm:py-2",
+                    "px-1.5 py-1.5 sm:px-2.5 sm:py-2",
                     "shadow-[0_12px_40px_rgba(3,6,16,0.55),inset_0_1px_0_rgba(255,255,255,0.06)]",
                     className
                 )}
@@ -142,7 +142,7 @@ export const FloatingNav = ({
                             aria-label={navItem.name}
                             title={navItem.name}
                             className={cn(
-                                "relative items-center justify-center flex rounded-full min-h-11 min-w-11 px-1.5 sm:min-h-0 sm:min-w-0 sm:px-4 py-2 transition-colors duration-200",
+                                "relative items-center justify-center flex rounded-full min-h-[42px] min-w-[42px] px-1 sm:min-h-0 sm:min-w-0 sm:px-4 py-2 transition-colors duration-200",
                                 isActive
                                     ? "text-white"
                                     : "text-neutral-400 hover:text-white hover:bg-white/[0.05]"
@@ -174,7 +174,7 @@ export const FloatingNav = ({
                     href="/Arnav_Resume.pdf"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group relative inline-flex min-h-11 items-center text-xs sm:text-sm font-medium px-3 sm:min-h-0 sm:px-5 py-2 sm:py-2.5 rounded-full transition-transform duration-300 ease-out hover:scale-[1.03] active:scale-[0.98]"
+                    className="group relative inline-flex min-h-[42px] items-center text-xs sm:text-sm font-medium px-2.5 sm:min-h-0 sm:px-5 py-2 sm:py-2.5 rounded-full transition-transform duration-300 ease-out hover:scale-[1.03] active:scale-[0.98]"
                     title="View my resume"
                 >
                     {/* Gradient border background — the site's signature purple ramp */}
